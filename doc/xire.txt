@@ -62,7 +62,7 @@ Requirements:
 - Gauche 0.9 or later <http://practical-scheme.net/gauche/>
 
 Latest version:
-http://github.com/kana/config/commits/vim-xire
+http://github.com/kana/vim-xire
 
 Document in HTML format:
 http://kana.github.com/config/vim/xire.html
