@@ -3,5 +3,8 @@ Testing xire-basics ...                                          Testing xire-ba
 test It should exist., expects #t ==> ok
 test It should have some entries in its macro table by default., expects #t ==> ok
 test It should be a parameter., expects (overridden <xire-context>) ==> ok
+<xire-register-macro!>---------------------------------------------------------
+test It should register a macro into the current context., expects 1 ==> ok
+test It should register a macro into a given context., expects ((default-context 0 given-context 0) (default-context 0 given-context 1)) ==> ok
 passed.
 passed.

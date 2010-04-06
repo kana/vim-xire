@@ -27,6 +27,35 @@
 
 
 
+(test-section "xire-register-macro!")  ;{{{1
+
+(test* "It should register a macro into the current context."
+       1
+       (parameterize ([xire-context (make <xire-context>)])
+         (xire-register-macro! 'arisa
+                               (lambda (form . args) 'arisa))
+         (hash-table-num-entries (ref (xire-context) 'macros))))
+
+(test* "It should register a macro into a given context."
+       '((default-context 0 given-context 0)
+         (default-context 0 given-context 1))
+       (parameterize ([xire-context (make <xire-context>)])
+         (let* ([context (make <xire-context>)]
+                [get-values
+                  (lambda ()
+                    (list 'default-context
+                          (hash-table-num-entries (ref (xire-context) 'macros))
+                          'given-context
+                          (hash-table-num-entries (ref context 'macros))))]
+                [before-values (get-values)])
+           (xire-register-macro! 'sasara
+                                 (lambda (form . args) 'sasara)
+                                 context)
+           (list before-values (get-values)))))
+
+
+
+
 ;(test-section "template")  ;{{{1
 
 ;(test* "title"
