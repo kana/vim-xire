@@ -50,6 +50,12 @@
 
 ; Compiler  ;{{{1
 (define (xire-compile x)  ;{{{2
+  (define (report-syntax-error invalid-expression)
+    (errorf "~A:~A: Invalid expression: ~S"
+      (port-name (current-input-port))
+      (port-current-line (current-input-port))
+      invalid-expression))
+
   (match x
     ; FIXME: This dispatching is ad hoc.  It should be replaced with more
     ; sophisticated way and it should be easily extendable.  For example:
@@ -62,10 +68,7 @@
            "\n")
      )
     (invalid-expression
-     (errorf "~A:~A: Invalid expression: ~S"
-       (port-name (current-input-port))
-       (port-current-line (current-input-port))
-       invalid-expression))
+      (report-syntax-error invalid-expression))
     ))
 
 
