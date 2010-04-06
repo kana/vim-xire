@@ -1,4 +1,5 @@
-; Test: xire-basics  ;{{{1
+; Test: xire-basics  {{{1
+
 (use gauche.test)
 (test-start "xire-basics")
 (load "./bin/xirec")
@@ -7,120 +8,19 @@
 
 
 
-(test-section "make-xire-context")  ;{{{1
+;(test-section "template")  ;{{{1
 
-; FIXME: Add tests.
-
-
-
-
-(test-section "x->vson")  ;{{{1
-
-(test* "integer (small enough)"
-       "142857"
-       (x->vson 142857))
-(test* "integer (too big)"
-       "142857285714428571571428714285857142"
-       (x->vson 142857285714428571571428714285857142))
-
-(test* "string (without strange char)"
-       "\"Sense 2010\""
-       (x->vson "Sense 2010"))
-(test* "string (with quotes)"
-       "\"single ' double \\\"\""
-       (x->vson "single ' double \""))
-(test* "string (with backslash)"
-       "\"\\\\\""
-       (x->vson "\\"))
-; FIXME: Add tests on more strange characters.
-
-(test* "symbol (C-like)"
-       "call_cc"
-       (x->vson 'call_cc))
-; FIXME: Add tests on non C-like symbols such-as-this.
-
-
-
-
-(test-section "xire-compile - invalid expression")  ;{{{1
-
-(test* "bad - list" (test-error <error>) (xire-compile '(bad expression)))
-
-(test* "bad - character" (test-error <error>) (xire-compile #\c))
-(test* "bad - integer" (test-error <error>) (xire-compile 142857))
-(test* "bad - keyword" (test-error <error>) (xire-compile :keyword))
-(test* "bad - pair" (test-error <error>) (xire-compile '(car . cdr)))
-(test* "bad - regular expression" (test-error <error>) (xire-compile #/re/))
-(test* "bad - string" (test-error <error>) (xire-compile "string"))
-(test* "bad - symbol" (test-error <error>) (xire-compile 'symbol))
-(test* "bad - vector" (test-error <error>) (xire-compile '#(vec tor)))
-
-
-
-
-(test-section "xire-compile - :echo")  ;{{{1
-
-(test* "0 argument"
-       '(:echo () "\n")
-       (xire-compile '(echo)))
-(test* "1 argument"
-       '(:echo ((" " . "142857")) "\n")
-       (xire-compile '(echo 142857)))
-(test* "2 or more arguments"
-       '(:echo ((" " . "142857") (" " . "285714")) "\n")
-       (xire-compile '(echo 142857 285714)))
-
-(test* "invalid" (test-error <error>) (xire-compile '(echo . 501)))
-
-
-
-
-(test-section "xire-compile - ...")  ;{{{1
-
-; FIXME: Add tests.
-
-
-
-
-(test-section "xire-emit")  ;{{{1
-
-; FIXME: Add tests.
-
-
-
-
-(test-section "xire-push")  ;{{{1
-
-; FIXME: Add tests.
-
-
-
-
-(test-section "xire-translate")  ;{{{1
-
-(define (test-xire-translate s)
-  (with-string-io
-    s
-    (lambda ()
-      (xire-translate)
-      (get-output-string (current-output-port)))))
-
-
-(test* "good"
-       "echo 142857\n"
-       (test-xire-translate "(echo 142857)"))
-
-(test* "bad - invalid xire expression"
-       (test-error <error>)
-       (test-xire-translate ":echo"))
-
-(test* "bad - read error"
-       (test-error <error>)
-       (test-xire-translate "(echo 142857"))
+;(test* "title"
+;       expected-value
+;       test-expression)
 
 
 
 
 (test-end)  ;{{{1
 
+
+
+
+; __END__
 ; vim: filetype=scheme foldmethod=marker

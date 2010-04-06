@@ -1,33 +1,3 @@
 Testing xire-basics ...                                          Testing xire-basics ===========================================================
-<make-xire-context>------------------------------------------------------------
-<x->vson>----------------------------------------------------------------------
-test integer (small enough), expects "142857" ==> ok
-test integer (too big), expects "142857285714428571571428714285857142" ==> ok
-test string (without strange char), expects "\"Sense 2010\"" ==> ok
-test string (with quotes), expects "\"single ' double \\\"\"" ==> ok
-test string (with backslash), expects "\"\\\\\"" ==> ok
-test symbol (C-like), expects "call_cc" ==> ok
-<xire-compile - invalid expression>--------------------------------------------
-test bad - list, expects #<<error>> ==> ok
-test bad - character, expects #<<error>> ==> ok
-test bad - integer, expects #<<error>> ==> ok
-test bad - keyword, expects #<<error>> ==> ok
-test bad - pair, expects #<<error>> ==> ok
-test bad - regular expression, expects #<<error>> ==> ok
-test bad - string, expects #<<error>> ==> ok
-test bad - symbol, expects #<<error>> ==> ok
-test bad - vector, expects #<<error>> ==> ok
-<xire-compile - :echo>---------------------------------------------------------
-test 0 argument, expects (:echo () "\n") ==> ok
-test 1 argument, expects (:echo ((" " . "142857")) "\n") ==> ok
-test 2 or more arguments, expects (:echo ((" " . "142857") (" " . "285714")) "\n") ==> ok
-test invalid, expects #<<error>> ==> ok
-<xire-compile - ...>-----------------------------------------------------------
-<xire-emit>--------------------------------------------------------------------
-<xire-push>--------------------------------------------------------------------
-<xire-translate>---------------------------------------------------------------
-test good, expects "echo 142857\n" ==> ok
-test bad - invalid xire expression, expects #<<error>> ==> ok
-test bad - read error, expects #<<error>> ==> ok
 passed.
 passed.
