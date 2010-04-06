@@ -23,6 +23,25 @@
 ;     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ; }}}
 
+(use gauche.parameter)
+
+
+
+
+;;; Xire context
+;;; ============
+
+;; Represent a context of xire compilation.
+(define-class <xire-context> ()
+  ([macros
+     :init-keyword :macros
+     :init-form (make-hash-table 'eq?)]))
+
+;; Represent the current context of xire compilation.
+(define xire-context
+  (make-parameter (make <xire-context>)))
+
+
 
 
 ;;; Main

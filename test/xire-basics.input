@@ -8,6 +8,25 @@
 
 
 
+(test-section "xire-context")  ;{{{1
+
+(test* "It should exist."
+       #t
+       (is-a? (xire-context) <xire-context>))
+
+(test* "It should have some entries in its macro table by default."
+       #t
+       (<= 0 (hash-table-num-entries (ref (xire-context) 'macros))))
+
+(test* "It should be a parameter."
+       '(overridden <xire-context>)
+       (list (parameterize ([xire-context 'overridden])
+                           (xire-context))
+             (class-name (class-of (xire-context)))))
+
+
+
+
 ;(test-section "template")  ;{{{1
 
 ;(test* "title"

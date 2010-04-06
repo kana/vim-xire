@@ -1,3 +1,7 @@
 Testing xire-basics ...                                          Testing xire-basics ===========================================================
+<xire-context>-----------------------------------------------------------------
+test It should exist., expects #t ==> ok
+test It should have some entries in its macro table by default., expects #t ==> ok
+test It should be a parameter., expects (overridden <xire-context>) ==> ok
 passed.
 passed.
