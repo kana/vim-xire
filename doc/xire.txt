@@ -99,7 +99,7 @@ XIRE SCRIPT					*xire-script*
 Xire script is a Scheme-based DSL to write Vim script.  Xire script consists
 of a seriese of xire expression.
 
-Each top-level xire xpression in xire script is compiled into a seriese of Ex
+Each top-level xire expression in xire script is compiled into a seriese of Ex
 commands in Vim script, then resulting piece of Vim script is outputted.  For
 example, "(echo 20091206)" is compiled into ":echo 20091206".
 
