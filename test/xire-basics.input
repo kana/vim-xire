@@ -5,6 +5,9 @@
 (load "./bin/xirec")
 (set! main #f)
 
+(define (hash-table-sorted-keys ht)
+  (sort-by (hash-table-keys ht) x->string))
+
 
 
 
@@ -40,6 +43,54 @@
        (list (parameterize ([xire-context 'overridden])
                            (xire-context))
              (class-name (class-of (xire-context)))))
+
+
+
+
+(test-section "xire-context-copy")  ;{{{1
+
+(test* "It should copy the current context"
+       '((#t #t)
+         (#f #t)
+         ((a) (a b)))
+       (parameterize ([xire-context (make <xire-context>)])
+         (xire-register-macro! 'a (lambda (form) 'a))
+         (let1 context-copied (xire-context-copy)
+           (xire-register-macro! 'b (lambda (form) 'c) context-copied)
+           `((,(boolean (xire-lookup-macro 'a (xire-context)))
+              ,(boolean (xire-lookup-macro 'a context-copied)))
+             (,(boolean (xire-lookup-macro 'b (xire-context)))
+              ,(boolean (xire-lookup-macro 'b context-copied)))
+             (,(hash-table-sorted-keys (ref (xire-context) 'macros))
+              ,(hash-table-sorted-keys (ref context-copied 'macros)))))))
+
+(test* "It should copy a given context"
+       '((#t #f #f)
+         (#f #t #t)
+         (#f #f #t)
+         ((a) (b) (b c)))
+       (parameterize ([xire-context (make <xire-context>)])
+         (xire-register-macro! 'a (lambda (form) 'a))
+         (let* ([context-original
+                  (let1 context (make <xire-context>)
+                    (xire-register-macro! 'b (lambda (form) 'b) context)
+                    context)]
+                [context-copied
+                  (let1 context (xire-context-copy context-original)
+                    (xire-register-macro! 'c (lambda (form) 'c) context)
+                    context)])
+           `((,(boolean (xire-lookup-macro 'a (xire-context)))
+              ,(boolean (xire-lookup-macro 'a context-original))
+              ,(boolean (xire-lookup-macro 'a context-copied)))
+             (,(boolean (xire-lookup-macro 'b (xire-context)))
+              ,(boolean (xire-lookup-macro 'b context-original))
+              ,(boolean (xire-lookup-macro 'b context-copied)))
+             (,(boolean (xire-lookup-macro 'c (xire-context)))
+              ,(boolean (xire-lookup-macro 'c context-original))
+              ,(boolean (xire-lookup-macro 'c context-copied)))
+             (,(hash-table-sorted-keys (ref (xire-context) 'macros))
+              ,(hash-table-sorted-keys (ref context-original 'macros))
+              ,(hash-table-sorted-keys (ref context-copied 'macros)))))))
 
 
 

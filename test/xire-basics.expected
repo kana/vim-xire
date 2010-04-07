@@ -5,6 +5,9 @@ test It should define a xire macro in the current context., expects (#f (< (orig
 test It should exist., expects #t ==> ok
 test It should have some entries in its macro table by default., expects #t ==> ok
 test It should be a parameter., expects (overridden <xire-context>) ==> ok
+<xire-context-copy>------------------------------------------------------------
+test It should copy the current context, expects ((#t #t) (#f #t) ((a) (a b))) ==> ok
+test It should copy a given context, expects ((#t #f #f) (#f #t #t) (#f #f #t) ((a) (b) (b c))) ==> ok
 <xire-lookup-macro>------------------------------------------------------------
 test It should return #f if there is no macro with the given name., expects #f ==> ok
 test It should return the expander of a registered macro., expects (expanded-form (original-form)) ==> ok

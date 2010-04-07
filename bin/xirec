@@ -41,6 +41,11 @@
 (define xire-context
   (make-parameter (make <xire-context>)))
 
+;; Copy the current xire context.
+(define (xire-context-copy :optional (context (xire-context)))
+  (make <xire-context>
+        :macros (hash-table-copy (ref context 'macros))))
+
 
 
 
