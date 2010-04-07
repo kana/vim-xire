@@ -8,6 +8,23 @@
 
 
 
+(test-section "define-xire-macro")  ;{{{1
+
+(test* "It should define a xire macro in the current context."
+       '(#f (< (original-form) >))
+       (parameterize ([xire-context (make <xire-context>)])
+         (let* ([get-values
+                  (lambda ()
+                    (let1 expander (xire-lookup-macro 'amane)
+                      (and expander (expander '(original-form)))))]
+                [before-values (get-values)])
+           (define-xire-macro (amane form)
+             (list '< form '>))
+           (list before-values (get-values)))))
+
+
+
+
 (test-section "xire-context")  ;{{{1
 
 (test* "It should exist."

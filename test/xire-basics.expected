@@ -1,4 +1,6 @@
 Testing xire-basics ...                                          Testing xire-basics ===========================================================
+<define-xire-macro>------------------------------------------------------------
+test It should define a xire macro in the current context., expects (#f (< (original-form) >)) ==> ok
 <xire-context>-----------------------------------------------------------------
 test It should exist., expects #t ==> ok
 test It should have some entries in its macro table by default., expects #t ==> ok
