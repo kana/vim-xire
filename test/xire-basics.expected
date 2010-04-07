@@ -3,6 +3,10 @@ Testing xire-basics ...                                          Testing xire-ba
 test It should exist., expects #t ==> ok
 test It should have some entries in its macro table by default., expects #t ==> ok
 test It should be a parameter., expects (overridden <xire-context>) ==> ok
+<xire-lookup-macro>------------------------------------------------------------
+test It should return #f if there is no macro with the given name., expects #f ==> ok
+test It should return the expander of a registered macro., expects (expanded-form (original-form)) ==> ok
+test It should look up macro from a given context., expects ((default-context #f given-context #f) (default-context #f given-context #t)) ==> ok
 <xire-register-macro!>---------------------------------------------------------
 test It should register a macro into the current context., expects 1 ==> ok
 test It should register a macro into a given context., expects ((default-context 0 given-context 0) (default-context 0 given-context 1)) ==> ok

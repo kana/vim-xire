@@ -27,6 +27,44 @@
 
 
 
+(test-section "xire-lookup-macro")  ;{{{1
+
+(test* "It should return #f if there is no macro with the given name."
+       #f
+       (parameterize ([xire-context (make <xire-context>)])
+         (xire-lookup-macro 'there-is-no-such-macro)))
+
+(test* "It should return the expander of a registered macro."
+       '(expanded-form (original-form))
+       (parameterize ([xire-context (make <xire-context>)])
+         (define (expander form)
+           (list 'expanded-form form))
+         (xire-register-macro! 'sasara expander)
+         ((xire-lookup-macro 'sasara) '(original-form))))
+
+(test* "It should look up macro from a given context."
+       '((default-context #f given-context #f)
+         (default-context #f given-context #t))
+       (parameterize ([xire-context (make <xire-context>)])
+         (let* ([context (make <xire-context>)]
+                [expand
+                  (lambda (expander)
+                    (and expander (expander '(original-form))))]
+                [get-values
+                  (lambda ()
+                    (list 'default-context
+                          (expand (xire-lookup-macro 'mashiro (xire-context)))
+                          'given-context
+                          (expand (xire-lookup-macro 'mashiro context))))]
+                [before-values (get-values)])
+           (xire-register-macro! 'mashiro
+                                 (lambda (form . args) #t)
+                                 context)
+           (list before-values (get-values)))))
+
+
+
+
 (test-section "xire-register-macro!")  ;{{{1
 
 (test* "It should register a macro into the current context."

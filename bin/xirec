@@ -56,6 +56,10 @@
 ;;; - Argument called EXPANDER is a procedure which takes one argument, the
 ;;;   form to expand.
 
+;; Look up a xire macro with the NAME.
+(define (xire-lookup-macro name :optional (context (xire-context)))
+  (hash-table-get (ref context 'macros) name #f))
+
 ;; Register a xire macro EXPANDER with the NAME into the current CONTEXT.
 (define (xire-register-macro! name expander :optional (context (xire-context)))
   (hash-table-put! (ref context 'macros) name expander))
