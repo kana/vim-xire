@@ -24,6 +24,8 @@
 ; }}}
 
 (use gauche.parameter)
+(use text.tree)
+(use util.match)
 
 
 
@@ -75,6 +77,45 @@
 ;; Register a xire macro EXPANDER with the NAME into the current CONTEXT.
 (define (xire-register-macro! name expander :optional (context (xire-context)))
   (hash-table-put! (ref context 'macros) name expander))
+
+
+
+
+;;; Compiler
+;;; ========
+
+;; Translate xire script into Vim script.
+;; Xire script is read from INP and resulting Vim script is written into OUTP.
+(define (xire-translate inp outp
+                        :key (context (xire-context-copy (xire-context)))
+                             (environment (make-module #f)))
+  (define compiled-vim-script-tree (list))
+  (define (finish)
+    (write-tree (reverse compiled-vim-script-tree) outp))
+
+  (eval '(extend user) environment)
+  (parameterize ([xire-context context])
+    (let loop ()
+      (match (read inp)
+        [(? eof-object?)
+         (finish)]
+        [(and ((or 'define-xire-macro)
+               . _)
+              form)
+         (eval form environment)
+         (loop)]
+        [(and (name . _) form)
+         (if (xire-lookup-macro name)
+           (push! compiled-vim-script-tree (xire-compile form))
+           (eval form environment))
+         (loop)]))))
+
+;; Compile a xire script STATEMENT, then return a resulting Vim script.
+;; Resulting Vim script is expressed as a list of strings which can be passed
+;; to write-tree provided by text.tree.
+(define (xire-compile statement)
+  ; FIXME: NIY
+  )
 
 
 

@@ -28,6 +28,13 @@
 
 
 
+(test-section "xire-compile")  ;{{{1
+
+; FIXME: NIY
+
+
+
+
 (test-section "xire-context")  ;{{{1
 
 (test* "It should exist."
@@ -158,6 +165,13 @@
                                  (lambda (form . args) 'sasara)
                                  context)
            (list before-values (get-values)))))
+
+
+
+
+(test-section "xire-translate")  ;{{{1
+
+; FIXME: NIY
 
 
 

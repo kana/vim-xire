@@ -1,6 +1,7 @@
 Testing xire-basics ...                                          Testing xire-basics ===========================================================
 <define-xire-macro>------------------------------------------------------------
 test It should define a xire macro in the current context., expects (#f (< (original-form) >)) ==> ok
+<xire-compile>-----------------------------------------------------------------
 <xire-context>-----------------------------------------------------------------
 test It should exist., expects #t ==> ok
 test It should have some entries in its macro table by default., expects #t ==> ok
@@ -16,4 +17,5 @@ test It should look up macro from a given context., expects ((default-context #f
 test It should register a macro into the current context., expects 1 ==> ok
 test It should register a macro into a given context., expects ((default-context 0 given-context 0) (default-context 0 given-context 1)) ==> ok
 passed.
+<xire-translate>---------------------------------------------------------------
 passed.
