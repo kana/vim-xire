@@ -114,8 +114,13 @@
 ;; Resulting Vim script is expressed as a list of strings which can be passed
 ;; to write-tree provided by text.tree.
 (define (xire-compile statement)
-  ; FIXME: NIY
-  )
+  (match-let1 (name . args) statement
+    (cond
+      [(xire-lookup-macro name)
+       => (lambda (expander)
+            (expander statement))]
+      [else
+        (errorf "Invalid xire statement: ~s" statement)])))
 
 
 
