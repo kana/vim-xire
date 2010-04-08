@@ -30,23 +30,23 @@
 
 
 
-;;; Xire context
+;;; Environment
 ;;; ============
 
-;; Represent a context of xire compilation.
-(define-class <xire-context> ()
-  ([macros
+;; Represent an environment for xire compilation.
+(define-class <xire-environment> ()
+  ([macros  ; contain xire macro bindings.
      :init-keyword :macros
      :init-form (make-hash-table 'eq?)]))
 
-;; Represent the current context of xire compilation.
-(define xire-context
-  (make-parameter (make <xire-context>)))
+;; Represent the current environment for xire compilation.
+(define xire-environment
+  (make-parameter (make <xire-environment>)))
 
-;; Copy the current xire context.
-(define (xire-context-copy :optional (context (xire-context)))
-  (make <xire-context>
-        :macros (hash-table-copy (ref context 'macros))))
+;; Copy the current xire environment.
+(define (xire-environment-copy :optional (environment (xire-environment)))
+  (make <xire-environment>
+        :macros (hash-table-copy (ref environment 'macros))))
 
 
 
@@ -63,7 +63,7 @@
 ;;; - Argument called EXPANDER is a procedure which takes one argument, the
 ;;;   form to expand.
 
-;; Define new xire macro in the current context.
+;; Define new xire macro in the current environment.
 ;; This is just a syntax sugar for xire-register-macro!.
 (define-syntax define-xire-macro
   (syntax-rules ()
@@ -71,12 +71,13 @@
      (xire-register-macro! 'name (lambda (form) . body))]))
 
 ;; Look up a xire macro with the NAME.
-(define (xire-lookup-macro name :optional (context (xire-context)))
-  (hash-table-get (ref context 'macros) name #f))
+(define (xire-lookup-macro name :optional (environment (xire-environment)))
+  (hash-table-get (ref environment 'macros) name #f))
 
 ;; Register a xire macro EXPANDER with the NAME into the current CONTEXT.
-(define (xire-register-macro! name expander :optional (context (xire-context)))
-  (hash-table-put! (ref context 'macros) name expander))
+(define (xire-register-macro! name expander
+                              :optional (environment (xire-environment)))
+  (hash-table-put! (ref environment 'macros) name expander))
 
 
 
@@ -87,14 +88,14 @@
 ;; Translate xire script into Vim script.
 ;; Xire script is read from INP and resulting Vim script is written into OUTP.
 (define (xire-translate inp outp
-                        :key (context (xire-context-copy (xire-context)))
-                             (environment (make-module #f)))
+                        :key (environment (xire-environment-copy))
+                             (scheme-environment (make-module #f)))
   (define compiled-vim-script-tree (list))
   (define (finish)
     (write-tree (reverse compiled-vim-script-tree) outp))
 
-  (eval '(extend user) environment)
-  (parameterize ([xire-context context])
+  (eval '(extend user) scheme-environment)
+  (parameterize ([xire-environment environment])
     (let loop ()
       (match (read inp)
         [(? eof-object?)
@@ -102,12 +103,12 @@
         [(and ((or 'define-xire-macro)
                . _)
               form)
-         (eval form environment)
+         (eval form scheme-environment)
          (loop)]
         [(and (name . _) form)
          (if (xire-lookup-macro name)
            (push! compiled-vim-script-tree (xire-compile form))
-           (eval form environment))
+           (eval form scheme-environment))
          (loop)]))))
 
 ;; Compile a xire script STATEMENT, then return a resulting Vim script.
