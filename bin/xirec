@@ -51,6 +51,22 @@
 
 
 
+;;; Context
+;;; =======
+
+;; Represent the context to compile a xire script.  The difference between
+;; <xire-context> and <xire-environment> is that:
+;;
+;; - <xire-environment> holds global information such as xire macro bindings.
+;; - While <xire-context> holds local information, for example, whether a xire
+;;   script being compiled is a top-level statement or not.
+(define-class <xire-context> ()
+  (; Currently, no slot is defined.
+   ))
+
+
+
+
 ;;; Xire macros
 ;;; ===========
 ;;;

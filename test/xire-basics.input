@@ -35,6 +35,13 @@
 
 
 
+(test-section "xire-context")  ;{{{1
+
+; FIXME: NIY
+
+
+
+
 (test-section "xire-environment")  ;{{{1
 
 (test* "It should exist."

@@ -2,6 +2,7 @@ Testing xire-basics ...                                          Testing xire-ba
 <define-xire-macro>------------------------------------------------------------
 test It should define a xire macro in the current environment., expects (#f (< (original-form) >)) ==> ok
 <xire-compile>-----------------------------------------------------------------
+<xire-context>-----------------------------------------------------------------
 <xire-environment>-------------------------------------------------------------
 test It should exist., expects #t ==> ok
 test It should have some entries in its macro table by default., expects #t ==> ok
