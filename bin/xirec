@@ -76,15 +76,15 @@
 ;;; For procedures in this section,
 ;;;
 ;;; - Argument called NAME is a symbol.
-;;; - Argument called EXPANDER is a procedure which takes one argument, the
-;;;   form to expand.
+;;; - Argument called EXPANDER is a procedure which takes two arguments,
+;;;   the form to expand and the context to compile the form.
 
 ;; Define new xire macro in the current environment.
 ;; This is just a syntax sugar for xire-register-macro!.
 (define-syntax define-xire-macro
   (syntax-rules ()
-    [(_ (name form) . body)
-     (xire-register-macro! 'name (lambda (form) . body))]))
+    [(_ (name form context) . body)
+     (xire-register-macro! 'name (lambda (form context) . body))]))
 
 ;; Look up a xire macro with the NAME.
 (define (xire-lookup-macro name :optional (environment (xire-environment)))
@@ -109,6 +109,7 @@
   (define compiled-vim-script-tree (list))
   (define (finish)
     (write-tree (reverse compiled-vim-script-tree) outp))
+  (define context (make <xire-context>))
 
   (eval '(extend user) scheme-environment)
   (parameterize ([xire-environment environment])
@@ -123,19 +124,19 @@
          (loop)]
         [(and (name . _) form)
          (if (xire-lookup-macro name)
-           (push! compiled-vim-script-tree (xire-compile form))
+           (push! compiled-vim-script-tree (xire-compile form context))
            (eval form scheme-environment))
          (loop)]))))
 
 ;; Compile a xire script STATEMENT, then return a resulting Vim script.
 ;; Resulting Vim script is expressed as a list of strings which can be passed
 ;; to write-tree provided by text.tree.
-(define (xire-compile statement)
+(define (xire-compile statement context)
   (match-let1 (name . args) statement
     (cond
       [(xire-lookup-macro name)
        => (lambda (expander)
-            (expander statement))]
+            (expander statement context))]
       [else
         (errorf "Invalid xire statement: ~s" statement)])))
 

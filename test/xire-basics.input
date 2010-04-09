@@ -14,15 +14,15 @@
 (test-section "define-xire-macro")  ;{{{1
 
 (test* "It should define a xire macro in the current environment."
-       '(#f (< (original-form) >))
+       '(#f (< (original-form) = context >))
        (parameterize ([xire-environment (make <xire-environment>)])
          (let* ([get-values
                   (lambda ()
                     (let1 expander (xire-lookup-macro 'amane)
-                      (and expander (expander '(original-form)))))]
+                      (and expander (expander '(original-form) 'context))))]
                 [before-values (get-values)])
-           (define-xire-macro (amane form)
-             (list '< form '>))
+           (define-xire-macro (amane form context)
+             (list '< form '= context '>))
            (list before-values (get-values)))))
 
 
