@@ -1,0 +1,26 @@
+; Test: xire-builtins  {{{1
+
+(use gauche.test)
+(test-start "xire-builtins")
+(load "./bin/xirec")
+(set! main #f)
+
+
+
+
+;(test-section "template")  ;{{{1
+
+;(test* "title"
+;       expected-value
+;       test-expression)
+
+
+
+
+(test-end)  ;{{{1
+
+
+
+
+; __END__
+; vim: filetype=scheme foldmethod=marker
