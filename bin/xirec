@@ -172,6 +172,22 @@
 
 
 
+;;; Built-in xire macros
+;;; ====================
+
+(define-xire-macro (comment form context)
+  (ensure-statement-context form context)
+  (match form
+    [(_ (? string? comment-string) ...)
+     `("\""
+       ,(fold-right (lambda (l r) `(" " ,l . ,r))
+                   '()
+                   comment-string)
+       "\n")]))
+
+
+
+
 ;;; Main
 ;;; ====
 

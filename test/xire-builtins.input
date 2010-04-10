@@ -8,6 +8,38 @@
 
 
 
+(test-section "comment")  ;{{{1
+
+(test* "It should be available."
+       #t
+       (boolean (xire-lookup-macro 'comment)))
+
+(test* "It should compile a given form into a Vim-script comment."
+       '(("\"" () "\n")
+         ("\"" (" " "foo") "\n")
+         ("\"" (" " "foo" " " "bar") "\n"))
+       (let ([expander (xire-lookup-macro 'comment)]
+             [context (make-statement-context (make <xire-context>))])
+         (list
+           (expander '(comment) context)
+           (expander '(comment "foo") context)
+           (expander '(comment "foo" "bar") context))))
+
+(test* "It should raise error for invalid arguments"
+       (test-error <error>)
+       (let1 expander (xire-lookup-macro 'comment)
+         (expander '(comment "a" #\b "c")
+                   (make-statement-context (make <xire-context>)))))
+
+(test* "It should raise error for non-statement context"
+       (test-error <error>)
+       (let1 expander (xire-lookup-macro 'comment)
+         (expander '(comment "a")
+                   (make-expression-context (make <xire-context>)))))
+
+
+
+
 ;(test-section "template")  ;{{{1
 
 ;(test* "title"
