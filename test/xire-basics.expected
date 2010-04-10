@@ -7,7 +7,16 @@ test It should raise error for a malformed script: 'invalid-expression, expects 
 test It should raise error for a malformed script: (no-such-macro), expects #<<error>> ==> ok
 test It should raise error for a malformed script: (macro invlaid argument), expects #<<error>> ==> ok
 test It should succeed to compile a valid script., expects ("\"" "I am a comment!") ==> ok
-<xire-context>-----------------------------------------------------------------
+<xire-context related stuffs>--------------------------------------------------
+test <xire-context> should be available., expects #<class <xire-context>> ==> ok
+test make-statement-context should make a proper instance., expects (#<class <xire-context>> statement) ==> ok
+test make-expression-context should make a proper instance., expects (#<class <xire-context>> expression) ==> ok
+test statement-context?, expects (#t #f) ==> ok
+test expression-context?, expects (#f #t) ==> ok
+test ensure-statement-context should not complain for a proper context., expects #t ==> ok
+test ensure-statement-context should complain for an improper context., expects #<<error>> ==> ok
+test ensure-expression-context should not complain for a proper context., expects #t ==> ok
+test ensure-expression-context should complain for an improper context., expects #<<error>> ==> ok
 <xire-environment>-------------------------------------------------------------
 test It should exist., expects #t ==> ok
 test It should have some entries in its macro table by default., expects #t ==> ok

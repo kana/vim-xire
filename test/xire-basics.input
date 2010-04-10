@@ -64,9 +64,65 @@
 
 
 
-(test-section "xire-context")  ;{{{1
+(test-section "xire-context related stuffs")  ;{{{1
 
-; FIXME: NIY
+(test* "<xire-context> should be available."
+       <xire-context>
+       (class-of (make <xire-context>)))
+
+(test* "make-statement-context should make a proper instance."
+       (list <xire-context> 'statement)
+       (let1 context (make-statement-context (make <xire-context>))
+         (list (class-of context)
+               (ref context 'type))))
+(test* "make-expression-context should make a proper instance."
+       (list <xire-context> 'expression)
+       (let1 context (make-expression-context (make <xire-context>))
+         (list (class-of context)
+               (ref context 'type))))
+
+(test* "statement-context?"
+       '(#t #f)
+       (list (statement-context?
+               (make-statement-context (make <xire-context>)))
+             (statement-context?
+               (make-expression-context (make <xire-context>)))))
+(test* "expression-context?"
+       '(#f #t)
+       (list (expression-context?
+               (make-statement-context (make <xire-context>)))
+             (expression-context?
+               (make-expression-context (make <xire-context>)))))
+
+(test* "ensure-statement-context should not complain for a proper context."
+       #t
+       (begin
+         (ensure-statement-context
+           '(form)
+           (make-statement-context (make <xire-context>)))
+         #t))
+(test* "ensure-statement-context should complain for an improper context."
+       (test-error <error>)
+       (begin
+         (ensure-statement-context
+           '(form)
+           (make-expression-context (make <xire-context>)))
+         #t))
+
+(test* "ensure-expression-context should not complain for a proper context."
+       #t
+       (begin
+         (ensure-expression-context
+           '(form)
+           (make-expression-context (make <xire-context>)))
+         #t))
+(test* "ensure-expression-context should complain for an improper context."
+       (test-error <error>)
+       (begin
+         (ensure-expression-context
+           '(form)
+           (make-statement-context (make <xire-context>)))
+         #t))
 
 
 

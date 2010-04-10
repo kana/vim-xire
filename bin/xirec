@@ -61,8 +61,25 @@
 ;; - While <xire-context> holds local information, for example, whether a xire
 ;;   script being compiled is a top-level statement or not.
 (define-class <xire-context> ()
-  (; Currently, no slot is defined.
-   ))
+  ([type  ; The type of a form being compiled -- statement, expression, etc.
+     :init-keyword :type]))
+
+(define (make-statement-context context)
+  (make <xire-context> :type 'statement))
+(define (make-expression-context context)
+  (make <xire-context> :type 'expression))
+
+(define (statement-context? context)
+  (eq? (ref context 'type) 'statement))
+(define (expression-context? context)
+  (eq? (ref context 'type) 'expression))
+
+(define (ensure-statement-context form context)
+  (unless (statement-context? context)
+    (error "Invalid form in a statement context:" form)))
+(define (ensure-expression-context form context)
+  (unless (expression-context? context)
+    (error "Invalid form in an expression context:" form)))
 
 
 
