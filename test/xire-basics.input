@@ -30,7 +30,36 @@
 
 (test-section "xire-compile")  ;{{{1
 
-; FIXME: NIY
+(test* "It should raise error for a malformed script: ()"
+       (test-error <error>)
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (xire-compile '() (make <xire-context>))))
+
+(test* "It should raise error for a malformed script: 'invalid-expression"
+       (test-error <error>)
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (xire-compile 'invalid-expression (make <xire-context>))))
+
+(test* "It should raise error for a malformed script: (no-such-macro)"
+       (test-error <error>)
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (xire-compile '(no-such-macro) (make <xire-context>))))
+
+(test* "It should raise error for a malformed script: (macro invlaid argument)"
+       (test-error <error>)
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (define-xire-macro (comment form context)
+           (match-let1 (_ comment-string) form
+             `("\"" ,comment-string)))
+         (xire-compile '(comment "wrong" "argument") (make <xire-context>))))
+
+(test* "It should succeed to compile a valid script."
+       '("\"" "I am a comment!")
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (define-xire-macro (comment form context)
+           (match-let1 (_ comment-string) form
+             `("\"" ,comment-string)))
+         (xire-compile '(comment "I am a comment!") (make <xire-context>))))
 
 
 

@@ -2,6 +2,11 @@ Testing xire-basics ...                                          Testing xire-ba
 <define-xire-macro>------------------------------------------------------------
 test It should define a xire macro in the current environment., expects (#f (< (original-form) = context >)) ==> ok
 <xire-compile>-----------------------------------------------------------------
+test It should raise error for a malformed script: (), expects #<<error>> ==> ok
+test It should raise error for a malformed script: 'invalid-expression, expects #<<error>> ==> ok
+test It should raise error for a malformed script: (no-such-macro), expects #<<error>> ==> ok
+test It should raise error for a malformed script: (macro invlaid argument), expects #<<error>> ==> ok
+test It should succeed to compile a valid script., expects ("\"" "I am a comment!") ==> ok
 <xire-context>-----------------------------------------------------------------
 <xire-environment>-------------------------------------------------------------
 test It should exist., expects #t ==> ok
