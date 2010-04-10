@@ -96,13 +96,6 @@
 ;;; - Argument called EXPANDER is a procedure which takes two arguments,
 ;;;   the form to expand and the context to compile the form.
 
-;; Define new xire macro in the current environment.
-;; This is just a syntax sugar for xire-register-macro!.
-(define-syntax define-xire-macro
-  (syntax-rules ()
-    [(_ (name form context) . body)
-     (xire-register-macro! 'name (lambda (form context) . body))]))
-
 ;; Look up a xire macro with the NAME.
 (define (xire-lookup-macro name :optional (environment (xire-environment)))
   (hash-table-get (ref environment 'macros) name #f))
@@ -111,6 +104,13 @@
 (define (xire-register-macro! name expander
                               :optional (environment (xire-environment)))
   (hash-table-put! (ref environment 'macros) name expander))
+
+;; Define new xire macro in the current environment.
+;; This is just a syntax sugar for xire-register-macro!.
+(define-syntax define-xire-macro
+  (syntax-rules ()
+    [(_ (name form context) . body)
+     (xire-register-macro! 'name (lambda (form context) . body))]))
 
 
 
