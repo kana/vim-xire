@@ -211,7 +211,44 @@
 
 (test-section "xire-translate")  ;{{{1
 
-; FIXME: NIY
+(test* "It should raise error for a malformed script: ()"
+       (test-error <error>)
+       (call-with-string-io "()"
+         (cut xire-translate <> <> :environment (make <xire-environment>))))
+
+(test* "It should raise error for a malformed script: 'invalid-expression"
+       (test-error <error>)
+       (call-with-string-io "invalid-expression"
+         (cut xire-translate <> <> :environment (make <xire-environment>))))
+
+(test* "It should raise error for a malformed script: (no-such-macro)"
+       (test-error <error>)
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (call-with-string-io "(no-such-macro)"
+           (cut xire-translate <> <>))))
+
+(test* "It should raise error for a malformed script: (macro invlaid argument)"
+       (test-error <error>)
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (define-xire-macro (comment form context)
+           (match-let1 (_ comment-string) form
+             `("\"" ,comment-string)))
+         (call-with-string-io "(comment \"wrong\" \"argument\")"
+           (cut xire-translate <> <>))))
+
+(test* "It should succeed to compile a valid script: (macro vlaid argument)"
+       "\"valid argument"
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (define-xire-macro (comment form context)
+           (match-let1 (_ comment-string) form
+             `("\"" ,comment-string)))
+         (call-with-string-io "(comment \"valid argument\")"
+           (cut xire-translate <> <>))))
+
+(test* "It should succeed to compile the empty script."
+       ""
+       (call-with-string-io ""
+         (cut xire-translate <> <> :environment (make <xire-environment>))))
 
 
 

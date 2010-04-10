@@ -22,6 +22,12 @@ test It should look up macro from a given environment., expects ((default-enviro
 <xire-register-macro!>---------------------------------------------------------
 test It should register a macro into the current environment., expects 1 ==> ok
 test It should register a macro into a given environment., expects ((default-environment 0 given-environment 0) (default-environment 0 given-environment 1)) ==> ok
-passed.
 <xire-translate>---------------------------------------------------------------
+test It should raise error for a malformed script: (), expects #<<error>> ==> ok
+test It should raise error for a malformed script: 'invalid-expression, expects #<<error>> ==> ok
+test It should raise error for a malformed script: (no-such-macro), expects #<<error>> ==> ok
+test It should raise error for a malformed script: (macro invlaid argument), expects #<<error>> ==> ok
+test It should succeed to compile a valid script: (macro vlaid argument), expects "\"valid argument" ==> ok
+test It should succeed to compile the empty script., expects "" ==> ok
+passed.
 passed.
