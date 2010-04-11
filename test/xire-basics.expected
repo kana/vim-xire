@@ -1,6 +1,9 @@
 Testing xire-basics ...                                          Testing xire-basics ===========================================================
 <define-xire-macro>------------------------------------------------------------
 test It should define a xire macro in the current environment., expects (#f (< (original-form) = context >)) ==> ok
+<define-xire-statement>--------------------------------------------------------
+test It should define a xire statement in the current environment., expects ((style a AAA) (style a AAA b BBB) (style a AAA rest (BBB CCC))) ==> ok
+test It should define a macro which raises error for non-statement context., expects #<<error>> ==> ok
 <xire-compile>-----------------------------------------------------------------
 test It should raise error for a malformed script: (), expects #<<error>> ==> ok
 test It should raise error for a malformed script: 'invalid-expression, expects #<<error>> ==> ok
