@@ -157,17 +157,22 @@
            (eval form scheme-environment))
          (loop)]))))
 
-;; Compile a xire script STATEMENT, then return a resulting Vim script.
+;; Compile a xire script FORM then return a resulting Vim script.
 ;; Resulting Vim script is expressed as a list of strings which can be passed
 ;; to write-tree provided by text.tree.
-(define (xire-compile statement context)
-  (match-let1 (name . args) statement
-    (cond
-      [(xire-lookup-macro name)
-       => (lambda (expander)
-            (expander statement context))]
-      [else
-        (errorf "Invalid xire statement: ~s" statement)])))
+(define (xire-compile form context)
+  (define (report-syntax-error)
+    (errorf "Invalid xire form: ~s" form))
+  (match form
+    [(name . args)
+     (cond
+       [(xire-lookup-macro name)
+        => (lambda (expander)
+             (expander form context))]
+       [else
+         (report-syntax-error)])]
+    [_
+      (report-syntax-error)]))
 
 
 
