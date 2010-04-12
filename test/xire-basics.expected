@@ -7,6 +7,7 @@ test It should define a macro which raises error for non-statement context., exp
 <xire-compile>-----------------------------------------------------------------
 test It should raise error for a malformed script: (), expects #<<error>> ==> ok
 test It should raise error for a malformed script: 'invalid-expression, expects #<<error>> ==> ok
+test It should raise error for a malformed script: ("already compiled"), expects #<<error>> ==> ok
 test It should raise error for a malformed script: (no-such-macro), expects #<<error>> ==> ok
 test It should raise error for a malformed script: (macro invlaid argument), expects #<<error>> ==> ok
 test It should succeed to compile a valid script., expects ("\"" "I am a comment!") ==> ok

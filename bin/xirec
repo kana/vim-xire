@@ -164,7 +164,7 @@
   (define (report-syntax-error)
     (errorf "Invalid xire form: ~s" form))
   (match form
-    [(name . args)
+    [((? symbol? name) . args)
      (cond
        [(xire-lookup-macro name)
         => (lambda (expander)
