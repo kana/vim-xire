@@ -174,6 +174,21 @@
     [_
       (report-syntax-error)]))
 
+;; Convert a given Scheme OBJECT into a string which represents
+;; a corresponding Vim script object.
+;;
+;; FIXME: Add conversion for List, Dictionary and Funcref.
+(define (x->vim-script-notation object)
+  (cond
+    [(number? object)  ; FIXME: Consider non-integers and big integers.
+     (number->string object)]
+    [(string? object)  ; FIXME: Escape special characters properly.
+     (format "~s" object)]
+    [(symbol? object)  ; Vim script variable
+     (symbol->string object)]  ; FIXME: Convert "->" to "_to_", etc.
+    [else
+      (errorf "Invalid object for Vim script: ~s" object)]))
+
 
 
 

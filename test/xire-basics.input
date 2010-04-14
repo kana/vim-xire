@@ -60,6 +60,55 @@
 
 
 
+(test-section "x->vim-script-notation")  ;{{{1
+
+(test* "It should convert 32 bit signed numbers properly."
+       '("0" "123" "-456" "2147483647" "-2147483648")
+       (map x->vim-script-notation
+            (list 0
+                  123
+                  -456
+                  (- (ash 1 31) 1)
+                  (ash -1 31))))
+
+; FIXME: NIY
+;(test* "It should fail to convert numbers beyond 32 bit signed ones (+)."
+;       (test-error <error>)
+;       (x->vim-script-notation "2147483648")
+;
+;(test* "It should fail to convert numbers beyond 32 bit signed ones (-)."
+;       (test-error <error>)
+;       (x->vim-script-notation "-2147483649")
+
+(test* "It should convert C-friendly symbols properly."
+       '("bufnr" "synIDattr" "has_key")
+       (map x->vim-script-notation
+            '(bufnr synIDattr has_key)))
+
+; FIXME: NIY
+;(test* "It should convert also non-C-friendly symbols properly."
+;       '("predicate_p" "mutate_x" "x_to_y")
+;       (map x->vim-script-notation
+;            '(predicate? mutate! x->y)))
+;
+;(test* "It should fail to convert symbols with strange characters."
+;       (test-error <error>)
+;       (x->vim-script-notation '*>_<*))
+
+(test* "It should convert strinigs without special characters."
+       '("\"long long time ago\"" "\"we are the one\"")
+       (map x->vim-script-notation
+            '("long long time ago" "we are the one")))
+
+; FIXME: NIY
+;(test* "It should convert strinigs with special characters."
+;       '("\"The \\\"X\"\\\"" "\"new\\nline\"" ...)
+;       (map x->vim-script-notation
+;            '("The \"X\"" "new\nline" ...)))
+
+
+
+
 (test-section "xire-compile")  ;{{{1
 
 (test* "It should raise error for a malformed script: ()"
