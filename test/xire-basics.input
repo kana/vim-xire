@@ -147,6 +147,19 @@
              `("\"" ,comment-string)))
          (xire-compile '(comment "I am a comment!") (make <xire-context>))))
 
+(test* "It should succeed to compile a valid expression."
+       '("123" "\"string\"" "symbol")
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (let1 context (make-expression-context (make <xire-context>))
+           (map (cut xire-compile <> context)
+                '(123 "string" symbol)))))
+
+(test* "It should raise error to compile an expression in invalid context."
+       (test-error <error>)
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (let1 wrong-context (make-statement-context (make <xire-context>))
+           (xire-compile 123 wrong-context))))
+
 
 
 

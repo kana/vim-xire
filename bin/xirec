@@ -171,6 +171,10 @@
              (expander form context))]
        [else
          (report-syntax-error)])]
+    [(or (? number?) (? string?) (? symbol?))
+     (ensure-expression-context form context)
+     (x->vim-script-notation form)]
+    ; FIXME: Add more support for Vim script expressions.
     [_
       (report-syntax-error)]))
 
