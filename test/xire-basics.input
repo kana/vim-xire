@@ -11,6 +11,38 @@
 
 
 
+(test-section "define-xire-expression")  ;{{{1
+
+(test* "It should define a xire expression in the current environment."
+       '((style a AAA)
+         (style a AAA b BBB)
+         (style a AAA rest (BBB CCC)))
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (define context (make-expression-context (make <xire-context>)))
+         (define-xire-expression my-expression
+           [(a)
+            `(style a ,a)]
+           [(a b)
+            `(style a ,a b ,b)]
+           [(a . rest)
+            `(style a ,a rest ,rest)])
+         (list
+           (xire-compile '(my-expression AAA) context)
+           (xire-compile '(my-expression AAA BBB) context)
+           (xire-compile '(my-expression AAA BBB CCC) context))))
+
+(test* "It should define a macro which raises error in non-expression context."
+       (test-error <error>)
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (define context (make-statement-context (make <xire-context>)))
+         (define-xire-expression my-expression
+           [(a . rest)
+            `(style a ,a rest ,rest)])
+         (xire-compile '(my-expression AAA BBB CCC) context)))
+
+
+
+
 (test-section "define-xire-macro")  ;{{{1
 
 (test* "It should define a xire macro in the current environment."

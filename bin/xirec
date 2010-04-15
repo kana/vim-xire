@@ -124,6 +124,18 @@
            [pattern . body]
            ...)))]))
 
+;; Define new xire expression in the current environment.
+;; This is a wrapper for define-xire-macro.
+(define-syntax define-xire-expression
+  (syntax-rules ()
+    [(_ name [pattern . body] ...)
+     (define-xire-macro (name form context)
+       (ensure-expression-context form context)
+       (let1 clauses (cdr form)
+         (match clauses
+           [pattern . body]
+           ...)))]))
+
 
 
 
