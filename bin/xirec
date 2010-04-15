@@ -209,6 +209,129 @@
                    comment-string)
        "\n")]))
 
+;;; Expressions
+;;; -----------
+;;;
+;;; See also :help expression-syntax .
+;;;
+;;; Format:
+;;; Vim script syntax       Xire script syntax      Note
+;;;
+;;; expr1
+;;; ~~~~~
+;;;
+;;; expr2 ? expr1 : expr1   (?: expr2 expr1 expr1)  if-then-else
+;;;
+;;; expr2
+;;; ~~~~~
+;;;
+;;; expr3 || expr3 ...      (or expr3 ...)          logical OR
+;;;
+;;; expr3
+;;; ~~~~~
+;;;
+;;; expr4 && expr4 ...      (and expr4 ...)         logical AND
+;;;
+;;; expr4
+;;; ~~~~~
+;;;
+;;; expr5 == expr5          (== expr5 expr5)        equal
+;;; expr5 != expr5          (!= expr5 expr5)        not equal
+;;; expr5 >  expr5          (>  expr5 expr5)        greater than
+;;; expr5 >= expr5          (>= expr5 expr5)        greater than or equal
+;;; expr5 <  expr5          (<  expr5 expr5)        smaller than
+;;; expr5 <= expr5          (<= expr5 expr5)        smaller than or equal
+;;; expr5 =~ expr5          (=~ expr5 expr5)        regexp matches
+;;; expr5 !~ expr5          (!~ expr5 expr5)        regexp doesn't match
+;;;
+;;; expr5 ==? expr5         (==? expr5 expr5)       equal, ignoring case
+;;; expr5 ==# expr5         (==# expr5 expr5)       equal, match case
+;;; etc.                    As above, append ? for ignoring case, # for
+;;;                         matching case.
+;;;
+;;;                         NB: Gauche can read "==#" and others as valid
+;;;                         symbols, but R5RS doesn't allow to use "#" in
+;;;                         symbols.
+;;;
+;;; expr5 is expr5          (is expr5 expr5)        same instance
+;;; expr5 isnot expr5       (isnot expr5 expr5)     different instance
+;;;
+;;; expr5
+;;; ~~~~~
+;;;
+;;; expr6 +  expr6 ...      (+ expr6 ...)           number addition
+;;;                                                 or list concatenation
+;;; expr6 -  expr6 ...      (- expr6 ...)           number subtraction
+;;; expr6 .  expr6 ...      (. expr6 ...)           string concatenation
+;;;
+;;; expr6
+;;; ~~~~~
+;;;
+;;; expr7 *  expr7 ...      (* expr7 ...)           number multiplication
+;;; expr7 /  expr7 ...      (/ expr7 ...)           number division
+;;; expr7 %  expr7 ...      (% expr7 ...)           number modulo
+;;;
+;;; expr7
+;;; ~~~~~
+;;;
+;;; ! expr7                 (! expr7)               logical NOT
+;;; - expr7                 N/A                     unary minus
+;;; + expr7                 N/A                     unary plus
+;;;
+;;;                         NB: xire provides n-ary +/- operators
+;;;                         and they also serve as unary ones.
+;;;
+;;; expr8
+;;; ~~~~~
+;;;
+;;; expr8[expr1]            (ref expr8 expr1)       Reference an element in
+;;;                                                 string, list or dictionary
+;;; expr8[expr1 : expr1]    (slice expr8 expr1 expr1)
+;;;                                                 Slice string or list
+;;; expr8.name              N/A (ref expr8 "name")  Dictionary reference
+;;; expr8(expr1, ...)       (call expr8 expr1 ...)  function call with Funcref
+;;;
+;;; expr9
+;;; ~~~~~
+;;;
+;;; number                  Scheme number           number constant
+;;; "string"                Scheme string           string with \-notation
+;;; 'string'                N/A                     literal string
+;;; [expr1, ...]            (list expr1 ...)        list
+;;; {expr1: expr1, ...}     (dict expr1 expr1 ...)  dictionary
+;;; &option                 (& "option")            option value
+;;; (expr1)                 N/A                     nested expression
+;;; variable                Scheme symbol           variable reference
+;;; va{ria}ble              N/A [*]                 ... with curly braces
+;;; $VAR                    ($ "VAR") [*]           environment variable
+;;; @r                      (@ "r") [*]             contents of register 'r'
+;;; function(expr1, ...)    (function expr1 ...)    function call
+;;;                         via macros defined separately.
+;;; func{ti}on(expr1, ...)  N/A [*]                 ... with curly braces
+;;;
+;;;                         [*] ... FIXME: Need review.
+;;;
+;;;                         Number, string and variable reference are handled
+;;;                         by x->vim-script-notation and xire-compile .
+;;;
+;;; [*SPACES] It's necessary to add spaces around operators to avoid wrong
+;;;     compilation result.  For example, think about compiling the following
+;;;     script:
+;;;
+;;;         (?: 'r 's 't)
+;;;
+;;;     If there is wrapping spaces, resulting Vim script will be:
+;;;
+;;;         (r ? s : t)
+;;;
+;;;     If there is no wrapping spaces, resulting Vim script will be:
+;;;
+;;;         (r?s:t)
+;;;
+;;;     And the latter result is ambiguous, because "s:t" may be treated as
+;;;     a script-local variable named "t" instead of local variables "s" and
+;;;     "t".  There are many problems similar to this one.
+
 
 
 
