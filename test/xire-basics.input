@@ -35,6 +35,23 @@
          (define-nary-operator + "<>" 0)
          (xire-compile '(+ 1) context)))
 
+(test* "It should define an N-ary operator, where 2 <= N. (success)"
+       '("(2 <> 3)"
+         "(4 <> 5 <> 6 <> 7)")
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (define context (make-expression-context (make <xire-context>)))
+         (define-nary-operator + "<>")
+         (list
+           (compile-as-string '(+ 2 3) context)
+           (compile-as-string '(+ 4 5 6 7) context))))
+
+(test* "It should define an N-ary operator, where 2 <= N. (failure)"
+       (test-error <error>)
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (define context (make-expression-context (make <xire-context>)))
+         (define-nary-operator + "<>")
+         (xire-compile '(+ 1) context)))
+
 
 
 

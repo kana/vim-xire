@@ -358,6 +358,13 @@
 
 (define-syntax define-nary-operator
   (syntax-rules ()
+    [(_ name vim-script-operator)  ; 2 <= N
+     (define-xire-expression name context
+       [(valueN ..2)
+        (%compile-nary-operator-exression
+          valueN
+          vim-script-operator
+          context)])]
     [(_ name vim-script-operator initial-value)  ; 1 <= N
      (define-xire-expression name context
        [(value1)
