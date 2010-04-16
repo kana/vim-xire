@@ -387,6 +387,8 @@
 
 (define-nary-operator or "||")
 
+(define-nary-operator and "&&")
+
 
 
 

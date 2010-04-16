@@ -45,6 +45,21 @@
 
 
 
+(test-section "(and expression ..2)")  ;{{{2
+
+(test* "It should be compiled properly."
+       '("(1 && 2)"
+         "(3 && 4 && 5)")
+       (list (compile-expression '(and 1 2))
+             (compile-expression '(and 3 4 5))))
+
+(test* "It should raise error if the number of operands is less than 2."
+       (test-error <error>)
+       (compile-expression '(and 1)))
+
+
+
+
 (test-section "comment")  ;{{{1
 
 (test* "It should be available."
