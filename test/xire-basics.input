@@ -40,6 +40,16 @@
             `(style a ,a rest ,rest)])
          (xire-compile '(my-expression AAA BBB CCC) context)))
 
+(test* "It should accept the name of a context"
+       #t
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (define outer-context (make-expression-context (make <xire-context>)))
+         (define-xire-expression my-expression inner-context
+           [()
+            (eq? inner-context outer-context)])
+         (let1 another-context outer-context
+           (xire-compile '(my-expression) another-context))))
+
 
 
 

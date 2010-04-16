@@ -137,6 +137,8 @@
            ...)))]
     ; Entry
     [(_ name [pattern . body] ...)  ; Basic form.
+     (define-xire-expression name context [pattern . body] ...)]
+    [(_ name context [pattern . body] ...)  ; With the name of context.
      (define-xire-expression "internal" name context [pattern . body] ...)]))
 
 
