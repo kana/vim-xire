@@ -375,6 +375,19 @@
           vim-script-operator
           context)])]))
 
+(define-syntax define-binary-operator
+  (syntax-rules ()
+    [(_ name vim-script-operator)
+     (define-xire-expression name context
+       [(l r)
+        (list "("
+              (xire-compile l context)
+              " "  ; [*SPACES] to avoid (is v e) ==> (vise)
+              vim-script-operator
+              " "
+              (xire-compile r context)
+              ")")])]))
+
 (define-xire-expression ?: context
   [(expression then-part else-part)
    (list "("

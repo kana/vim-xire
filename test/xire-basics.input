@@ -14,6 +14,39 @@
 
 
 
+(test-section "define-binary-operator")  ;{{{1
+
+(test* "It should define a binary operator in the current context."
+       "(0 <> 1)"
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (define context (make-expression-context (make <xire-context>)))
+         (define-binary-operator == "<>")
+         (compile-as-string '(== 0 1) context)))
+
+(test* "It should define a binary operator, available only in an expression."
+       (test-error <error>)
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (define context (make-statement-context (make <xire-context>)))
+         (define-binary-operator == "<>")
+         (compile-as-string '(== 0 1) context)))
+
+(test* "It should raise error if the number of operands is less than 2."
+       (test-error <error>)
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (define context (make-expression-context (make <xire-context>)))
+         (define-binary-operator == "<>")
+         (compile-as-string '(== 0) context)))
+
+(test* "It should raise error if the number of operands is greater than 2."
+       (test-error <error>)
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (define context (make-expression-context (make <xire-context>)))
+         (define-binary-operator == "<>")
+         (compile-as-string '(== 0 1 2) context)))
+
+
+
+
 (test-section "define-nary-operator")  ;{{{1
 
 (test* "It should define an nary operator in the current context."

@@ -1,4 +1,9 @@
 Testing xire-basics ...                                          Testing xire-basics ===========================================================
+<define-binary-operator>-------------------------------------------------------
+test It should define a binary operator in the current context., expects "(0 <> 1)" ==> ok
+test It should define a binary operator, available only in an expression., expects #<<error>> ==> ok
+test It should raise error if the number of operands is less than 2., expects #<<error>> ==> ok
+test It should raise error if the number of operands is greater than 2., expects #<<error>> ==> ok
 <define-nary-operator>---------------------------------------------------------
 test It should define an nary operator in the current context., expects ("(0 <> 1)" "(2 <> 3)" "(4 <> 5 <> 6 <> 7)") ==> ok
 test It should define an nary operator, available only in an expression., expects #<<error>> ==> ok
