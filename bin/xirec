@@ -128,7 +128,7 @@
 ;; This is a wrapper for define-xire-macro.
 (define-syntax define-xire-expression
   (syntax-rules ()
-    [(_ "internal" name [pattern . body] ...)
+    [(_ "internal" name context [pattern . body] ...)
      (define-xire-macro (name form context)
        (ensure-expression-context form context)
        (let1 clauses (cdr form)
@@ -137,7 +137,7 @@
            ...)))]
     ; Entry
     [(_ name [pattern . body] ...)  ; Basic form.
-     (define-xire-expression "internal" name [pattern . body] ...)]))
+     (define-xire-expression "internal" name context [pattern . body] ...)]))
 
 
 
