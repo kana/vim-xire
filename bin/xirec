@@ -25,6 +25,7 @@
 
 (use gauche.parameter)
 (use text.tree)
+(use util.list)
 (use util.match)
 
 
@@ -348,6 +349,24 @@
 ;;;     And the latter result is ambiguous, because "s:t" may be treated as
 ;;;     a script-local variable named "t" instead of local variables "s" and
 ;;;     "t".  There are many problems similar to this one.
+
+(define (%compile-nary-operator-exression forms vim-script-operator context)
+  `("("
+    ,@(intersperse `(" " ,vim-script-operator " ")
+                   (map (cut xire-compile <> context) forms))
+    ")"))
+
+(define-syntax define-nary-operator
+  (syntax-rules ()
+    [(_ name vim-script-operator initial-value)  ; 1 <= N
+     (define-xire-expression name context
+       [(value1)
+        (xire-compile `(name initial-value ,value1) context)]
+       [(valueN ..2)
+        (%compile-nary-operator-exression
+          valueN
+          vim-script-operator
+          context)])]))
 
 
 

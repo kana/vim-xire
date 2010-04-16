@@ -8,6 +8,33 @@
 (define (hash-table-sorted-keys ht)
   (sort-by (hash-table-keys ht) x->string))
 
+(define (compile-as-string form context)
+  (tree->string (xire-compile form context)))
+
+
+
+
+(test-section "define-nary-operator")  ;{{{1
+
+(test* "It should define an nary operator in the current context."
+       '("(0 <> 1)"
+         "(2 <> 3)"
+         "(4 <> 5 <> 6 <> 7)")
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (define context (make-expression-context (make <xire-context>)))
+         (define-nary-operator + "<>" 0)
+         (list
+           (compile-as-string '(+ 1) context)
+           (compile-as-string '(+ 2 3) context)
+           (compile-as-string '(+ 4 5 6 7) context))))
+
+(test* "It should define an nary operator, available only in an expression."
+       (test-error <error>)
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (define context (make-statement-context (make <xire-context>)))
+         (define-nary-operator + "<>" 0)
+         (xire-compile '(+ 1) context)))
+
 
 
 

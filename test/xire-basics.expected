@@ -1,4 +1,7 @@
 Testing xire-basics ...                                          Testing xire-basics ===========================================================
+<define-nary-operator>---------------------------------------------------------
+test It should define an nary operator in the current context., expects ("(0 <> 1)" "(2 <> 3)" "(4 <> 5 <> 6 <> 7)") ==> ok
+test It should define an nary operator, available only in an expression., expects #<<error>> ==> ok
 <define-xire-expression>-------------------------------------------------------
 test It should define a xire expression in the current environment., expects ((style a AAA) (style a AAA b BBB) (style a AAA rest (BBB CCC))) ==> ok
 test It should define a macro which raises error in non-expression context., expects #<<error>> ==> ok
