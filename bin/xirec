@@ -441,6 +441,10 @@
 (define-nary-operator - "-" 0)
 (define-nary-operator .. ".")
 
+(define-nary-operator * "*")
+(define-nary-operator / "/")
+(define-nary-operator % "%")
+
 
 
 
