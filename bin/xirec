@@ -280,7 +280,11 @@
 ;;; expr6 +  expr6 ...      (+ expr6 ...)           number addition
 ;;;                                                 or list concatenation
 ;;; expr6 -  expr6 ...      (- expr6 ...)           number subtraction
-;;; expr6 .  expr6 ...      (. expr6 ...)           string concatenation
+;;; expr6 .  expr6 ...      (.. expr6 ...)          string concatenation
+;;;                                                 (borrowed from Lua's one)
+;;;
+;;;                         NB: Gauche can read ".." as a valid symbol, but
+;;;                         R5RS doesn't allow such symbol.
 ;;;
 ;;; expr6
 ;;; ~~~~~
@@ -432,6 +436,10 @@
 (define-binary-operator isnot "isnot")
 (define-binary-operator isnot# "isnot#")
 (define-binary-operator isnot? "isnot?")
+
+(define-nary-operator + "+" 0)
+(define-nary-operator - "-" 0)
+(define-nary-operator .. ".")
 
 
 
