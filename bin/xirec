@@ -402,6 +402,37 @@
 
 (define-nary-operator and "&&")
 
+(define-binary-operator != "!=")
+(define-binary-operator !=# "!=#")
+(define-binary-operator !=? "!=?")
+(define-binary-operator !~ "!~")
+(define-binary-operator !~# "!~#")
+(define-binary-operator !~? "!~?")
+(define-binary-operator < "<")
+(define-binary-operator <# "<#")
+(define-binary-operator <= "<=")
+(define-binary-operator <=# "<=#")
+(define-binary-operator <=? "<=?")
+(define-binary-operator <? "<?")
+(define-binary-operator == "==")
+(define-binary-operator ==# "==#")
+(define-binary-operator ==? "==?")
+(define-binary-operator =~ "=~")
+(define-binary-operator =~# "=~#")
+(define-binary-operator =~? "=~?")
+(define-binary-operator > ">")
+(define-binary-operator ># ">#")
+(define-binary-operator >= ">=")
+(define-binary-operator >=# ">=#")
+(define-binary-operator >=? ">=?")
+(define-binary-operator >? ">?")
+(define-binary-operator is "is")
+(define-binary-operator is# "is#")
+(define-binary-operator is? "is?")
+(define-binary-operator isnot "isnot")
+(define-binary-operator isnot# "isnot#")
+(define-binary-operator isnot? "isnot?")
+
 
 
 
