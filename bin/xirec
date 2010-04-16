@@ -375,6 +375,16 @@
           vim-script-operator
           context)])]))
 
+(define-xire-expression ?: context
+  [(expression then-part else-part)
+   (list "("
+         (xire-compile expression context)
+         " ? "
+         (xire-compile then-part context)
+         " : "  ; [*SPACES] to avoid (?: 'r 's 't) ==> (r?s:t)
+         (xire-compile else-part context)
+         ")")])
+
 
 
 

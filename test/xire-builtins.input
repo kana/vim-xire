@@ -5,6 +5,28 @@
 (load "./bin/xirec")
 (set! main #f)
 
+(define (compile-expression expression)
+  (define context (make-expression-context (make <xire-context>)))
+  (tree->string (xire-compile expression context)))
+
+
+
+
+; Expression  ;{{{1
+(test-section "(?: expression then-part else-part)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "(0 ? 1 : 2)"
+       (compile-expression '(?: 0 1 2)))
+
+(test* "It should raise error if the number of operands is less than 3."
+       (test-error <error>)
+       (compile-expression '(?: 0 1)))
+
+(test* "It should raise error if the number of operands is greater than 3."
+       (test-error <error>)
+       (compile-expression '(?: 0 1 2 3)))
+
 
 
 

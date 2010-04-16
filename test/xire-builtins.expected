@@ -1,4 +1,8 @@
 Testing xire-builtins ...                                        Testing xire-builtins =========================================================
+<(?: expression then-part else-part)>------------------------------------------
+test It should be compiled properly., expects "(0 ? 1 : 2)" ==> ok
+test It should raise error if the number of operands is less than 3., expects #<<error>> ==> ok
+test It should raise error if the number of operands is greater than 3., expects #<<error>> ==> ok
 <comment>----------------------------------------------------------------------
 test It should be available., expects #t ==> ok
 test It should compile a given form into a Vim-script comment., expects (("\"" () "\n") ("\"" (" " "foo") "\n") ("\"" (" " "foo" " " "bar") "\n")) ==> ok
