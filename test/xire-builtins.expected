@@ -3,6 +3,9 @@ Testing xire-builtins ...                                        Testing xire-bu
 test It should be compiled properly., expects "(0 ? 1 : 2)" ==> ok
 test It should raise error if the number of operands is less than 3., expects #<<error>> ==> ok
 test It should raise error if the number of operands is greater than 3., expects #<<error>> ==> ok
+<(or expression ..2)>----------------------------------------------------------
+test It should be compiled properly., expects ("(1 || 2)" "(3 || 4 || 5)") ==> ok
+test It should raise error if the number of operands is less than 2., expects #<<error>> ==> ok
 <comment>----------------------------------------------------------------------
 test It should be available., expects #t ==> ok
 test It should compile a given form into a Vim-script comment., expects (("\"" () "\n") ("\"" (" " "foo") "\n") ("\"" (" " "foo" " " "bar") "\n")) ==> ok
