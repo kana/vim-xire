@@ -542,6 +542,31 @@
    `("@" ,(x->vim-script-notation variable-name))])
 
 
+;;; Control flow
+;;; ------------
+
+(define-xire-statement if context
+  [(condition then-part)
+   (list "if"
+         " "
+         (xire-compile condition (make-expression-context context))
+         "\n"
+         (xire-compile then-part context)
+         "endif"
+         "\n")]
+  [(condition then-part else-part)
+   (list "if"
+         " "
+         (xire-compile condition (make-expression-context context))
+         "\n"
+         (xire-compile then-part context)
+         "else"
+         "\n"
+         (xire-compile else-part context)
+         "endif"
+         "\n")])
+
+
 ;;; Equivalents for other Ex commands
 ;;; ---------------------------------
 

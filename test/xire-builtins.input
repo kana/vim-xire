@@ -13,6 +13,9 @@
   (define context (make-statement-context (make <xire-context>)))
   (tree->string (xire-compile statement context)))
 
+(define (join . lines)
+  (string-join lines "\n" 'suffix))
+
 
 
 
@@ -407,6 +410,26 @@
 (test* "It should raise error if the number of operands is greater than 1."
        (test-error <error>)
        (compile-expression '(@ foo bar)))
+
+
+
+
+; Control flow  ;{{{1
+(test-section "(if ...)")  ;{{{2
+
+(test* "It should be compiled properly."
+       (list (join "if 1" "echo 2" "endif")
+             (join "if 1" "echo 2" "else" "echo 3" "endif"))
+       (list (compile-statement '(if 1 (echo 2)))
+             (compile-statement '(if 1 (echo 2) (echo 3)))))
+
+(test* "It should raise error if the number of operands is less than 2."
+       (test-error <error>)
+       (compile-statement '(if 1)))
+
+(test* "It should raise error if the number of operands is greater than 3."
+       (test-error <error>)
+       (compile-statement '(if 1 2 3 4)))
 
 
 

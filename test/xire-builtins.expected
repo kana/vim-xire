@@ -67,6 +67,10 @@ test It should be compiled properly., expects "@r" ==> ok
 test It should raise error if the given option name is not a symbol., expects #<<error>> ==> ok
 test It should raise error if the number of operands is less than 1., expects #<<error>> ==> ok
 test It should raise error if the number of operands is greater than 1., expects #<<error>> ==> ok
+<(if ...)>---------------------------------------------------------------------
+test It should be compiled properly., expects ("if 1\necho 2\nendif\n" "if 1\necho 2\nelse\necho 3\nendif\n") ==> ok
+test It should raise error if the number of operands is less than 2., expects #<<error>> ==> ok
+test It should raise error if the number of operands is greater than 3., expects #<<error>> ==> ok
 <(echo expression ...)>--------------------------------------------------------
 test It should be compiled properly., expects ("echo \n" "echo 1\n" "echo 1 2\n" "echo 1 (2 + 3)\n") ==> ok
 <comment>----------------------------------------------------------------------
