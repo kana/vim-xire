@@ -176,6 +176,16 @@
             `(style a ,a rest ,rest)])
          (xire-compile '(my-statement AAA BBB CCC) context)))
 
+(test* "It should accept the name of a context"
+       #t
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (define outer-context (make-statement-context (make <xire-context>)))
+         (define-xire-statement my-statement inner-context
+           [()
+            (eq? inner-context outer-context)])
+         (let1 another-context outer-context
+           (xire-compile '(my-statement) another-context))))
+
 
 
 
