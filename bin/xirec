@@ -213,6 +213,9 @@
      (format "~s" object)]
     [(symbol? object)  ; Vim script variable
      (symbol->string object)]  ; FIXME: Convert "->" to "_to_", etc.
+    [(regexp? object)  ; As pseudo 'raw-string' literal for xire script.
+     (x->vim-script-notation
+       (regexp-replace-all #/\\\\/ (regexp->string object) "\\"))]
     ; List literal is provided by a xire macro.
     ; Dictionary literal is provided by a xire macro.
     ; FIXME: How about Funcref?

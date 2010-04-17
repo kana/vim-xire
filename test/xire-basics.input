@@ -243,6 +243,19 @@
        #f
        (x->vim-script-notation '() #f))
 
+(test* "It should convert regular expressions properly."
+       '("\"\""
+         "\"\\\\\""
+         "\"/\""
+         "\"#\""
+         "\"\\\\v(\\\\\\\\zs\\\\S+\\\\ze/ \\\\(Angel\\\\))\"")
+       (map x->vim-script-notation
+            '(#//
+              #/\\/
+              #/\//
+              #/#/
+              #/\v(\\\zs\S+\ze\/ \(Angel\))/)))
+
 
 
 
