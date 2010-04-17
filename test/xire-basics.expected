@@ -27,7 +27,7 @@ test It should raise error if an invalid object is given., expects #<<error>> ==
 test It should return #f for an invalid object if requested so., expects #f ==> ok
 <xire-compile>-----------------------------------------------------------------
 test It should raise error for a malformed script: (), expects #<<error>> ==> ok
-test It should raise error for a malformed script: 'invalid-expression, expects #<<error>> ==> ok
+test It should raise error for a malformed script: (lambda () #f), expects #<<error>> ==> ok
 test It should raise error for a malformed script: ("already compiled"), expects #<<error>> ==> ok
 test It should raise error for a malformed script: (no-such-macro), expects #<<error>> ==> ok
 test It should raise error for a malformed script: (macro invlaid argument), expects #<<error>> ==> ok

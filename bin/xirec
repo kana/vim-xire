@@ -194,12 +194,14 @@
              (expander form context))]
        [else
          (report-syntax-error)])]
-    [(or (? number?) (? string?) (? symbol?))
-     (ensure-expression-context form context)
-     (x->vim-script-notation form)]
-    ; FIXME: Add more support for Vim script expressions.
     [_
-      (report-syntax-error)]))
+     (cond
+       [(x->vim-script-notation form #f)
+        => (lambda (vim-script-notation)
+             (ensure-expression-context form context)
+             vim-script-notation)]
+       [else
+         (report-syntax-error)])]))
 
 ;; Convert a given Scheme OBJECT into a string which represents
 ;; a corresponding Vim script object.

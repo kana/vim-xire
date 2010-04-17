@@ -253,10 +253,10 @@
        (parameterize ([xire-environment (make <xire-environment>)])
          (xire-compile '() (make <xire-context>))))
 
-(test* "It should raise error for a malformed script: 'invalid-expression"
+(test* "It should raise error for a malformed script: (lambda () #f)"
        (test-error <error>)
        (parameterize ([xire-environment (make <xire-environment>)])
-         (xire-compile 'invalid-expression (make <xire-context>))))
+         (xire-compile (lambda () #f) (make <xire-context>))))
 
 (test* "It should raise error for a malformed script: (\"already compiled\")"
        (test-error <error>)
