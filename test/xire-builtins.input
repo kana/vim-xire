@@ -9,6 +9,10 @@
   (define context (make-expression-context (make <xire-context>)))
   (tree->string (xire-compile expression context)))
 
+(define (compile-statement statement)
+  (define context (make-statement-context (make <xire-context>)))
+  (tree->string (xire-compile statement context)))
+
 
 
 
@@ -403,6 +407,22 @@
 (test* "It should raise error if the number of operands is greater than 1."
        (test-error <error>)
        (compile-expression '(@ foo bar)))
+
+
+
+
+; Other Ex commands  ;{{{1
+(test-section "(echo expression ...)")  ;{{{2
+
+(test* "It should be compiled properly."
+       '("echo \n"
+         "echo 1\n"
+         "echo 1 2\n"
+         "echo 1 (2 + 3)\n")
+       (list (compile-statement '(echo))
+             (compile-statement '(echo 1))
+             (compile-statement '(echo 1 2))
+             (compile-statement '(echo 1 (+ 2 3)))))
 
 
 

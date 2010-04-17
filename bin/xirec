@@ -542,6 +542,19 @@
    `("@" ,(x->vim-script-notation variable-name))])
 
 
+;;; Equivalents for other Ex commands
+;;; ---------------------------------
+
+(define-xire-statement echo context
+  [(expression ...)
+   `("echo"
+     " "
+     ,@(intersperse " "
+                    (let1 econtext (make-expression-context context)
+                      (map (cut xire-compile <> econtext) expression)))
+     "\n")])
+
+
 
 
 ;;; Main
