@@ -624,13 +624,9 @@
          "endfor"
          "\n")])
 
-(define-xire-statement break context
-  [()
-   '("break" "\n")])
+(define-xire-statement break "break")
 
-(define-xire-statement continue context
-  [()
-   '("continue" "\n")])
+(define-xire-statement continue "continue")
 
 (define-xire-statement return context
   [()
