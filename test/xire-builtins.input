@@ -466,6 +466,21 @@
 
 
 
+(test-section "(for ...)")  ;{{{2
+
+(test* "It should be compiled properly."
+       (list (join "for i in [1,2,3]" "echo i" "endfor")
+             (join "for i in [1,2,3]" "echo i" "echo i i" "endfor"))
+       (list (compile-statement '(for i (list 1 2 3) (echo i)))
+             (compile-statement '(for i (list 1 2 3) (echo i) (echo i i)))))
+
+(test* "It should raise error if the number of operands is less than 3."
+       (test-error <error>)
+       (compile-statement '(for i (list 1 2 3))))
+
+
+
+
 ; Other Ex commands  ;{{{1
 (test-section "(echo expression ...)")  ;{{{2
 

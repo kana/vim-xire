@@ -583,6 +583,23 @@
          "endwhile"
          "\n")])
 
+(define-xire-statement for context
+   ; :for i in list
+  [((? symbol? variable) list-expression statement ..1)
+   (list "for"
+         " "
+         (x->vim-script-notation variable)
+         " "
+         "in"
+         " "
+         (xire-compile list-expression (make-expression-context context))
+         "\n"
+         (xire-compile `(begin ,@statement) context)
+         "endfor"
+         "\n")]
+  ; FIXME: for [i, j, ...] in list-of-lists
+  )
+
 
 ;;; Equivalents for other Ex commands
 ;;; ---------------------------------
