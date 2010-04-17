@@ -453,6 +453,19 @@
          ")")])
 ; unary +/- operators are provided as a part of n-ary +/- operators.
 
+(define-xire-expression ref context
+  [(container-expression index-expression)
+   (list "("
+         "("
+         (xire-compile container-expression context)
+         ")"
+         "["
+         "("  ; To clear ambiguoussness -- a[l:r] = a[(l:r)] or a[(l):(r)]?
+         (xire-compile index-expression context)
+         ")"
+         "]"
+         ")")])
+
 
 
 

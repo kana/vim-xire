@@ -240,6 +240,23 @@
 
 
 
+(test-section "(ref array index)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "((array)[(123)])"
+       (compile-expression '(ref array 123)))
+
+(test* "It should raise error if the number of operands is less than 2."
+       (test-error <error>)
+       (compile-expression '(ref)))
+
+(test* "It should raise error if the number of operands is greater than 2."
+       (test-error <error>)
+       (compile-expression '(ref 1 2 3)))
+
+
+
+
 (test-section "comment")  ;{{{1
 
 (test* "It should be available."
