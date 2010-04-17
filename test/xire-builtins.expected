@@ -37,6 +37,10 @@ test It should raise error if the number of operands is greater than 1., expects
 test It should be compiled properly., expects "((array)[(123)])" ==> ok
 test It should raise error if the number of operands is less than 2., expects #<<error>> ==> ok
 test It should raise error if the number of operands is greater than 2., expects #<<error>> ==> ok
+<(slice array index1 index2)>--------------------------------------------------
+test It should be compiled properly., expects "((array)[(123):(456)])" ==> ok
+test It should raise error if the number of operands is less than 3., expects #<<error>> ==> ok
+test It should raise error if the number of operands is greater than 3., expects #<<error>> ==> ok
 <comment>----------------------------------------------------------------------
 test It should be available., expects #t ==> ok
 test It should compile a given form into a Vim-script comment., expects (("\"" () "\n") ("\"" (" " "foo") "\n") ("\"" (" " "foo" " " "bar") "\n")) ==> ok

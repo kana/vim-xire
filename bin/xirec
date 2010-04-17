@@ -465,6 +465,22 @@
          ")"
          "]"
          ")")])
+(define-xire-expression slice context
+  [(container-expression index1-expression index2-expression)
+   (list "("
+         "("
+         (xire-compile container-expression context)
+         ")"
+         "["
+         "("
+         (xire-compile index1-expression context)
+         ")"
+         ":"
+         "("
+         (xire-compile index2-expression context)
+         ")"
+         "]"
+         ")")])
 
 
 
