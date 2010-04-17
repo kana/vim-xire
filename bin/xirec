@@ -622,6 +622,15 @@
   [()
    '("continue" "\n")])
 
+(define-xire-statement return context
+  [()
+   '("return" "\n")]
+  [(value-expression)
+   (list "return"
+         " "
+         (xire-compile value-expression (make-expression-context context))
+         "\n")])
+
 
 ;;; Equivalents for other Ex commands
 ;;; ---------------------------------

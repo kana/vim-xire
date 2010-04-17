@@ -515,6 +515,23 @@
 
 
 
+(test-section "(return ...)")  ;{{{2
+
+(test* "It should be compiled properly."
+       (list (join "return")
+             (join "return 1")
+             (join "return [1,2,3]"))
+       (list (compile-statement '(return))
+             (compile-statement '(return 1))
+             (compile-statement '(return (list 1 2 3)))))
+
+(test* "It should raise error if the number of operands is greater than 1."
+       (test-error <error>)
+       (compile-statement '(return of you)))
+
+
+
+
 ; Other Ex commands  ;{{{1
 (test-section "(echo expression ...)")  ;{{{2
 

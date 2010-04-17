@@ -87,6 +87,9 @@ test It should raise error if the number of operands is greater than 0., expects
 <(continue)>-------------------------------------------------------------------
 test It should be compiled properly., expects "continue\n" ==> ok
 test It should raise error if the number of operands is greater than 0., expects #<<error>> ==> ok
+<(return ...)>-----------------------------------------------------------------
+test It should be compiled properly., expects ("return\n" "return 1\n" "return [1,2,3]\n") ==> ok
+test It should raise error if the number of operands is greater than 1., expects #<<error>> ==> ok
 <(echo expression ...)>--------------------------------------------------------
 test It should be compiled properly., expects ("echo \n" "echo 1\n" "echo 1 2\n" "echo 1 (2 + 3)\n") ==> ok
 <comment>----------------------------------------------------------------------
