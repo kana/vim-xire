@@ -545,6 +545,13 @@
 ;;; Control flow
 ;;; ------------
 
+(define-xire-statement begin context
+  ; Though there is no equivalent for BEGIN in Vim script, it's necessary to
+  ; write multiple statements as a single statement in xire script.  For
+  ; example: (if condition (begin statement1 statement2 ...))
+  [(statement ..1)
+   (map (cut xire-compile <> context) statement)])
+
 (define-xire-statement if context
   [(condition then-part)
    (list "if"

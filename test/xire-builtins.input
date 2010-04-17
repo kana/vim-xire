@@ -415,6 +415,23 @@
 
 
 ; Control flow  ;{{{1
+(test-section "(begin ...)")  ;{{{2
+
+(test* "It should be compiled properly."
+       (list (join "echo 1")
+             (join "echo 2" "echo 3")
+             (join "echo 4" "echo 5" "echo 6"))
+       (list (compile-statement '(begin (echo 1)))
+             (compile-statement '(begin (echo 2) (echo 3)))
+             (compile-statement '(begin (echo 4) (echo 5) (echo 6)))))
+
+(test* "It should raise error if the number of operands is less than 1."
+       (test-error <error>)
+       (compile-statement '(begin)))
+
+
+
+
 (test-section "(if ...)")  ;{{{2
 
 (test* "It should be compiled properly."
