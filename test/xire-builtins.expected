@@ -45,6 +45,9 @@ test It should raise error if the number of operands is greater than 3., expects
 test It should be compiled properly., expects "((dictionary).member)" ==> ok
 test It should raise error if the number of operands is less than 2., expects #<<error>> ==> ok
 test It should raise error if the number of operands is greater than 2., expects #<<error>> ==> ok
+<(apply function argument ...)>------------------------------------------------
+test It should be compiled properly., expects ("(function())" "(function(1))" "(function(1,2))" "(function(1,2,3))") ==> ok
+test It should raise error if the number of operands is less than 1., expects #<<error>> ==> ok
 <comment>----------------------------------------------------------------------
 test It should be available., expects #t ==> ok
 test It should compile a given form into a Vim-script comment., expects (("\"" () "\n") ("\"" (" " "foo") "\n") ("\"" (" " "foo" " " "bar") "\n")) ==> ok

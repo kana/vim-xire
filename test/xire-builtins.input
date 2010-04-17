@@ -291,6 +291,25 @@
 
 
 
+(test-section "(apply function argument ...)")  ;{{{2
+
+(test* "It should be compiled properly."
+       '("(function())"
+         "(function(1))"
+         "(function(1,2))"
+         "(function(1,2,3))")
+       (list (compile-expression '(apply function))
+             (compile-expression '(apply function 1))
+             (compile-expression '(apply function 1 2))
+             (compile-expression '(apply function 1 2 3))))
+
+(test* "It should raise error if the number of operands is less than 1."
+       (test-error <error>)
+       (compile-expression '(apply)))
+
+
+
+
 (test-section "comment")  ;{{{1
 
 (test* "It should be available."
