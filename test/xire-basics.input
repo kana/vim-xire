@@ -186,6 +186,20 @@
          (let1 another-context outer-context
            (xire-compile '(my-statement) another-context))))
 
+(test* "It should define a macro for simple statement such :break."
+       '(("break!" "\n")
+         ("continue!" "\n")
+         ("noel" "\n"))
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (define context (make-statement-context (make <xire-context>)))
+         (define-xire-statement break "break!")
+         (define-xire-statement continue "continue!")
+         (define-xire-statement wreathlit "noel")
+         (map (cut xire-compile <> context)
+              '((break)
+                (continue)
+                (wreathlit)))))
+
 
 
 
