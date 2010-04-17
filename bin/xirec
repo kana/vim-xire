@@ -618,6 +618,10 @@
   [()
    '("break" "\n")])
 
+(define-xire-statement continue context
+  [()
+   '("continue" "\n")])
+
 
 ;;; Equivalents for other Ex commands
 ;;; ---------------------------------

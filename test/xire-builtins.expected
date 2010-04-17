@@ -84,6 +84,9 @@ test It should raise error if the number of operands is less than 3., expects #<
 <(break)>----------------------------------------------------------------------
 test It should be compiled properly., expects "break\n" ==> ok
 test It should raise error if the number of operands is greater than 0., expects #<<error>> ==> ok
+<(continue)>-------------------------------------------------------------------
+test It should be compiled properly., expects "continue\n" ==> ok
+test It should raise error if the number of operands is greater than 0., expects #<<error>> ==> ok
 <(echo expression ...)>--------------------------------------------------------
 test It should be compiled properly., expects ("echo \n" "echo 1\n" "echo 1 2\n" "echo 1 (2 + 3)\n") ==> ok
 <comment>----------------------------------------------------------------------
