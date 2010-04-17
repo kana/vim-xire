@@ -235,6 +235,14 @@
 ;       (map x->vim-script-notation
 ;            '("The \"X\"" "new\nline" ...)))
 
+(test* "It should raise error if an invalid object is given."
+       (test-error <error>)
+       (x->vim-script-notation '()))
+
+(test* "It should return #f for an invalid object if requested so."
+       #f
+       (x->vim-script-notation '() #f))
+
 
 
 
