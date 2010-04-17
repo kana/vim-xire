@@ -334,7 +334,7 @@
 ;;; variable                Scheme symbol           variable reference
 ;;; va{ria}ble              N/A [*]                 ... with curly braces
 ;;; $VAR                    ($ VAR)                 environment variable
-;;; @r                      (@ "r") [*]             contents of register 'r'
+;;; @r                      (@ r)                   contents of register 'r'
 ;;; function(expr1, ...)    (function expr1 ...)    function call
 ;;;                         via macros defined separately.
 ;;; func{ti}on(expr1, ...)  N/A [*]                 ... with curly braces
@@ -343,6 +343,9 @@
 ;;;
 ;;;                         Number, string and variable reference are handled
 ;;;                         by x->vim-script-notation and xire-compile .
+;;;
+;;;                         NB: Gauche can read "@" as a valid symbol, but
+;;;                         R5RS doesn't allow such symbol.
 ;;;
 ;;; [*SPACES] It's necessary to add spaces around operators to avoid wrong
 ;;;     compilation result.  For example, think about compiling the following
@@ -529,6 +532,9 @@
 (define-xire-expression $ context
   [((? symbol? variable-name))
    `("$" ,(x->vim-script-notation variable-name))])
+(define-xire-expression @ context
+  [((? symbol? variable-name))
+   `("@" ,(x->vim-script-notation variable-name))])
 
 
 
