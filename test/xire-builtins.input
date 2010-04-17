@@ -451,6 +451,21 @@
 
 
 
+(test-section "(while ...)")  ;{{{2
+
+(test* "It should be compiled properly."
+       (list (join "while 1" "echo 2" "endwhile")
+             (join "while 1" "echo 2" "echo 3" "endwhile"))
+       (list (compile-statement '(while 1 (echo 2)))
+             (compile-statement '(while 1 (echo 2) (echo 3)))))
+
+(test* "It should raise error if the number of operands is less than 2."
+       (test-error <error>)
+       (compile-statement '(while 1)))
+
+
+
+
 ; Other Ex commands  ;{{{1
 (test-section "(echo expression ...)")  ;{{{2
 

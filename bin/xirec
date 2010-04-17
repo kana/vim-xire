@@ -573,6 +573,16 @@
          "endif"
          "\n")])
 
+(define-xire-statement while context
+  [(condition statement ..1)
+   (list "while"
+         " "
+         (xire-compile condition (make-expression-context context))
+         "\n"
+         (xire-compile `(begin ,@statement) context)
+         "endwhile"
+         "\n")])
+
 
 ;;; Equivalents for other Ex commands
 ;;; ---------------------------------
