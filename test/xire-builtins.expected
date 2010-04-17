@@ -50,6 +50,8 @@ test It should be compiled properly., expects ("(function())" "(function(1))" "(
 test It should raise error if the number of operands is less than 1., expects #<<error>> ==> ok
 <(list expression ...)>--------------------------------------------------------
 test It should be compiled properly., expects ("[]" "[1]" "[1,2]" "[1,2,3]") ==> ok
+<(dict (key value) ...)>-------------------------------------------------------
+test It should be compiled properly., expects ("{}" "{k1 : v1}" "{k1 : v1,k2 : v2}" "{k1 : v1,k2 : v2,k3 : v3}") ==> ok
 <comment>----------------------------------------------------------------------
 test It should be available., expects #t ==> ok
 test It should compile a given form into a Vim-script comment., expects (("\"" () "\n") ("\"" (" " "foo") "\n") ("\"" (" " "foo" " " "bar") "\n")) ==> ok

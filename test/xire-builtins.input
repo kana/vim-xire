@@ -325,6 +325,21 @@
 
 
 
+(test-section "(dict (key value) ...)")  ;{{{2
+
+(test* "It should be compiled properly."
+       '("{}"
+         "{k1 : v1}"
+         "{k1 : v1,k2 : v2}"
+         "{k1 : v1,k2 : v2,k3 : v3}")
+       (list (compile-expression '(dict))
+             (compile-expression '(dict [k1 v1]))
+             (compile-expression '(dict [k1 v1] [k2 v2]))
+             (compile-expression '(dict [k1 v1] [k2 v2] [k3 v3]))))
+
+
+
+
 (test-section "comment")  ;{{{1
 
 (test* "It should be available."

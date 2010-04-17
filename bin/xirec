@@ -325,7 +325,7 @@
 ;;; "string"                Scheme string           string with \-notation
 ;;; 'string'                N/A                     literal string
 ;;; [expr1, ...]            (list expr1 ...)        list
-;;; {expr1: expr1, ...}     (dict expr1 expr1 ...)  dictionary
+;;; {expr1: expr1, ...}     (dict (key value) ...)  dictionary
 ;;; &option                 (& "option")            option value
 ;;; (expr1)                 N/A                     nested expression
 ;;; variable                Scheme symbol           variable reference
@@ -509,6 +509,17 @@
    `("["
      ,@(intersperse "," (map (cut xire-compile <> context) valueN))
      "]")])
+(define-xire-expression dict context
+  [(and ((key value) ...)
+     (item ...))
+   `("{"
+     ,@(intersperse ","
+                    (map (lambda (kv)
+                           (list (xire-compile (car kv) context)
+                                 " : "
+                                 (xire-compile (cadr kv) context)))
+                         item))
+     "}")])
 
 
 
