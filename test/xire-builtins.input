@@ -489,6 +489,19 @@
 
 
 
+(test-section "(break)")  ;{{{2
+
+(test* "It should be compiled properly."
+       (join "break")
+       (compile-statement '(break)))
+
+(test* "It should raise error if the number of operands is greater than 0."
+       (test-error <error>)
+       (compile-statement '(break me down)))
+
+
+
+
 ; Other Ex commands  ;{{{1
 (test-section "(echo expression ...)")  ;{{{2
 

@@ -614,6 +614,10 @@
          "endfor"
          "\n")])
 
+(define-xire-statement break context
+  [()
+   '("break" "\n")])
+
 
 ;;; Equivalents for other Ex commands
 ;;; ---------------------------------
