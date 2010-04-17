@@ -57,6 +57,11 @@ test It should be compiled properly., expects ("&option" "&l:option" "&g:option"
 test It should raise error if the given option name is not a symbol., expects #<<error>> ==> ok
 test It should raise error if the number of operands is less than 1., expects #<<error>> ==> ok
 test It should raise error if the number of operands is greater than 1., expects #<<error>> ==> ok
+<($ variable)>-----------------------------------------------------------------
+test It should be compiled properly., expects "$variable" ==> ok
+test It should raise error if the given option name is not a symbol., expects #<<error>> ==> ok
+test It should raise error if the number of operands is less than 1., expects #<<error>> ==> ok
+test It should raise error if the number of operands is greater than 1., expects #<<error>> ==> ok
 <comment>----------------------------------------------------------------------
 test It should be available., expects #t ==> ok
 test It should compile a given form into a Vim-script comment., expects (("\"" () "\n") ("\"" (" " "foo") "\n") ("\"" (" " "foo" " " "bar") "\n")) ==> ok

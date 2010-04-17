@@ -365,6 +365,27 @@
 
 
 
+(test-section "($ variable)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "$variable"
+       (compile-expression '($ variable)))
+
+(test* "It should raise error if the given option name is not a symbol."
+       (test-error <error>)
+       (compile-expression '($ "string")))
+
+(test* "It should raise error if the number of operands is less than 1."
+       (test-error <error>)
+       (compile-expression '($)))
+
+(test* "It should raise error if the number of operands is greater than 1."
+       (test-error <error>)
+       (compile-expression '($ foo bar)))
+
+
+
+
 (test-section "comment")  ;{{{1
 
 (test* "It should be available."

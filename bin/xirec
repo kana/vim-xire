@@ -333,7 +333,7 @@
 ;;; (expr1)                 N/A                     nested expression
 ;;; variable                Scheme symbol           variable reference
 ;;; va{ria}ble              N/A [*]                 ... with curly braces
-;;; $VAR                    ($ "VAR") [*]           environment variable
+;;; $VAR                    ($ VAR)                 environment variable
 ;;; @r                      (@ "r") [*]             contents of register 'r'
 ;;; function(expr1, ...)    (function expr1 ...)    function call
 ;;;                         via macros defined separately.
@@ -526,6 +526,9 @@
 (define-xire-expression & context
   [((? symbol? option-name))
    `("&" ,(x->vim-script-notation option-name))])
+(define-xire-expression $ context
+  [((? symbol? variable-name))
+   `("$" ,(x->vim-script-notation variable-name))])
 
 
 
