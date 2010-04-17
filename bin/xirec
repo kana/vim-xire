@@ -310,8 +310,11 @@
 ;;;                                                 string, list or dictionary
 ;;; expr8[expr1 : expr1]    (slice expr8 expr1 expr1)
 ;;;                                                 Slice string or list
-;;; expr8.name              N/A (ref expr8 "name")  Dictionary reference
+;;; expr8.name              (-> expr8 name)         Dictionary reference
 ;;; expr8(expr1, ...)       (call expr8 expr1 ...)  function call with Funcref
+;;;
+;;;                         NB: Gauche can read "->" as a valid symbol, but
+;;;                         R5RS doesn't allow such symbol.
 ;;;
 ;;; expr9
 ;;; ~~~~~
@@ -480,6 +483,15 @@
          (xire-compile index2-expression context)
          ")"
          "]"
+         ")")])
+(define-xire-expression -> context
+  [(dictionary (? symbol? member-name))
+   (list "("
+         "("
+         (xire-compile dictionary context)
+         ")"
+         "."
+         (xire-compile member-name context)
          ")")])
 
 

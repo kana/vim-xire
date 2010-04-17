@@ -274,6 +274,23 @@
 
 
 
+(test-section "(-> dictionary member)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "((dictionary).member)"
+       (compile-expression '(-> dictionary member)))
+
+(test* "It should raise error if the number of operands is less than 2."
+       (test-error <error>)
+       (compile-expression '(-> dictionary)))
+
+(test* "It should raise error if the number of operands is greater than 2."
+       (test-error <error>)
+       (compile-expression '(-> dictionary member more-member)))
+
+
+
+
 (test-section "comment")  ;{{{1
 
 (test* "It should be available."
