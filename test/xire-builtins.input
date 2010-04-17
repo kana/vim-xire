@@ -340,6 +340,31 @@
 
 
 
+(test-section "(& option)")  ;{{{2
+
+(test* "It should be compiled properly."
+       '("&option"
+         "&l:option"
+         "&g:option")
+       (list (compile-expression '(& option))
+             (compile-expression '(& l:option))
+             (compile-expression '(& g:option))))
+
+(test* "It should raise error if the given option name is not a symbol."
+       (test-error <error>)
+       (compile-expression '(& "string")))
+
+(test* "It should raise error if the number of operands is less than 1."
+       (test-error <error>)
+       (compile-expression '(&)))
+
+(test* "It should raise error if the number of operands is greater than 1."
+       (test-error <error>)
+       (compile-expression '(& foo bar)))
+
+
+
+
 (test-section "comment")  ;{{{1
 
 (test* "It should be available."

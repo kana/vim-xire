@@ -327,6 +327,9 @@
 ;;; [expr1, ...]            (list expr1 ...)        list
 ;;; {expr1: expr1, ...}     (dict (key value) ...)  dictionary
 ;;; &option                 (& "option")            option value
+;;; &option                 (& option)              option value
+;;; &l:option               (& l:option)            local option value
+;;; &g:option               (& g:option)            global option value
 ;;; (expr1)                 N/A                     nested expression
 ;;; variable                Scheme symbol           variable reference
 ;;; va{ria}ble              N/A [*]                 ... with curly braces
@@ -520,6 +523,9 @@
                                  (xire-compile (cadr kv) context)))
                          item))
      "}")])
+(define-xire-expression & context
+  [((? symbol? option-name))
+   `("&" ,(x->vim-script-notation option-name))])
 
 
 
