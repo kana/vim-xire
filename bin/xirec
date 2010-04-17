@@ -597,8 +597,22 @@
          (xire-compile `(begin ,@statement) context)
          "endfor"
          "\n")]
-  ; FIXME: for [i, j, ...] in list-of-lists
-  )
+  ; for [i, ...] in list-olf-lists
+  [(((? symbol? variable) ..1) list-of-lists-expression statement ..1)
+   (list "for"
+         " "
+         "["
+         (intersperse "," (map x->vim-script-notation variable))
+         "]"
+         " "
+         "in"
+         " "
+         (xire-compile list-of-lists-expression
+                       (make-expression-context context))
+         "\n"
+         (xire-compile `(begin ,@statement) context)
+         "endfor"
+         "\n")])
 
 
 ;;; Equivalents for other Ex commands

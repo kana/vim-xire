@@ -78,7 +78,8 @@ test It should raise error if the number of operands is greater than 3., expects
 test It should be compiled properly., expects ("while 1\necho 2\nendwhile\n" "while 1\necho 2\necho 3\nendwhile\n") ==> ok
 test It should raise error if the number of operands is less than 2., expects #<<error>> ==> ok
 <(for ...)>--------------------------------------------------------------------
-test It should be compiled properly., expects ("for i in [1,2,3]\necho i\nendfor\n" "for i in [1,2,3]\necho i\necho i i\nendfor\n") ==> ok
+test It, 'for i in list', should be compiled properly., expects ("for i in [1,2,3]\necho i\nendfor\n" "for i in [1,2,3]\necho i\necho i i\nendfor\n") ==> ok
+test It, 'for [i, ...] in list-of-lists', should be compiled properly., expects ("for [i] in [[1],[2]]\necho i\nendfor\n" "for [i,j] in [[1,2],[3,4]]\necho i\necho j\nendfor\n") ==> ok
 test It should raise error if the number of operands is less than 3., expects #<<error>> ==> ok
 <(echo expression ...)>--------------------------------------------------------
 test It should be compiled properly., expects ("echo \n" "echo 1\n" "echo 1 2\n" "echo 1 (2 + 3)\n") ==> ok
