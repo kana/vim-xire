@@ -310,6 +310,21 @@
 
 
 
+(test-section "(list expression ...)")  ;{{{2
+
+(test* "It should be compiled properly."
+       '("[]"
+         "[1]"
+         "[1,2]"
+         "[1,2,3]")
+       (list (compile-expression '(list))
+             (compile-expression '(list 1))
+             (compile-expression '(list 1 2))
+             (compile-expression '(list 1 2 3))))
+
+
+
+
 (test-section "comment")  ;{{{1
 
 (test* "It should be available."

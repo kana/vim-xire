@@ -504,6 +504,12 @@
      ")"
      ")")])
 
+(define-xire-expression list context
+  [(valueN ...)
+   `("["
+     ,@(intersperse "," (map (cut xire-compile <> context) valueN))
+     "]")])
+
 
 
 
