@@ -223,6 +223,23 @@
 
 
 
+(test-section "(not expression)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "(!0)"
+       (compile-expression '(not 0)))
+
+(test* "It should raise error if the number of operands is less than 1."
+       (test-error <error>)
+       (compile-expression '(not)))
+
+(test* "It should raise error if the number of operands is greater than 1."
+       (test-error <error>)
+       (compile-expression '(not 0 0)))
+
+
+
+
 (test-section "comment")  ;{{{1
 
 (test* "It should be available."

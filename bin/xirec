@@ -445,6 +445,14 @@
 (define-nary-operator / "/")
 (define-nary-operator % "%")
 
+(define-xire-expression not context
+  [(expression)
+   (list "("
+         "!"
+         (xire-compile expression context)
+         ")")])
+; unary +/- operators are provided as a part of n-ary +/- operators.
+
 
 
 
