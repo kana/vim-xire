@@ -203,8 +203,6 @@
 
 ;; Convert a given Scheme OBJECT into a string which represents
 ;; a corresponding Vim script object.
-;;
-;; FIXME: Add conversion for List, Dictionary and Funcref.
 (define (x->vim-script-notation object)
   (cond
     [(number? object)  ; FIXME: Consider non-integers and big integers.
@@ -213,6 +211,9 @@
      (format "~s" object)]
     [(symbol? object)  ; Vim script variable
      (symbol->string object)]  ; FIXME: Convert "->" to "_to_", etc.
+    ; List literal is provided by a xire macro.
+    ; Dictionary literal is provided by a xire macro.
+    ; FIXME: How about Funcref?
     [else
       (errorf "Invalid object for Vim script: ~s" object)]))
 
