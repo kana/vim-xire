@@ -644,6 +644,8 @@
          (xire-compile value-expression (make-expression-context context))
          "\n")])
 
+; FIXME: Equivalents for :try, :catch, :finally and :endtry.
+
 
 ;;; Equivalents for other Ex commands
 ;;; ---------------------------------
