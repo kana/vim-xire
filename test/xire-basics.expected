@@ -22,6 +22,8 @@ test It should accept the name of a context, expects #t ==> ok
 test It should define a macro for simple statement such :break., expects (("break!" "\n") ("continue!" "\n") ("noel" "\n")) ==> ok
 <x->vim-script-notation>-------------------------------------------------------
 test It should convert 32 bit signed numbers properly., expects ("0" "123" "-456" "2147483647" "-2147483648") ==> ok
+test It should fail to convert numbers beyond 32 bit signed ones (+)., expects #<<error>> ==> ok
+test It should fail to convert numbers beyond 32 bit signed ones (-)., expects #<<error>> ==> ok
 test It should convert C-friendly symbols properly., expects ("bufnr" "synIDattr" "has_key") ==> ok
 test It should convert strinigs without special characters., expects ("\"long long time ago\"" "\"we are the one\"") ==> ok
 test It should raise error if an invalid object is given., expects #<<error>> ==> ok

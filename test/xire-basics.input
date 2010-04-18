@@ -214,14 +214,13 @@
                   (- (ash 1 31) 1)
                   (ash -1 31))))
 
-; FIXME: NIY
-;(test* "It should fail to convert numbers beyond 32 bit signed ones (+)."
-;       (test-error <error>)
-;       (x->vim-script-notation "2147483648")
-;
-;(test* "It should fail to convert numbers beyond 32 bit signed ones (-)."
-;       (test-error <error>)
-;       (x->vim-script-notation "-2147483649")
+(test* "It should fail to convert numbers beyond 32 bit signed ones (+)."
+       (test-error <error>)
+       (x->vim-script-notation (ash 1 31)))
+
+(test* "It should fail to convert numbers beyond 32 bit signed ones (-)."
+       (test-error <error>)
+       (x->vim-script-notation (- (ash -1 31) 1)))
 
 (test* "It should convert C-friendly symbols properly."
        '("bufnr" "synIDattr" "has_key")

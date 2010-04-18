@@ -208,9 +208,19 @@
 ;; Convert a given Scheme OBJECT into a string which represents
 ;; a corresponding Vim script object.
 (define (x->vim-script-notation object :optional (raise-error-p #t))
+  ; Vim script numbers are 32 bit signed integers.  (cf. :help Number)
+  (define MINIMAL-NUMBER (ash -1 31))
+  (define MAXIMUM-NUMBER (- (ash 1 31) 1))
+
   (cond
-    [(number? object)  ; FIXME: Consider non-integers and big integers.
-     (number->string object)]
+    [(number? object)  ; FIXME: Consider non-integers.
+     (cond
+       [(< object MINIMAL-NUMBER)
+        (errorf "Too small number for Vim script: ~s" object)]
+       [(< MAXIMUM-NUMBER object)
+        (errorf "Too big number for Vim script: ~s" object)]
+       [else
+         (number->string object)])]
     [(string? object)  ; FIXME: Escape special characters properly.
      (format "~s" object)]
     [(symbol? object)  ; Vim script variable
