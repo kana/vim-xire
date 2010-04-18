@@ -213,14 +213,17 @@
   (define MAXIMUM-NUMBER (- (ash 1 31) 1))
 
   (cond
-    [(number? object)  ; FIXME: Consider non-integers.
+    [(number? object)
      (cond
        [(< object MINIMAL-NUMBER)
         (errorf "Too small number for Vim script: ~s" object)]
        [(< MAXIMUM-NUMBER object)
         (errorf "Too big number for Vim script: ~s" object)]
+       [(integer? object)
+        (number->string (inexact->exact object))]
+       ; FIXME: Support float in Vim script.
        [else
-         (number->string object)])]
+        (errorf "Invalid number for Vim script: ~s" object)])]
     [(string? object)  ; FIXME: Escape special characters properly.
      (format "~s" object)]
     [(symbol? object)  ; Vim script variable

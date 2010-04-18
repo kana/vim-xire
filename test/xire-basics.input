@@ -206,21 +206,23 @@
 (test-section "x->vim-script-notation")  ;{{{1
 
 (test* "It should convert 32 bit signed numbers properly."
-       '("0" "123" "-456" "2147483647" "-2147483648")
+       '("0" "123" "-456" "789" "2147483647" "-2147483648")
        (map x->vim-script-notation
             (list 0
                   123
                   -456
+                  (exact->inexact 789)
                   (- (ash 1 31) 1)
                   (ash -1 31))))
-
 (test* "It should fail to convert numbers beyond 32 bit signed ones (+)."
        (test-error <error>)
        (x->vim-script-notation (ash 1 31)))
-
 (test* "It should fail to convert numbers beyond 32 bit signed ones (-)."
        (test-error <error>)
        (x->vim-script-notation (- (ash -1 31) 1)))
+(test* "It should fail to convert numbers which is not integer."
+       (test-error <error>)
+       (x->vim-script-notation 1/2))
 
 (test* "It should convert C-friendly symbols properly."
        '("bufnr" "synIDattr" "has_key")
