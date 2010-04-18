@@ -41,6 +41,31 @@
 
 
 
+(test-section "comment")  ;{{{2
+
+(test* "It should be available."
+       #t
+       (boolean (xire-lookup-macro 'comment)))
+
+(test* "It should compile a given form into a Vim-script comment."
+       '("\"\n"
+         "\" foo\n"
+         "\" foo bar\n")
+       (list (compile-statement '(comment))
+             (compile-statement '(comment "foo"))
+             (compile-statement '(comment "foo" "bar"))))
+
+(test* "It should raise error for invalid arguments"
+       (test-error <error>)
+       (compile-statement '(comment "a" #\b "c")))
+
+(test* "It should raise error for non-statement context"
+       (test-error <error>)
+       (compile-expression '(comment "a")))
+
+
+
+
 ; Expression  ;{{{1
 (test-section "(?: expression then-part else-part)")  ;{{{2
 
@@ -585,31 +610,6 @@
              (compile-statement '(echo 1))
              (compile-statement '(echo 1 2))
              (compile-statement '(echo 1 (+ 2 3)))))
-
-
-
-
-(test-section "comment")  ;{{{1
-
-(test* "It should be available."
-       #t
-       (boolean (xire-lookup-macro 'comment)))
-
-(test* "It should compile a given form into a Vim-script comment."
-       '("\"\n"
-         "\" foo\n"
-         "\" foo bar\n")
-       (list (compile-statement '(comment))
-             (compile-statement '(comment "foo"))
-             (compile-statement '(comment "foo" "bar"))))
-
-(test* "It should raise error for invalid arguments"
-       (test-error <error>)
-       (compile-statement '(comment "a" #\b "c")))
-
-(test* "It should raise error for non-statement context"
-       (test-error <error>)
-       (compile-expression '(comment "a")))
 
 
 

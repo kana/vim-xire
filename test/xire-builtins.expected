@@ -2,6 +2,11 @@ Testing xire-builtins ...                                        Testing xire-bu
 <(RAW ...)>--------------------------------------------------------------------
 test It should be compiled properly in statement context., expects ("" "\" Apple" "banana\ncherry\ndandelion\n") ==> ok
 test It should be compiled properly in expression context., expects ("" "\" Apple" "banana\ncherry\ndandelion\n") ==> ok
+<comment>----------------------------------------------------------------------
+test It should be available., expects #t ==> ok
+test It should compile a given form into a Vim-script comment., expects ("\"\n" "\" foo\n" "\" foo bar\n") ==> ok
+test It should raise error for invalid arguments, expects #<<error>> ==> ok
+test It should raise error for non-statement context, expects #<<error>> ==> ok
 <(?: expression then-part else-part)>------------------------------------------
 test It should be compiled properly., expects "(0 ? 1 : 2)" ==> ok
 test It should raise error if the number of operands is less than 3., expects #<<error>> ==> ok
@@ -99,10 +104,5 @@ test It should raise error if the number of operands is less than 1., expects #<
 test It should raise error if the number of operands is greater than 1., expects #<<error>> ==> ok
 <(echo expression ...)>--------------------------------------------------------
 test It should be compiled properly., expects ("echo \n" "echo 1\n" "echo 1 2\n" "echo 1 (2 + 3)\n") ==> ok
-<comment>----------------------------------------------------------------------
-test It should be available., expects #t ==> ok
-test It should compile a given form into a Vim-script comment., expects ("\"\n" "\" foo\n" "\" foo bar\n") ==> ok
-test It should raise error for invalid arguments, expects #<<error>> ==> ok
-test It should raise error for non-statement context, expects #<<error>> ==> ok
 passed.
 passed.
