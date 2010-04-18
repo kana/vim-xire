@@ -243,15 +243,12 @@
     [(_ . stuffs)
      (map x->string stuffs)]))
 
-(define-xire-macro (comment form context)
-  (ensure-statement-context form context)
-  (match form
-    [(_ (? string? comment-string) ...)
-     `("\""
-       ,(fold-right (lambda (l r) `(" " ,l . ,r))
-                   '()
-                   comment-string)
-       "\n")]))
+(define-xire-statement comment
+  [((? string? comment-string) ...)
+   `("\""
+     ,(string-join comment-string " " 'prefix)
+     "\n")])
+
 
 ;;; Expressions
 ;;; -----------
