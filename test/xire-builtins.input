@@ -596,27 +596,20 @@
        (boolean (xire-lookup-macro 'comment)))
 
 (test* "It should compile a given form into a Vim-script comment."
-       '(("\"" () "\n")
-         ("\"" (" " "foo") "\n")
-         ("\"" (" " "foo" " " "bar") "\n"))
-       (let ([expander (xire-lookup-macro 'comment)]
-             [context (make-statement-context (make <xire-context>))])
-         (list
-           (expander '(comment) context)
-           (expander '(comment "foo") context)
-           (expander '(comment "foo" "bar") context))))
+       '("\"\n"
+         "\" foo\n"
+         "\" foo bar\n")
+       (list (compile-statement '(comment))
+             (compile-statement '(comment "foo"))
+             (compile-statement '(comment "foo" "bar"))))
 
 (test* "It should raise error for invalid arguments"
        (test-error <error>)
-       (let1 expander (xire-lookup-macro 'comment)
-         (expander '(comment "a" #\b "c")
-                   (make-statement-context (make <xire-context>)))))
+       (compile-statement '(comment "a" #\b "c")))
 
 (test* "It should raise error for non-statement context"
        (test-error <error>)
-       (let1 expander (xire-lookup-macro 'comment)
-         (expander '(comment "a")
-                   (make-expression-context (make <xire-context>)))))
+       (compile-expression '(comment "a")))
 
 
 
