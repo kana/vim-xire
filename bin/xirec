@@ -232,6 +232,17 @@
 ;;; Built-in xire macros
 ;;; ====================
 
+;;; Primitives
+;;; ----------
+
+(define-xire-macro (RAW form context)
+  ; Embed raw Vim script.  This is a temporary stuff until xire supports full
+  ; features of Vim script.  Use it carefully and it should not be used if
+  ; possible.
+  (match form
+    [(_ . stuffs)
+     (map x->string stuffs)]))
+
 (define-xire-macro (comment form context)
   (ensure-statement-context form context)
   (match form

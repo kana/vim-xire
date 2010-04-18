@@ -1,4 +1,7 @@
 Testing xire-builtins ...                                        Testing xire-builtins =========================================================
+<(RAW ...)>--------------------------------------------------------------------
+test It should be compiled properly in statement context., expects ("" "\" Apple" "banana\ncherry\ndandelion\n") ==> ok
+test It should be compiled properly in expression context., expects ("" "\" Apple" "banana\ncherry\ndandelion\n") ==> ok
 <(?: expression then-part else-part)>------------------------------------------
 test It should be compiled properly., expects "(0 ? 1 : 2)" ==> ok
 test It should raise error if the number of operands is less than 3., expects #<<error>> ==> ok
