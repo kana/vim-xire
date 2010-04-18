@@ -90,6 +90,10 @@ test It should raise error if the number of operands is greater than 0., expects
 <(return ...)>-----------------------------------------------------------------
 test It should be compiled properly., expects ("return\n" "return 1\n" "return [1,2,3]\n") ==> ok
 test It should raise error if the number of operands is greater than 1., expects #<<error>> ==> ok
+<(throw ...)>------------------------------------------------------------------
+test It should be compiled properly., expects ("throw 1\n" "throw [1,2,3]\n") ==> ok
+test It should raise error if the number of operands is less than 1., expects #<<error>> ==> ok
+test It should raise error if the number of operands is greater than 1., expects #<<error>> ==> ok
 <(echo expression ...)>--------------------------------------------------------
 test It should be compiled properly., expects ("echo \n" "echo 1\n" "echo 1 2\n" "echo 1 (2 + 3)\n") ==> ok
 <comment>----------------------------------------------------------------------

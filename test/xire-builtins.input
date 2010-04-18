@@ -532,6 +532,25 @@
 
 
 
+(test-section "(throw ...)")  ;{{{2
+
+(test* "It should be compiled properly."
+       (list (join "throw 1")
+             (join "throw [1,2,3]"))
+       (list (compile-statement '(throw 1))
+             (compile-statement '(throw (list 1 2 3)))))
+
+(test* "It should raise error if the number of operands is less than 1."
+       (test-error <error>)
+       (compile-statement '(throw)))
+
+(test* "It should raise error if the number of operands is greater than 1."
+       (test-error <error>)
+       (compile-statement '(throw of you)))
+
+
+
+
 ; Other Ex commands  ;{{{1
 (test-section "(echo expression ...)")  ;{{{2
 

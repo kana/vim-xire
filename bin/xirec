@@ -637,6 +637,13 @@
          (xire-compile value-expression (make-expression-context context))
          "\n")])
 
+(define-xire-statement throw context
+  [(value-expression)
+   (list "throw"
+         " "
+         (xire-compile value-expression (make-expression-context context))
+         "\n")])
+
 
 ;;; Equivalents for other Ex commands
 ;;; ---------------------------------
