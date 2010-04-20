@@ -227,7 +227,7 @@
     [(string? object)  ; FIXME: Escape special characters properly.
      (format "~s" object)]
     [(symbol? object)  ; Vim script variable
-     (symbol->string object)]  ; FIXME: Convert "->" to "_to_", etc.
+     (convert-identifier-conventions (symbol->string object))]
     [(regexp? object)  ; As pseudo 'raw-string' literal for xire script.
      (x->vim-script-notation
        (regexp-replace-all #/\\\\/ (regexp->string object) "\\"))]
@@ -238,6 +238,13 @@
       (if raise-error-p
         (errorf "Invalid object for Vim script: ~s" object)
         #f)]))
+
+;; Convert identifier conventions between Scheme and Vim script.  For example,
+;; Scheme usually uses hyphen (-) to join words in an identifier, while Vim
+;; script uses underscore (_) for that purpose.  This procedure converts such
+;; conventions.
+(define (convert-identifier-conventions scheme-identifier)
+  scheme-identifier)  ; FIXME: NIY
 
 
 
