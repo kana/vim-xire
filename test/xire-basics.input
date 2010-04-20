@@ -14,6 +14,24 @@
 
 
 
+(test-section "convert-identifier-conventions")  ;{{{1
+
+(test* "It should convert properly."
+       '("foo_bar_baz"
+         "x_to_y"
+         "set_x"
+         "set_p"
+         "$*@%")
+       (map convert-identifier-conventions
+            '("foo-bar-baz"
+              "x->y"
+              "set!"
+              "set?"
+              "$*@%")))
+
+
+
+
 (test-section "define-binary-operator")  ;{{{1
 
 (test* "It should define a binary operator in the current context."
@@ -229,12 +247,11 @@
        (map x->vim-script-notation
             '(bufnr synIDattr has_key)))
 
-; FIXME: NIY
-;(test* "It should convert also non-C-friendly symbols properly."
-;       '("predicate_p" "mutate_x" "x_to_y")
-;       (map x->vim-script-notation
-;            '(predicate? mutate! x->y)))
-;
+(test* "It should convert also non-C-friendly symbols properly."
+       '("predicate_p" "mutate_x" "x_to_y")
+       (map x->vim-script-notation
+            '(predicate? mutate! x->y)))
+
 ;(test* "It should fail to convert symbols with strange characters."
 ;       (test-error <error>)
 ;       (x->vim-script-notation '*>_<*))

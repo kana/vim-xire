@@ -1,4 +1,6 @@
 Testing xire-basics ...                                          Testing xire-basics ===========================================================
+<convert-identifier-conventions>-----------------------------------------------
+test It should convert properly., expects ("foo_bar_baz" "x_to_y" "set_x" "set_p" "$*@%") ==> ok
 <define-binary-operator>-------------------------------------------------------
 test It should define a binary operator in the current context., expects "(0 <> 1)" ==> ok
 test It should define a binary operator, available only in an expression., expects #<<error>> ==> ok
@@ -26,6 +28,7 @@ test It should fail to convert numbers beyond 32 bit signed ones (+)., expects #
 test It should fail to convert numbers beyond 32 bit signed ones (-)., expects #<<error>> ==> ok
 test It should fail to convert numbers which is not integer., expects #<<error>> ==> ok
 test It should convert C-friendly symbols properly., expects ("bufnr" "synIDattr" "has_key") ==> ok
+test It should convert also non-C-friendly symbols properly., expects ("predicate_p" "mutate_x" "x_to_y") ==> ok
 test It should convert strinigs without special characters., expects ("\"long long time ago\"" "\"we are the one\"") ==> ok
 test It should raise error if an invalid object is given., expects #<<error>> ==> ok
 test It should return #f for an invalid object if requested so., expects #f ==> ok

@@ -244,7 +244,12 @@
 ;; script uses underscore (_) for that purpose.  This procedure converts such
 ;; conventions.
 (define (convert-identifier-conventions scheme-identifier)
-  scheme-identifier)  ; FIXME: NIY
+  ; FIXME: Raise error for invalid characters as Vim script identifier.
+  (regexp-replace-all* scheme-identifier
+                       #/\?$/ "_p"
+                       #/!$/ "_x"
+                       #/->/ "_to_"
+                       #/-/ "_"))
 
 
 
