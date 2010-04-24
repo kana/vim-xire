@@ -30,6 +30,7 @@ test It should fail to convert numbers which is not integer., expects #<<error>>
 test It should convert C-friendly symbols properly., expects ("bufnr" "synIDattr" "has_key") ==> ok
 test It should convert also non-C-friendly symbols properly., expects ("predicate_p" "mutate_x" "x_to_y") ==> ok
 test It should convert strinigs without special characters., expects ("\"long long time ago\"" "\"we are the one\"") ==> ok
+test It should convert strinigs with special characters properly., expects ("\"\\\\\\\"\\f\\n\\r\\t\"" "\"\\x01\"" "\"\\n\\n\"" "\"foobar\"") ==> ok
 test It should raise error if an invalid object is given., expects #<<error>> ==> ok
 test It should return #f for an invalid object if requested so., expects #f ==> ok
 test It should convert regular expressions properly., expects ("''" "'/'" "'\\\\'" "''''" "'foo bar baz'" "'foo/bar\\\\baz'" "'^Angel \\zs\\S\\+\\ze$'") ==> ok

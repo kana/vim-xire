@@ -261,11 +261,19 @@
        (map x->vim-script-notation
             '("long long time ago" "we are the one")))
 
-; FIXME: NIY
-;(test* "It should convert strinigs with special characters."
-;       '("\"The \\\"X\"\\\"" "\"new\\nline\"" ...)
-;       (map x->vim-script-notation
-;            '("The \"X\"" "new\nline" ...)))
+(test* "It should convert strinigs with special characters properly."
+       '("\"\\\\\\\"\\f\\n\\r\\t\""
+         "\"\\x01\""
+         "\"\\n\\n\""
+         ; "\"\\u3042\""  ; FIXME: It's not written with \uNNNN.
+         "\"foobar\"")
+       (map x->vim-script-notation
+            '("\\\"\f\n\r\t"
+              "\x01"
+              "\x0A\x0a"
+              ; "\u3042"  ; "A" in Japanese hiragana.
+              "foo\
+               bar")))
 
 (test* "It should raise error if an invalid object is given."
        (test-error <error>)
