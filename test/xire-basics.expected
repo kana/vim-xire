@@ -32,7 +32,7 @@ test It should convert also non-C-friendly symbols properly., expects ("predicat
 test It should convert strinigs without special characters., expects ("\"long long time ago\"" "\"we are the one\"") ==> ok
 test It should raise error if an invalid object is given., expects #<<error>> ==> ok
 test It should return #f for an invalid object if requested so., expects #f ==> ok
-test It should convert regular expressions properly., expects ("\"\"" "\"\\\\\"" "\"/\"" "\"#\"" "\"\\\\v(\\\\\\\\zs\\\\S+\\\\ze/ \\\\(Angel\\\\))\"") ==> ok
+test It should convert regular expressions properly., expects ("''" "'/'" "'\\\\'" "''''" "'foo bar baz'" "'foo/bar\\\\baz'" "'^Angel \\zs\\S\\+\\ze$'") ==> ok
 <xire-compile>-----------------------------------------------------------------
 test It should raise error for a malformed script: (), expects #<<error>> ==> ok
 test It should raise error for a malformed script: (lambda () #f), expects #<<error>> ==> ok

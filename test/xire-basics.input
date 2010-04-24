@@ -276,17 +276,21 @@
        (x->vim-script-notation '() #f))
 
 (test* "It should convert regular expressions properly."
-       '("\"\""
-         "\"\\\\\""
-         "\"/\""
-         "\"#\""
-         "\"\\\\v(\\\\\\\\zs\\\\S+\\\\ze/ \\\\(Angel\\\\))\"")
+       '("''"
+         "'/'"
+         "'\\\\'"
+         "''''"
+         "'foo bar baz'"
+         "'foo/bar\\\\baz'"
+         "'^Angel \\zs\\S\\+\\ze$'")
        (map x->vim-script-notation
             '(#//
-              #/\\/
               #/\//
-              #/#/
-              #/\v(\\\zs\S+\ze\/ \(Angel\))/)))
+              #/\\/
+              #/'/
+              #/foo bar baz/
+              #/foo\/bar\\baz/
+              #/^Angel \zs\S\+\ze$/)))
 
 
 
