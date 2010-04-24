@@ -224,8 +224,8 @@
        ; FIXME: Support float in Vim script.
        [else
         (errorf "Invalid number for Vim script: ~s" object)])]
-    [(string? object)  ; FIXME: Escape special characters properly.
-     (format "~s" object)]
+    [(string? object)
+     (string->vim-script-string-notation object)]
     [(symbol? object)  ; Vim script variable
      (convert-identifier-conventions (symbol->string object))]
     [(regexp? object)
@@ -239,6 +239,12 @@
       (if raise-error-p
         (errorf "Invalid object for Vim script: ~s" object)
         #f)]))
+
+;; Convert Scheme string object into Vim script string notation.
+;;
+;; FIXME: Escape special characters properly.
+(define (string->vim-script-string-notation s)
+  (format "~s" s))
 
 ;; Convert identifier conventions between Scheme and Vim script.  For example,
 ;; Scheme usually uses hyphen (-) to join words in an identifier, while Vim
