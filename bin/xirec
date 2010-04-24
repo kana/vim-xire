@@ -242,8 +242,64 @@
 
 ;; Convert Scheme string object into Vim script string notation.
 ;;
-;; FIXME: Escape special characters properly.
+;; In xire script, Vim script strings are written as Scheme strings.  But both
+;; notations are not completely equivalent.  So that we put the following
+;; limitations on Scheme strings which will be compiled into Vim script:
+;;
+;; (i) In Scheme strings, only the following backslash-escape notations may be
+;;     used:
+;;
+;;     \\ \" \f \n \r \t \uNNNN \xNN \<whitespace>*<newline><whitespace>*
+;;
+;;     - All but the last notation are the same as Vim script's ones, so that
+;;       external representation of Scheme strings and Vim script strings are
+;;       the same if this condition is met.  Therefore we can simply write
+;;       Scheme strings as if they are Vim script strings.
+;;
+;;     - The last notation is processed by Scheme's reader and it is simply
+;;       ignored.  So that it may be used too.
+;;
+;;     - Other notations (\0, \UNNNNNNNN) must not be used.  Because:
+;;       - There is no equivalent for \UNNNNNNNN.  
+;;       - Vim script cannot handle NUL character as is.  Though we can write
+;;         "\0" in Vim script, such strings are essentially wrong.  So that it
+;;         must not be used.
+;;
+;; (ii) The following backslash-escape notations in Vim script are not
+;;      available in xire script:
+;;
+;;      (o) \. \.. \... (arbitrary byte, in octal digits)
+;;      (x) \x.         (arbitrary byte, in single hex digit)
+;;      (X) \X. \X..    (equivalent to \x. and \..)
+;;      (U) \U....      (equivalent to \u....)
+;;      (b) \b          (equivalent to \<BS>)
+;;      (e) \e          (equivalent to \<Esc>)
+;;      (k) \<Key>      (special key sequence)
+;;
+;;      - (o), (x) and (X): Use "\xNN" instead.
+;;      - (b) and (e): Use "\xNN" instead.
+;;      - (U): Incompatible with Gauche's "\UNNNNNNNN" notation and it is
+;;        rarely used.
+;;      - (k): Use (keyseq <Key> ...) form instead. [KEYSEQ]  FIXME: Review.
+;;
+;; [KEYSEQ]
+;;     In Vim script, it's necessary to write special key sequences in
+;;     the following situations:
+;;
+;;     (A) To denote input:
+;;         (a) :execute 'normal!' "\<Key>"
+;;         (b) :call feedkeys("\<Key>", 't')
+;;         (c) :map <expr> {lhs} "\<Key>"
+;;         (d) :map {lhs} <C-r>="\<Key>"<Return>
+;;     (B) To compare input:
+;;         (a) visualmode() ==# "\<C-v>"
+;;         (b) nr2char(getchar()) =~# "[\<C-c>\<Esc>]"
+;;
+;;     But it's possible to write equivalent Vim script if (keyseq <Key> ...)
+;;     form is available.  So that it's not a problem even if we cannot write
+;;     "\<Key>" directly in xire script.
 (define (string->vim-script-string-notation s)
+  ; FIXME: Check the above limitations are met.
   (format "~s" s))
 
 ;; Convert identifier conventions between Scheme and Vim script.  For example,
