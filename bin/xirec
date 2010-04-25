@@ -743,6 +743,35 @@
 ; FIXME: Equivalents for :try, :catch, :finally and :endtry.
 
 
+;;; Functions
+;;; ---------
+
+(define-syntax define-xire-function
+  (syntax-rules ()
+    [(_ name minimum-argument-count maximum-argument-count)
+     (define-xire-expression name context
+       [(expressions ..0)
+        (let1 n (length expressions)
+          (if (< n minimum-argument-count)
+            (errorf "Function ~s takes at least ~s arguments, but got: ~s"
+                    'name
+                    minimum-argument-count
+                    'expressions))
+          (if (and maximum-argument-count (< maximum-argument-count n))
+            (errorf "Function ~s takes at most ~s arguments, but got: ~s"
+                    'name
+                    maximum-argument-count
+                    'expressions)))
+        (list "("
+              'name
+              "("
+              (intersperse ","
+                           (let1 econtext (make-expression-context context)
+                             (map (cut xire-compile <> econtext) expressions)))
+              ")"
+              ")")])]))
+
+
 ;;; Equivalents for other Ex commands
 ;;; ---------------------------------
 

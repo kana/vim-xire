@@ -148,6 +148,50 @@
 
 
 
+(test-section "define-xire-function")  ;{{{1
+
+(parameterize ([xire-environment (make <xire-environment>)])
+  (define context (make-expression-context (make <xire-context>)))
+  (define-xire-function f03 0 3)
+  (define-xire-function f11 1 1)
+  (test* "It should define a xire function in the current environment."
+         '("(f03())"
+           "(f03(1))"
+           "(f03(1,\"2\"))"
+           "(f03(1,\"2\",'3'))")
+         (map (cut compile-as-string <> context)
+              '((f03)
+                (f03 1)
+                (f03 1 "2")
+                (f03 1 "2" #/3/))))
+  (test* "It should raise error for non-expression context."
+         (test-error <error>)
+         (compile-as-string '(f03) (make-statement-context context)))
+  (test* "It should raise error for less arguments."
+         (test-error <error>)
+         (compile-as-string '(f11) context))
+  (test* "It should raise error for more arguments."
+         (test-error <error>)
+         (compile-as-string '(f11 1 2) context)))
+
+(parameterize ([xire-environment (make <xire-environment>)])
+  (define context (make-expression-context (make <xire-context>)))
+  (define-xire-function f 1 #f)
+  (test* "It should take at least 1 argument."
+         (test-error <error>)
+         (compile-as-string '(f) context))
+  (test* "It should take 1 or more arguments."
+         '("(f(1))"
+           "(f(1,2))"
+           "(f(1,2,3))")
+         (map (cut compile-as-string <> context)
+              '((f 1)
+                (f 1 2)
+                (f 1 2 3)))))
+
+
+
+
 (test-section "define-xire-macro")  ;{{{1
 
 (test* "It should define a xire macro in the current environment."
