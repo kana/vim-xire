@@ -598,6 +598,18 @@
 
 
 
+; Functions  ;{{{1
+(test-section "(abs ...)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "(abs(1))"
+       (compile-expression '(abs 1)))
+
+; FIXME: Add tests for other built-in functions.
+
+
+
+
 ; Other Ex commands  ;{{{1
 (test-section "(echo expression ...)")  ;{{{2
 
