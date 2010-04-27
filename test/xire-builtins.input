@@ -10,7 +10,7 @@
   (tree->string (xire-compile expression context)))
 
 (define (compile-statement statement)
-  (define context (make-statement-context (make <xire-context>)))
+  (define context (make-statement-context))
   (tree->string (xire-compile statement context)))
 
 (define (join . lines)

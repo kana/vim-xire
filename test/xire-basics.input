@@ -44,7 +44,7 @@
 (test* "It should define a binary operator, available only in an expression."
        (test-error <error>)
        (parameterize ([xire-environment (make <xire-environment>)])
-         (define context (make-statement-context (make <xire-context>)))
+         (define context (make-statement-context))
          (define-binary-operator == "<>")
          (compile-as-string '(== 0 1) context)))
 
@@ -82,7 +82,7 @@
 (test* "It should define an nary operator, available only in an expression."
        (test-error <error>)
        (parameterize ([xire-environment (make <xire-environment>)])
-         (define context (make-statement-context (make <xire-context>)))
+         (define context (make-statement-context))
          (define-nary-operator + "<>" 0)
          (xire-compile '(+ 1) context)))
 
@@ -129,7 +129,7 @@
 (test* "It should define a macro which raises error in non-expression context."
        (test-error <error>)
        (parameterize ([xire-environment (make <xire-environment>)])
-         (define context (make-statement-context (make <xire-context>)))
+         (define context (make-statement-context))
          (define-xire-expression my-expression
            [(a . rest)
             `(style a ,a rest ,rest)])
@@ -166,7 +166,7 @@
                 (f03 1 "2" #/3/))))
   (test* "It should raise error for non-expression context."
          (test-error <error>)
-         (compile-as-string '(f03) (make-statement-context context)))
+         (compile-as-string '(f03) (make-statement-context)))
   (test* "It should raise error for less arguments."
          (test-error <error>)
          (compile-as-string '(f11) context))
@@ -216,7 +216,7 @@
          (style a AAA b BBB)
          (style a AAA rest (BBB CCC)))
        (parameterize ([xire-environment (make <xire-environment>)])
-         (define context (make-statement-context (make <xire-context>)))
+         (define context (make-statement-context))
          (define-xire-statement my-statement
            [(a)
             `(style a ,a)]
@@ -241,7 +241,7 @@
 (test* "It should accept the name of a context"
        #t
        (parameterize ([xire-environment (make <xire-environment>)])
-         (define outer-context (make-statement-context (make <xire-context>)))
+         (define outer-context (make-statement-context))
          (define-xire-statement my-statement inner-context
            [()
             (eq? inner-context outer-context)])
@@ -253,7 +253,7 @@
          ("continue!" "\n")
          ("noel" "\n"))
        (parameterize ([xire-environment (make <xire-environment>)])
-         (define context (make-statement-context (make <xire-context>)))
+         (define context (make-statement-context))
          (define-xire-statement break "break!")
          (define-xire-statement continue "continue!")
          (define-xire-statement wreathlit "noel")
@@ -409,7 +409,7 @@
 
 (test* "make-statement-context should make a proper instance."
        (list <xire-context> 'statement)
-       (let1 context (make-statement-context (make <xire-context>))
+       (let1 context (make-statement-context)
          (list (class-of context)
                (ref context 'type))))
 (test* "make-expression-context should make a proper instance."
@@ -420,14 +420,12 @@
 
 (test* "statement-context?"
        '(#t #f)
-       (list (statement-context?
-               (make-statement-context (make <xire-context>)))
+       (list (statement-context? (make-statement-context))
              (statement-context?
                (make-expression-context (make <xire-context>)))))
 (test* "expression-context?"
        '(#f #t)
-       (list (expression-context?
-               (make-statement-context (make <xire-context>)))
+       (list (expression-context? (make-statement-context))
              (expression-context?
                (make-expression-context (make <xire-context>)))))
 
@@ -436,7 +434,7 @@
        (begin
          (ensure-statement-context
            '(form)
-           (make-statement-context (make <xire-context>)))
+           (make-statement-context))
          #t))
 (test* "ensure-statement-context should complain for an improper context."
        (test-error <error>)
@@ -458,7 +456,7 @@
        (begin
          (ensure-expression-context
            '(form)
-           (make-statement-context (make <xire-context>)))
+           (make-statement-context))
          #t))
 
 
