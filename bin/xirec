@@ -168,7 +168,7 @@
   (define compiled-vim-script-tree (list))
   (define (finish)
     (write-tree (reverse compiled-vim-script-tree) outp))
-  (define context (make <xire-context>))
+  (define context (make-toplevel-context))
 
   (eval '(extend user) scheme-environment)
   (parameterize ([xire-environment environment])

@@ -352,22 +352,22 @@
 (test* "It should raise error for a malformed script: ()"
        (test-error <error>)
        (parameterize ([xire-environment (make <xire-environment>)])
-         (xire-compile '() (make <xire-context>))))
+         (xire-compile '() (make-toplevel-context))))
 
 (test* "It should raise error for a malformed script: (lambda () #f)"
        (test-error <error>)
        (parameterize ([xire-environment (make <xire-environment>)])
-         (xire-compile (lambda () #f) (make <xire-context>))))
+         (xire-compile (lambda () #f) (make-toplevel-context))))
 
 (test* "It should raise error for a malformed script: (\"already compiled\")"
        (test-error <error>)
        (parameterize ([xire-environment (make <xire-environment>)])
-         (xire-compile '("already compiled") (make <xire-context>))))
+         (xire-compile '("already compiled") (make-toplevel-context))))
 
 (test* "It should raise error for a malformed script: (no-such-macro)"
        (test-error <error>)
        (parameterize ([xire-environment (make <xire-environment>)])
-         (xire-compile '(no-such-macro) (make <xire-context>))))
+         (xire-compile '(no-such-macro) (make-toplevel-context))))
 
 (test* "It should raise error for a malformed script: (macro invlaid argument)"
        (test-error <error>)
@@ -375,7 +375,7 @@
          (define-xire-macro (comment form context)
            (match-let1 (_ comment-string) form
              `("\"" ,comment-string)))
-         (xire-compile '(comment "wrong" "argument") (make <xire-context>))))
+         (xire-compile '(comment "wrong" "argument") (make-toplevel-context))))
 
 (test* "It should succeed to compile a valid script."
        '("\"" "I am a comment!")
@@ -383,7 +383,7 @@
          (define-xire-macro (comment form context)
            (match-let1 (_ comment-string) form
              `("\"" ,comment-string)))
-         (xire-compile '(comment "I am a comment!") (make <xire-context>))))
+         (xire-compile '(comment "I am a comment!") (make-toplevel-context))))
 
 (test* "It should succeed to compile a valid expression."
        '("123" "\"string\"" "symbol")
@@ -395,7 +395,7 @@
 (test* "It should raise error to compile an expression in invalid context."
        (test-error <error>)
        (parameterize ([xire-environment (make <xire-environment>)])
-         (let1 wrong-context (make-statement-context (make <xire-context>))
+         (let1 wrong-context (make-statement-context (make-toplevel-context))
            (xire-compile 123 wrong-context))))
 
 
