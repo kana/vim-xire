@@ -110,7 +110,7 @@
 (define (xire-lookup-macro name :optional (environment (xire-environment)))
   (hash-table-get (ref environment 'macros) name #f))
 
-;; Register a xire macro EXPANDER with the NAME into the current CONTEXT.
+;; Register a xire macro EXPANDER with the NAME into ENVIRONMENT.
 (define (xire-register-macro! name expander
                               :optional (environment (xire-environment)))
   (hash-table-put! (ref environment 'macros) name expander))
