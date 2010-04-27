@@ -68,7 +68,8 @@
 (define (make-statement-context :optional context)
   ; FIXME: Use a given CONTEXT.
   (make <xire-context> :type 'statement))
-(define (make-expression-context context)
+(define (make-expression-context :optional context)
+  ; FIXME: Use a given CONTEXT.
   (make <xire-context> :type 'expression))
 
 (define (statement-context? context)

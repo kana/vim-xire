@@ -6,7 +6,7 @@
 (set! main #f)
 
 (define (compile-expression expression)
-  (define context (make-expression-context (make <xire-context>)))
+  (define context (make-expression-context))
   (tree->string (xire-compile expression context)))
 
 (define (compile-statement statement)
