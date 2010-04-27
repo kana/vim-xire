@@ -425,19 +425,22 @@
 
 (test* "toplevel-context?"
        '(#t #f #f)
-       (list (toplevel-context? (make-toplevel-context))
-             (toplevel-context? (make-statement-context))
-             (toplevel-context? (make-expression-context))))
+       (map toplevel-context?
+            (list (make-toplevel-context)
+                  (make-statement-context)
+                  (make-expression-context))))
 (test* "statement-context?"
        '(#t #t #f)
-       (list (statement-context? (make-toplevel-context))
-             (statement-context? (make-statement-context))
-             (statement-context? (make-expression-context))))
+       (map statement-context?
+            (list (make-toplevel-context)
+                  (make-statement-context)
+                  (make-expression-context))))
 (test* "expression-context?"
        '(#f #f #t)
-       (list (expression-context? (make-toplevel-context))
-             (expression-context? (make-statement-context))
-             (expression-context? (make-expression-context))))
+       (map expression-context?
+            (list (make-toplevel-context)
+                  (make-statement-context)
+                  (make-expression-context))))
 
 (test* "ensure-statement-context should succeed for a top-level context."
        #t
