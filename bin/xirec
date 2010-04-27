@@ -65,6 +65,9 @@
   ([type  ; The type of a form being compiled -- statement, expression, etc.
      :init-keyword :type]))
 
+(define (make-toplevel-context)
+  ; FIXME: Add a slot to distinct usual contexts from (make-statement-context).
+  (make <xire-context> :type 'statement))
 (define (make-statement-context :optional context)
   ; FIXME: Use a given CONTEXT.
   (make <xire-context> :type 'statement))

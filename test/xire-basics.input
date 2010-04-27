@@ -407,6 +407,11 @@
        <xire-context>
        (class-of (make <xire-context>)))
 
+(test* "make-toplevel-context should make a proper instance."
+       (list <xire-context> 'statement)
+       (let1 context (make-toplevel-context)
+         (list (class-of context)
+               (ref context 'type))))
 (test* "make-statement-context should make a proper instance."
        (list <xire-context> 'statement)
        (let1 context (make-statement-context)
@@ -419,22 +424,31 @@
                (ref context 'type))))
 
 (test* "statement-context?"
-       '(#t #f)
-       (list (statement-context? (make-statement-context))
+       '(#t #t #f)
+       (list (statement-context? (make-toplevel-context))
+             (statement-context? (make-statement-context))
              (statement-context? (make-expression-context))))
 (test* "expression-context?"
-       '(#f #t)
-       (list (expression-context? (make-statement-context))
+       '(#f #f #t)
+       (list (expression-context? (make-toplevel-context))
+             (expression-context? (make-statement-context))
              (expression-context? (make-expression-context))))
 
-(test* "ensure-statement-context should not complain for a proper context."
+(test* "ensure-statement-context should succeed for a top-level context."
+       #t
+       (begin
+         (ensure-statement-context
+           '(form)
+           (make-toplevel-context))
+         #t))
+(test* "ensure-statement-context should succeed for a statement context."
        #t
        (begin
          (ensure-statement-context
            '(form)
            (make-statement-context))
          #t))
-(test* "ensure-statement-context should complain for an improper context."
+(test* "ensure-statement-context should fail for an expression context."
        (test-error <error>)
        (begin
          (ensure-statement-context
@@ -442,19 +456,26 @@
            (make-expression-context))
          #t))
 
-(test* "ensure-expression-context should not complain for a proper context."
-       #t
+(test* "ensure-expression-context should fail for a top-level context."
+       (test-error <error>)
        (begin
          (ensure-expression-context
            '(form)
-           (make-expression-context))
+           (make-toplevel-context))
          #t))
-(test* "ensure-expression-context should complain for an improper context."
+(test* "ensure-expression-context should fail for a statement context."
        (test-error <error>)
        (begin
          (ensure-expression-context
            '(form)
            (make-statement-context))
+         #t))
+(test* "ensure-expression-context should succeed for an expression context."
+       #t
+       (begin
+         (ensure-expression-context
+           '(form)
+           (make-expression-context))
          #t))
 
 
