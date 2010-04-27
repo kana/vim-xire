@@ -1,7 +1,7 @@
 Testing xire-builtins ...                                        Testing xire-builtins =========================================================
 <(RAW ...)>--------------------------------------------------------------------
 test It should be compiled properly in statement context., expects ("" "\" Apple" "banana\ncherry\ndandelion\n") ==> ok
-test It should be compiled properly in expression context., expects ("" "\" Apple" "banana\ncherry\ndandelion\n") ==> ok
+test It should not be compiled in expression context., expects #<<error>> ==> ok
 <comment>----------------------------------------------------------------------
 test It should be available., expects #t ==> ok
 test It should compile a given form into a Vim-script comment., expects ("\"\n" "\" foo\n" "\" foo bar\n") ==> ok

@@ -30,13 +30,9 @@
              (compile-statement '(RAW "" "\"" " " "Apple"))
              (compile-statement '(RAW "banana\n" "cherry\n" "dandelion\n"))))
 
-(test* "It should be compiled properly in expression context."
-       '(""
-         "\" Apple"
-         "banana\ncherry\ndandelion\n")
-       (list (compile-expression '(RAW ""))
-             (compile-expression '(RAW "" "\"" " " "Apple"))
-             (compile-expression '(RAW "banana\n" "cherry\n" "dandelion\n"))))
+(test* "It should not be compiled in expression context."
+       (test-error <error>)
+       (compile-expression '(RAW "")))
 
 
 
