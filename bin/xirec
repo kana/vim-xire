@@ -63,11 +63,13 @@
 ;;   script being compiled is a top-level statement or not.
 (define-class <xire-context> ()
   ([type  ; The type of a form being compiled -- statement, expression, etc.
-     :init-keyword :type]))
+     :init-keyword :type]
+   [toplevelp  ; The flag to indicate top-level context.
+     :init-keyword :toplevelp
+     :init-value #f]))
 
 (define (make-toplevel-context)
-  ; FIXME: Add a slot to distinct usual contexts from (make-statement-context).
-  (make <xire-context> :type 'statement))
+  (make <xire-context> :type 'statement :toplevelp #t))
 (define (make-statement-context :optional context)
   ; FIXME: Use a given CONTEXT.
   (make <xire-context> :type 'statement))
@@ -75,6 +77,8 @@
   ; FIXME: Use a given CONTEXT.
   (make <xire-context> :type 'expression))
 
+(define (toplevel-context? context)
+  (ref context 'toplevelp))
 (define (statement-context? context)
   (eq? (ref context 'type) 'statement))
 (define (expression-context? context)

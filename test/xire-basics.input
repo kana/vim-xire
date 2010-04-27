@@ -423,6 +423,11 @@
          (list (class-of context)
                (ref context 'type))))
 
+(test* "toplevel-context?"
+       '(#t #f #f)
+       (list (toplevel-context? (make-toplevel-context))
+             (toplevel-context? (make-statement-context))
+             (toplevel-context? (make-expression-context))))
 (test* "statement-context?"
        '(#t #t #f)
        (list (statement-context? (make-toplevel-context))

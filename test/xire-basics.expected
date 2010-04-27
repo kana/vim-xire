@@ -55,6 +55,7 @@ test <xire-context> should be available., expects #<class <xire-context>> ==> ok
 test make-toplevel-context should make a proper instance., expects (#<class <xire-context>> statement) ==> ok
 test make-statement-context should make a proper instance., expects (#<class <xire-context>> statement) ==> ok
 test make-expression-context should make a proper instance., expects (#<class <xire-context>> expression) ==> ok
+test toplevel-context?, expects (#t #f #f) ==> ok
 test statement-context?, expects (#t #t #f) ==> ok
 test expression-context?, expects (#f #f #t) ==> ok
 test ensure-statement-context should succeed for a top-level context., expects #t ==> ok
