@@ -202,7 +202,7 @@
                     (let1 expander (xire-lookup-macro 'amane)
                       (and expander (expander '(original-form) 'context))))]
                 [before-values (get-values)])
-           (define-xire-macro (amane form context)
+           (define-xire-macro :statement (amane form context)
              (list '< form '= context '>))
            (list before-values (get-values)))))
 
@@ -372,7 +372,7 @@
 (test* "It should raise error for a malformed script: (macro invlaid argument)"
        (test-error <error>)
        (parameterize ([xire-environment (make <xire-environment>)])
-         (define-xire-macro (comment form context)
+         (define-xire-macro :statement (comment form context)
            (match-let1 (_ comment-string) form
              `("\"" ,comment-string)))
          (xire-compile '(comment "wrong" "argument") (make-toplevel-context))))
@@ -380,7 +380,7 @@
 (test* "It should succeed to compile a valid script."
        '("\"" "I am a comment!")
        (parameterize ([xire-environment (make <xire-environment>)])
-         (define-xire-macro (comment form context)
+         (define-xire-macro :statement (comment form context)
            (match-let1 (_ comment-string) form
              `("\"" ,comment-string)))
          (xire-compile '(comment "I am a comment!") (make-toplevel-context))))
@@ -515,9 +515,14 @@
          (#f #t)
          ((a) (a b)))
        (parameterize ([xire-environment (make <xire-environment>)])
-         (xire-register-macro! 'a (lambda (form) 'a))
+         (xire-register-macro! 'a
+                               (lambda (form) 'a)
+                               :statement)
          (let1 environment-copied (xire-environment-copy)
-           (xire-register-macro! 'b (lambda (form) 'c) environment-copied)
+           (xire-register-macro! 'b
+                                 (lambda (form) 'c)
+                                 :statement
+                                 environment-copied)
            `((,(boolean (xire-lookup-macro 'a (xire-environment)))
               ,(boolean (xire-lookup-macro 'a environment-copied)))
              (,(boolean (xire-lookup-macro 'b (xire-environment)))
@@ -531,15 +536,23 @@
          (#f #f #t)
          ((a) (b) (b c)))
        (parameterize ([xire-environment (make <xire-environment>)])
-         (xire-register-macro! 'a (lambda (form) 'a))
+         (xire-register-macro! 'a
+                               (lambda (form) 'a)
+                               :statement)
          (let* ([environment-original
                   (let1 environment (make <xire-environment>)
-                    (xire-register-macro! 'b (lambda (form) 'b) environment)
+                    (xire-register-macro! 'b
+                                          (lambda (form) 'b)
+                                          :statement
+                                          environment)
                     environment)]
                 [environment-copied
                   (let1
                     environment (xire-environment-copy environment-original)
-                    (xire-register-macro! 'c (lambda (form) 'c) environment)
+                    (xire-register-macro! 'c
+                                          (lambda (form) 'c)
+                                          :statement
+                                          environment)
                     environment)])
            `((,(boolean (xire-lookup-macro 'a (xire-environment)))
               ,(boolean (xire-lookup-macro 'a environment-original))
@@ -569,7 +582,7 @@
        (parameterize ([xire-environment (make <xire-environment>)])
          (define (expander form)
            (list 'expanded-form form))
-         (xire-register-macro! 'sasara expander)
+         (xire-register-macro! 'sasara expander :statement)
          ((xire-lookup-macro 'sasara) '(original-form))))
 
 (test* "It should look up macro from a given environment."
@@ -590,6 +603,7 @@
                 [before-values (get-values)])
            (xire-register-macro! 'mashiro
                                  (lambda (form . args) #t)
+                                 :statement
                                  environment)
            (list before-values (get-values)))))
 
@@ -602,7 +616,8 @@
        1
        (parameterize ([xire-environment (make <xire-environment>)])
          (xire-register-macro! 'arisa
-                               (lambda (form . args) 'arisa))
+                               (lambda (form . args) 'arisa)
+                               :statement)
          (hash-table-num-entries (ref (xire-environment) 'macros))))
 
 (test* "It should register a macro into a given environment."
@@ -621,6 +636,7 @@
                 [before-values (get-values)])
            (xire-register-macro! 'sasara
                                  (lambda (form . args) 'sasara)
+                                 :statement
                                  environment)
            (list before-values (get-values)))))
 
@@ -648,7 +664,7 @@
 (test* "It should raise error for a malformed script: (macro invlaid argument)"
        (test-error <error>)
        (parameterize ([xire-environment (make <xire-environment>)])
-         (define-xire-macro (comment form context)
+         (define-xire-macro :statement (comment form context)
            (match-let1 (_ comment-string) form
              `("\"" ,comment-string)))
          (call-with-string-io "(comment \"wrong\" \"argument\")"
@@ -657,7 +673,7 @@
 (test* "It should succeed to compile a valid script: (macro vlaid argument)"
        "\"valid argument"
        (parameterize ([xire-environment (make <xire-environment>)])
-         (define-xire-macro (comment form context)
+         (define-xire-macro :statement (comment form context)
            (match-let1 (_ comment-string) form
              `("\"" ,comment-string)))
          (call-with-string-io "(comment \"valid argument\")"

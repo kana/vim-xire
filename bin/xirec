@@ -110,24 +110,31 @@
 (define (xire-lookup-macro name :optional (environment (xire-environment)))
   (hash-table-get (ref environment 'macros) name #f))
 
-;; Register a xire macro EXPANDER with the NAME into ENVIRONMENT.
-(define (xire-register-macro! name expander
+;; Register a xire macro EXPANDER with the NAME into ENVIRONMENT.  The macro
+;; will be available for a specific context corresponding to CONTEXT-TYPE.
+(define (xire-register-macro! name expander context-type
                               :optional (environment (xire-environment)))
+  ; FIXME: Use CONTEXT-TYPE.
+  (if (not (or (eq? context-type :expression)
+               (eq? context-type :statement)))
+    (errorf "Invalid context-type: ~s" context-type))
   (hash-table-put! (ref environment 'macros) name expander))
 
 ;; Define new xire macro in the current environment.
 ;; This is just a syntax sugar for xire-register-macro!.
 (define-syntax define-xire-macro
   (syntax-rules ()
-    [(_ (name form context) . body)
-     (xire-register-macro! 'name (lambda (form context) . body))]))
+    [(_ context-type (name form context) . body)
+     (xire-register-macro! 'name
+                           (lambda (form context) . body)
+                           context-type)]))
 
 ;; Define new xire statement in the current environment.
 ;; This is a wrapper for define-xire-macro.
 (define-syntax define-xire-statement
   (syntax-rules ()
     [(_ "internal" name context [pattern . body] ...)
-     (define-xire-macro (name form context)
+     (define-xire-macro :statement (name form context)
        (ensure-statement-context form context)
        (let1 clauses (cdr form)
          (match clauses
@@ -146,7 +153,7 @@
 (define-syntax define-xire-expression
   (syntax-rules ()
     [(_ "internal" name context [pattern . body] ...)
-     (define-xire-macro (name form context)
+     (define-xire-macro :expression (name form context)
        (ensure-expression-context form context)
        (let1 clauses (cdr form)
          (match clauses
