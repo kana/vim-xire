@@ -69,20 +69,20 @@
      :init-value #f]))
 
 (define (make-toplevel-context)
-  (make <xire-context> :type 'statement :toplevelp #t))
+  (make <xire-context> :type :statement :toplevelp #t))
 (define (make-statement-context :optional context)
   ; FIXME: Use a given CONTEXT.
-  (make <xire-context> :type 'statement))
+  (make <xire-context> :type :statement))
 (define (make-expression-context :optional context)
   ; FIXME: Use a given CONTEXT.
-  (make <xire-context> :type 'expression))
+  (make <xire-context> :type :expression))
 
 (define (toplevel-context? context)
   (ref context 'toplevelp))
 (define (statement-context? context)
-  (eq? (ref context 'type) 'statement))
+  (eq? (ref context 'type) :statement))
 (define (expression-context? context)
-  (eq? (ref context 'type) 'expression))
+  (eq? (ref context 'type) :expression))
 
 (define (ensure-statement-context form context)
   (unless (statement-context? context)
