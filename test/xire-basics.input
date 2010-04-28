@@ -409,20 +409,14 @@
        (class-of (make <xire-context>)))
 
 (test* "make-toplevel-context should make a proper instance."
-       (list <xire-context> 'statement)
-       (let1 context (make-toplevel-context)
-         (list (class-of context)
-               (ref context 'type))))
+       <xire-context>
+       (class-of (make-toplevel-context)))
 (test* "make-statement-context should make a proper instance."
-       (list <xire-context> 'statement)
-       (let1 context (make-statement-context)
-         (list (class-of context)
-               (ref context 'type))))
+       <xire-context>
+       (class-of (make-statement-context)))
 (test* "make-expression-context should make a proper instance."
-       (list <xire-context> 'expression)
-       (let1 context (make-expression-context)
-         (list (class-of context)
-               (ref context 'type))))
+       <xire-context>
+       (class-of (make-expression-context)))
 
 (test* "toplevel-context?"
        '(#t #f #f)
