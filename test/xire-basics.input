@@ -491,8 +491,11 @@
        (is-a? (xire-environment) <xire-environment>))
 
 (test* "It should have some entries in its macro table by default."
-       #t
-       (<= 0 (hash-table-num-entries (ref (xire-environment) 'macros))))
+       '(#t #t)
+       (map (lambda (slot-name)
+              (<= 0
+                  (hash-table-num-entries (ref (xire-environment) slot-name))))
+            '(expression-macros statement-macros)))
 
 (test* "It should be a parameter."
        '(overridden <xire-environment>)
@@ -523,8 +526,10 @@
               ,(boolean (xire-lookup-macro 'a context environment-copied)))
              (,(boolean (xire-lookup-macro 'b context (xire-environment)))
               ,(boolean (xire-lookup-macro 'b context environment-copied)))
-             (,(hash-table-sorted-keys (ref (xire-environment) 'macros))
-              ,(hash-table-sorted-keys (ref environment-copied 'macros)))))))
+             (,(hash-table-sorted-keys
+                 (ref (xire-environment) 'statement-macros))
+              ,(hash-table-sorted-keys
+                 (ref environment-copied 'statement-macros)))))))
 
 (test* "It should copy a given environment"
        '((#t #f #f)
@@ -560,9 +565,12 @@
              (,(boolean (xire-lookup-macro 'c context (xire-environment)))
               ,(boolean (xire-lookup-macro 'c context environment-original))
               ,(boolean (xire-lookup-macro 'c context environment-copied)))
-             (,(hash-table-sorted-keys (ref (xire-environment) 'macros))
-              ,(hash-table-sorted-keys (ref environment-original 'macros))
-              ,(hash-table-sorted-keys (ref environment-copied 'macros)))))))
+             (,(hash-table-sorted-keys
+                 (ref (xire-environment) 'statement-macros))
+              ,(hash-table-sorted-keys
+                 (ref environment-original 'statement-macros))
+              ,(hash-table-sorted-keys
+                 (ref environment-copied 'statement-macros)))))))
 
 
 
@@ -609,6 +617,43 @@
                                  environment)
            (list before-values (get-values)))))
 
+(test* "It should look up a macro for a specific context."
+       '((#t #f)
+         (#f #t)
+         (#f #t))
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (let ([expander-e (lambda (form . arguments) 'E)]
+               [expander-s (lambda (form . arguments) 'S)])
+           (xire-register-macro! 'E expander-e :expression)
+           (xire-register-macro! 'S expander-s :statement)
+           (map (lambda (context)
+                  (map (lambda (name expander)
+                         (and-let* ([e (xire-lookup-macro name context)])
+                           (eq? e expander)))
+                       '(E S)
+                       (list expander-e expander-s)))
+                (list (make-expression-context)
+                      (make-statement-context)
+                      (make-toplevel-context))))))
+
+(test* "It should return different macros for different contexts."
+       '((#t #f)
+         (#f #t)
+         (#f #t))
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (let ([expander-e (lambda (form . arguments) 'E)]
+               [expander-s (lambda (form . arguments) 'S)])
+           (xire-register-macro! 'X expander-e :expression)
+           (xire-register-macro! 'X expander-s :statement)
+           (map (lambda (context)
+                  (map (lambda (expander)
+                         (and-let* ([e (xire-lookup-macro 'X context)])
+                           (eq? e expander)))
+                       (list expander-e expander-s)))
+                (list (make-expression-context)
+                      (make-statement-context)
+                      (make-toplevel-context))))))
+
 
 
 
@@ -620,7 +665,7 @@
          (xire-register-macro! 'arisa
                                (lambda (form . args) 'arisa)
                                :statement)
-         (hash-table-num-entries (ref (xire-environment) 'macros))))
+         (hash-table-num-entries (ref (xire-environment) 'statement-macros))))
 
 (test* "It should register a macro into a given environment."
        '((default-environment 0 given-environment 0)
@@ -631,10 +676,10 @@
                   (lambda ()
                     (list 'default-environment
                           (hash-table-num-entries
-                            (ref (xire-environment) 'macros))
+                            (ref (xire-environment) 'statement-macros))
                           'given-environment
                           (hash-table-num-entries
-                            (ref environment 'macros))))]
+                            (ref environment 'statement-macros))))]
                 [before-values (get-values)])
            (xire-register-macro! 'sasara
                                  (lambda (form . args) 'sasara)

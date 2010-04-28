@@ -66,7 +66,7 @@ test ensure-expression-context should fail for a statement context., expects #<<
 test ensure-expression-context should succeed for an expression context., expects #t ==> ok
 <xire-environment>-------------------------------------------------------------
 test It should exist., expects #t ==> ok
-test It should have some entries in its macro table by default., expects #t ==> ok
+test It should have some entries in its macro table by default., expects (#t #t) ==> ok
 test It should be a parameter., expects (overridden <xire-environment>) ==> ok
 <xire-environment-copy>--------------------------------------------------------
 test It should copy the current environment, expects ((#t #t) (#f #t) ((a) (a b))) ==> ok
@@ -75,6 +75,8 @@ test It should copy a given environment, expects ((#t #f #f) (#f #t #t) (#f #f #
 test It should return #f if there is no macro with the given name., expects #f ==> ok
 test It should return the expander of a registered macro., expects (expanded-form (original-form)) ==> ok
 test It should look up macro from a given environment., expects ((default-environment #f given-environment #f) (default-environment #f given-environment #t)) ==> ok
+test It should look up a macro for a specific context., expects ((#t #f) (#f #t) (#f #t)) ==> ok
+test It should return different macros for different contexts., expects ((#t #f) (#f #t) (#f #t)) ==> ok
 <xire-register-macro!>---------------------------------------------------------
 test It should register a macro into the current environment., expects 1 ==> ok
 test It should register a macro into a given environment., expects ((default-environment 0 given-environment 0) (default-environment 0 given-environment 1)) ==> ok

@@ -36,8 +36,11 @@
 
 ;; Represent an environment for xire compilation.
 (define-class <xire-environment> ()
-  ([macros  ; contain xire macro bindings.
-     :init-keyword :macros
+  ([expression-macros  ; contain xire macro bindings for expression context.
+     :init-keyword :expression-macros
+     :init-form (make-hash-table 'eq?)]
+   [statement-macros  ; contain xire macro bindings for statement context.
+     :init-keyword :statement-macros
      :init-form (make-hash-table 'eq?)]))
 
 ;; Represent the current environment for xire compilation.
@@ -47,7 +50,10 @@
 ;; Copy the current xire environment.
 (define (xire-environment-copy :optional (environment (xire-environment)))
   (make <xire-environment>
-        :macros (hash-table-copy (ref environment 'macros))))
+        :expression-macros
+          (hash-table-copy (ref environment 'expression-macros))
+        :statement-macros
+          (hash-table-copy (ref environment 'statement-macros))))
 
 
 
@@ -106,24 +112,36 @@
 ;;; - Argument called EXPANDER is a procedure which takes two arguments,
 ;;;   the form to expand and the context to compile the form.
 
+(define (%context-type->slot-name context-type)
+  (cond
+    [(eq? context-type :expression)
+     'expression-macros]
+    [(eq? context-type :statement)
+     'statement-macros]
+    [else
+      (errorf "Invalid context-type: ~s" context-type)]))
+
 ;; Look up a xire macro with the NAME from ENVIRONMENT.  The macro must be
 ;; available in a specified CONTEXT.
 (define (xire-lookup-macro name context
                            :optional (environment (xire-environment)))
-  ; FIXME: Use CONTEXT.
   (if (not (is-a? context <xire-context>))
     (errorf "Invalid context: ~s" context))
-  (hash-table-get (ref environment 'macros) name #f))
+  (hash-table-get (ref environment
+                       (%context-type->slot-name (ref context 'type)))
+                  name
+                  #f))
 
 ;; Register a xire macro EXPANDER with the NAME into ENVIRONMENT.  The macro
 ;; will be available for a specific context corresponding to CONTEXT-TYPE.
 (define (xire-register-macro! name expander context-type
                               :optional (environment (xire-environment)))
-  ; FIXME: Use CONTEXT-TYPE.
   (if (not (or (eq? context-type :expression)
                (eq? context-type :statement)))
     (errorf "Invalid context-type: ~s" context-type))
-  (hash-table-put! (ref environment 'macros) name expander))
+  (hash-table-put! (ref environment (%context-type->slot-name context-type))
+                   name
+                   expander))
 
 ;; Define new xire macro in the current environment.
 ;; This is just a syntax sugar for xire-register-macro!.
