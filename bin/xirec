@@ -106,8 +106,13 @@
 ;;; - Argument called EXPANDER is a procedure which takes two arguments,
 ;;;   the form to expand and the context to compile the form.
 
-;; Look up a xire macro with the NAME.
-(define (xire-lookup-macro name :optional (environment (xire-environment)))
+;; Look up a xire macro with the NAME from ENVIRONMENT.  The macro must be
+;; available in a specified CONTEXT.
+(define (xire-lookup-macro name context
+                           :optional (environment (xire-environment)))
+  ; FIXME: Use CONTEXT.
+  (if (not (is-a? context <xire-context>))
+    (errorf "Invalid context: ~s" context))
   (hash-table-get (ref environment 'macros) name #f))
 
 ;; Register a xire macro EXPANDER with the NAME into ENVIRONMENT.  The macro
@@ -193,7 +198,7 @@
          (eval form scheme-environment)
          (loop)]
         [(and (name . _) form)
-         (if (xire-lookup-macro name)
+         (if (xire-lookup-macro name context)
            (push! compiled-vim-script-tree (xire-compile form context))
            (eval form scheme-environment))
          (loop)]))))
@@ -207,7 +212,7 @@
   (match form
     [((? symbol? name) . args)
      (cond
-       [(xire-lookup-macro name)
+       [(xire-lookup-macro name context)
         => (lambda (expander)
              (expander form context))]
        [else

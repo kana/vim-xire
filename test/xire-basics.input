@@ -197,9 +197,10 @@
 (test* "It should define a xire macro in the current environment."
        '(#f (< (original-form) = context >))
        (parameterize ([xire-environment (make <xire-environment>)])
-         (let* ([get-values
+         (let* ([context (make-toplevel-context)]
+                [get-values
                   (lambda ()
-                    (let1 expander (xire-lookup-macro 'amane)
+                    (let1 expander (xire-lookup-macro 'amane context)
                       (and expander (expander '(original-form) 'context))))]
                 [before-values (get-values)])
            (define-xire-macro :statement (amane form context)
@@ -518,15 +519,16 @@
          (xire-register-macro! 'a
                                (lambda (form) 'a)
                                :statement)
-         (let1 environment-copied (xire-environment-copy)
+         (let ([context (make-toplevel-context)]
+               [environment-copied (xire-environment-copy)])
            (xire-register-macro! 'b
                                  (lambda (form) 'c)
                                  :statement
                                  environment-copied)
-           `((,(boolean (xire-lookup-macro 'a (xire-environment)))
-              ,(boolean (xire-lookup-macro 'a environment-copied)))
-             (,(boolean (xire-lookup-macro 'b (xire-environment)))
-              ,(boolean (xire-lookup-macro 'b environment-copied)))
+           `((,(boolean (xire-lookup-macro 'a context (xire-environment)))
+              ,(boolean (xire-lookup-macro 'a context environment-copied)))
+             (,(boolean (xire-lookup-macro 'b context (xire-environment)))
+              ,(boolean (xire-lookup-macro 'b context environment-copied)))
              (,(hash-table-sorted-keys (ref (xire-environment) 'macros))
               ,(hash-table-sorted-keys (ref environment-copied 'macros)))))))
 
@@ -539,7 +541,8 @@
          (xire-register-macro! 'a
                                (lambda (form) 'a)
                                :statement)
-         (let* ([environment-original
+         (let* ([context (make-toplevel-context)]
+                [environment-original
                   (let1 environment (make <xire-environment>)
                     (xire-register-macro! 'b
                                           (lambda (form) 'b)
@@ -554,15 +557,15 @@
                                           :statement
                                           environment)
                     environment)])
-           `((,(boolean (xire-lookup-macro 'a (xire-environment)))
-              ,(boolean (xire-lookup-macro 'a environment-original))
-              ,(boolean (xire-lookup-macro 'a environment-copied)))
-             (,(boolean (xire-lookup-macro 'b (xire-environment)))
-              ,(boolean (xire-lookup-macro 'b environment-original))
-              ,(boolean (xire-lookup-macro 'b environment-copied)))
-             (,(boolean (xire-lookup-macro 'c (xire-environment)))
-              ,(boolean (xire-lookup-macro 'c environment-original))
-              ,(boolean (xire-lookup-macro 'c environment-copied)))
+           `((,(boolean (xire-lookup-macro 'a context (xire-environment)))
+              ,(boolean (xire-lookup-macro 'a context environment-original))
+              ,(boolean (xire-lookup-macro 'a context environment-copied)))
+             (,(boolean (xire-lookup-macro 'b context (xire-environment)))
+              ,(boolean (xire-lookup-macro 'b context environment-original))
+              ,(boolean (xire-lookup-macro 'b context environment-copied)))
+             (,(boolean (xire-lookup-macro 'c context (xire-environment)))
+              ,(boolean (xire-lookup-macro 'c context environment-original))
+              ,(boolean (xire-lookup-macro 'c context environment-copied)))
              (,(hash-table-sorted-keys (ref (xire-environment) 'macros))
               ,(hash-table-sorted-keys (ref environment-original 'macros))
               ,(hash-table-sorted-keys (ref environment-copied 'macros)))))))
@@ -575,7 +578,7 @@
 (test* "It should return #f if there is no macro with the given name."
        #f
        (parameterize ([xire-environment (make <xire-environment>)])
-         (xire-lookup-macro 'there-is-no-such-macro)))
+         (xire-lookup-macro 'there-is-no-such-macro (make-toplevel-context))))
 
 (test* "It should return the expander of a registered macro."
        '(expanded-form (original-form))
@@ -583,13 +586,15 @@
          (define (expander form)
            (list 'expanded-form form))
          (xire-register-macro! 'sasara expander :statement)
-         ((xire-lookup-macro 'sasara) '(original-form))))
+         ((xire-lookup-macro 'sasara (make-toplevel-context))
+          '(original-form))))
 
 (test* "It should look up macro from a given environment."
        '((default-environment #f given-environment #f)
          (default-environment #f given-environment #t))
        (parameterize ([xire-environment (make <xire-environment>)])
-         (let* ([environment (make <xire-environment>)]
+         (let* ([context (make-toplevel-context)]
+                [environment (make <xire-environment>)]
                 [expand
                   (lambda (expander)
                     (and expander (expander '(original-form))))]
@@ -597,9 +602,12 @@
                   (lambda ()
                     (list 'default-environment
                           (expand (xire-lookup-macro 'mashiro
+                                                     context
                                                      (xire-environment)))
                           'given-environment
-                          (expand (xire-lookup-macro 'mashiro environment))))]
+                          (expand (xire-lookup-macro 'mashiro
+                                                     context
+                                                     environment))))]
                 [before-values (get-values)])
            (xire-register-macro! 'mashiro
                                  (lambda (form . args) #t)

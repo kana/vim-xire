@@ -41,7 +41,7 @@
 
 (test* "It should be available."
        #t
-       (boolean (xire-lookup-macro 'comment)))
+       (boolean (xire-lookup-macro 'comment (make-toplevel-context))))
 
 (test* "It should compile a given form into a Vim-script comment."
        '("\"\n"
