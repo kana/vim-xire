@@ -135,6 +135,12 @@ test It should fail for invalid form., expects #<<error>> ==> ok
 <(ex!)>------------------------------------------------------------------------
 test It should be compiled properly., expects ("ex!\n" "ex! `='ordinary-path'`\n" "ex! `='path with spaces'`\n" "ex! `='path''with\\strange`characters'`\n" "ex! #\n" "ex! #3\n" "ex! `=(\"foo\" . \"bar\")`\n" "ex! `find . -name ver\\\\*.c -print`\n" "ex! ++encoding=utf-8 ++fileformat=unix `='foo'`\n") ==> ok
 test It should fail for invalid form., expects #<<error>> ==> ok
+<(view)>-----------------------------------------------------------------------
+test It should be compiled properly., expects ("view\n" "view `='ordinary-path'`\n" "view `='path with spaces'`\n" "view `='path''with\\strange`characters'`\n" "view #\n" "view #3\n" "view `=(\"foo\" . \"bar\")`\n" "view `find . -name ver\\\\*.c -print`\n" "view ++encoding=utf-8 ++fileformat=unix `='foo'`\n") ==> ok
+test It should fail for invalid form., expects #<<error>> ==> ok
+<(view!)>----------------------------------------------------------------------
+test It should be compiled properly., expects ("view!\n" "view! `='ordinary-path'`\n" "view! `='path with spaces'`\n" "view! `='path''with\\strange`characters'`\n" "view! #\n" "view! #3\n" "view! `=(\"foo\" . \"bar\")`\n" "view! `find . -name ver\\\\*.c -print`\n" "view! ++encoding=utf-8 ++fileformat=unix `='foo'`\n") ==> ok
+test It should fail for invalid form., expects #<<error>> ==> ok
 <(visual)>---------------------------------------------------------------------
 test It should be compiled properly., expects ("visual\n" "visual `='ordinary-path'`\n" "visual `='path with spaces'`\n" "visual `='path''with\\strange`characters'`\n" "visual #\n" "visual #3\n" "visual `=(\"foo\" . \"bar\")`\n" "visual `find . -name ver\\\\*.c -print`\n" "visual ++encoding=utf-8 ++fileformat=unix `='foo'`\n") ==> ok
 test It should fail for invalid form., expects #<<error>> ==> ok

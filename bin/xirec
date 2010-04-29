@@ -1193,6 +1193,13 @@
 ;;; Commands - V
 ;;; ------------
 
+(define-xire-statement view context
+  [(_ . arguments)
+   `(%edit "view" "" ,@arguments)])
+(define-xire-statement view! context
+  [(_ . arguments)
+   `(%edit "view" "!" ,@arguments)])
+
 (define-xire-statement visual context
   [(_ . arguments)
    `(%edit "visual" "" ,@arguments)])
