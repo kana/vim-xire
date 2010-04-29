@@ -1075,6 +1075,11 @@
 
 ;;; Built-in xire macros - Ex commands (except control flow)
 ;;; ========================================================
+;;;
+;;; Definitions are sorted in alphabetical order.
+
+;;; Commands - E
+;;; ------------
 
 (define-xire-statement echo context
   [(_ expression ...)
