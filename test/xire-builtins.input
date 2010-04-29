@@ -836,6 +836,66 @@
 
 
 
+(test-section "(find)")  ;{{{2
+
+(test* "It should be compiled properly."
+       '("find\n"
+         "find `='ordinary-path'`\n"
+         "find `='path with spaces'`\n"
+         "find `='path''with\\strange`characters'`\n"
+         "find #\n"
+         "find #3\n"
+         "find `=(\"foo\" . \"bar\")`\n"
+         "find `find . -name ver\\\\*.c -print`\n"
+         "find ++encoding=utf-8 ++fileformat=unix `='foo'`\n")
+       (map compile-statement
+            '((find)
+              (find "ordinary-path")
+              (find "path with spaces")
+              (find "path'with\\strange`characters")
+              (find :alternate)
+              (find :buffer 3)
+              (find :expression (.. "foo" "bar"))
+              (find :command "find . -name ver\\*.c -print")
+              (find "foo" :encoding "utf-8" :fileformat "unix"))))
+
+(test* "It should fail for invalid form."
+       (test-error <error>)
+       (compile-statement '(find foo bar)))
+
+
+
+
+(test-section "(find!)")  ;{{{2
+
+(test* "It should be compiled properly."
+       '("find!\n"
+         "find! `='ordinary-path'`\n"
+         "find! `='path with spaces'`\n"
+         "find! `='path''with\\strange`characters'`\n"
+         "find! #\n"
+         "find! #3\n"
+         "find! `=(\"foo\" . \"bar\")`\n"
+         "find! `find . -name ver\\\\*.c -print`\n"
+         "find! ++encoding=utf-8 ++fileformat=unix `='foo'`\n")
+       (map compile-statement
+            '((find!)
+              (find! "ordinary-path")
+              (find! "path with spaces")
+              (find! "path'with\\strange`characters")
+              (find! :alternate)
+              (find! :buffer 3)
+              (find! :expression (.. "foo" "bar"))
+              (find! :command "find . -name ver\\*.c -print")
+              (find! "foo" :encoding "utf-8" :fileformat "unix"))))
+
+(test* "It should fail for invalid form."
+       (test-error <error>)
+       (compile-statement '(find! foo bar)))
+
+
+
+
 (test-section "(view)")  ;{{{2
 
 (test* "It should be compiled properly."

@@ -1190,6 +1190,19 @@
    `(%edit "ex" "!" ,@arguments)])
 
 
+;;; Commands - F
+;;; ------------
+
+(define-xire-statement find context
+  ; FIXME: Support count.
+  [(_ . arguments)
+   `(%edit "find" "" ,@arguments)])
+(define-xire-statement find! context
+  ; FIXME: Support count.
+  [(_ . arguments)
+   `(%edit "find" "!" ,@arguments)])
+
+
 ;;; Commands - V
 ;;; ------------
 
