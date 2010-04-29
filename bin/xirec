@@ -23,6 +23,7 @@
 ;     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 (use gauche.parameter)
+(use srfi-1)
 (use text.tree)
 (use util.list)
 (use util.match)
@@ -1077,6 +1078,38 @@
 ;;; ========================================================
 ;;;
 ;;; Definitions are sorted in alphabetical order.
+
+;;; Common utilities
+;;; ----------------
+
+;; Parse OPTIONS which expresses a list of ++opt.
+;;
+;; Examples:
+;;   :edit ++{option} ==> (edit :{option} #t)
+;;   :edit ++{option}={value} ==> (edit :{option} {value})
+(define (parse-++opt options)
+  (let-keywords options ([bad #f]
+                         [binary #f]
+                         [edit #f]
+                         [encoding #f]
+                         [fileformat #f]
+                         [nobinary #f]
+                         . etc)
+    (define (_ name value)
+      (cond
+        [(string? value) (list "++" name "=" value)]
+        [value (list "++" name)]
+        [else #f]))
+    (if (not (null? etc))
+      (errorf "Invalid options: ~s" etc))
+    (remove (lambda (x) (eq? x #f))
+            (list (_ "bad" bad)
+                  (_ "binary" binary)
+                  (_ "edit" edit)
+                  (_ "encoding" encoding)
+                  (_ "fileformat" fileformat)
+                  (_ "nobinary" nobinary)))))
+
 
 ;;; Commands - E
 ;;; ------------

@@ -110,6 +110,11 @@ test It should raise error if the number of operands is less than 1., expects #<
 test It should raise error if the number of operands is greater than 1., expects #<<error>> ==> ok
 <(abs ...)>--------------------------------------------------------------------
 test It should be compiled properly., expects "(abs(1))" ==> ok
+<(parse-++opt)>----------------------------------------------------------------
+test It should return the null list for option list without any content., expects () ==> ok
+test It should succeed for ordinary option list with a few options., expects ("++encoding=utf-8" "++fileformat=unix") ==> ok
+test It should succeed for ordinary option list with all options., expects ("++bad=X" "++binary" "++edit" "++encoding=utf-8" "++fileformat=unix" "++nobinary") ==> ok
+test It should fail for invalid option list., expects #<<error>> ==> ok
 <(echo expression ...)>--------------------------------------------------------
 test It should be compiled properly., expects ("echo \n" "echo 1\n" "echo 1 2\n" "echo 1 (2 + 3)\n") ==> ok
 passed.

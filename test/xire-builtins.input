@@ -638,6 +638,42 @@
 
 
 
+; Common utilities  ;{{{1
+(test-section "(parse-++opt)")  ;{{{2
+
+(test* "It should return the null list for option list without any content."
+       '()
+       (parse-++opt '()))
+
+(test* "It should succeed for ordinary option list with a few options."
+       '("++encoding=utf-8"
+         "++fileformat=unix")
+       (map tree->string
+            (parse-++opt '(:encoding "utf-8"
+                           :fileformat "unix"))))
+
+(test* "It should succeed for ordinary option list with all options."
+       '("++bad=X"
+         "++binary"
+         "++edit"
+         "++encoding=utf-8"
+         "++fileformat=unix"
+         "++nobinary")
+       (map tree->string
+            (parse-++opt '(:bad "X"
+                           :binary #t
+                           :edit #t
+                           :encoding "utf-8"
+                           :fileformat "unix"
+                           :nobinary #t))))
+
+(test* "It should fail for invalid option list."
+       (test-error <error>)
+       (parse-++opt '(:invalid!? #t)))
+
+
+
+
 ; Other Ex commands  ;{{{1
 (test-section "(echo expression ...)")  ;{{{2
 
