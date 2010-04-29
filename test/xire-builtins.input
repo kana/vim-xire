@@ -836,6 +836,66 @@
 
 
 
+(test-section "(visual)")  ;{{{2
+
+(test* "It should be compiled properly."
+       '("visual\n"
+         "visual `='ordinary-path'`\n"
+         "visual `='path with spaces'`\n"
+         "visual `='path''with\\strange`characters'`\n"
+         "visual #\n"
+         "visual #3\n"
+         "visual `=(\"foo\" . \"bar\")`\n"
+         "visual `find . -name ver\\\\*.c -print`\n"
+         "visual ++encoding=utf-8 ++fileformat=unix `='foo'`\n")
+       (map compile-statement
+            '((visual)
+              (visual "ordinary-path")
+              (visual "path with spaces")
+              (visual "path'with\\strange`characters")
+              (visual :alternate)
+              (visual :buffer 3)
+              (visual :expression (.. "foo" "bar"))
+              (visual :command "find . -name ver\\*.c -print")
+              (visual "foo" :encoding "utf-8" :fileformat "unix"))))
+
+(test* "It should fail for invalid form."
+       (test-error <error>)
+       (compile-statement '(visual foo bar)))
+
+
+
+
+(test-section "(visual!)")  ;{{{2
+
+(test* "It should be compiled properly."
+       '("visual!\n"
+         "visual! `='ordinary-path'`\n"
+         "visual! `='path with spaces'`\n"
+         "visual! `='path''with\\strange`characters'`\n"
+         "visual! #\n"
+         "visual! #3\n"
+         "visual! `=(\"foo\" . \"bar\")`\n"
+         "visual! `find . -name ver\\\\*.c -print`\n"
+         "visual! ++encoding=utf-8 ++fileformat=unix `='foo'`\n")
+       (map compile-statement
+            '((visual!)
+              (visual! "ordinary-path")
+              (visual! "path with spaces")
+              (visual! "path'with\\strange`characters")
+              (visual! :alternate)
+              (visual! :buffer 3)
+              (visual! :expression (.. "foo" "bar"))
+              (visual! :command "find . -name ver\\*.c -print")
+              (visual! "foo" :encoding "utf-8" :fileformat "unix"))))
+
+(test* "It should fail for invalid form."
+       (test-error <error>)
+       (compile-statement '(visual! foo bar)))
+
+
+
+
 ;(test-section "template")  ;{{{1
 
 ;(test* "title"

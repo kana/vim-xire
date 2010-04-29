@@ -1190,6 +1190,17 @@
    `(%edit "ex" "!" ,@arguments)])
 
 
+;;; Commands - V
+;;; ------------
+
+(define-xire-statement visual context
+  [(_ . arguments)
+   `(%edit "visual" "" ,@arguments)])
+(define-xire-statement visual! context
+  [(_ . arguments)
+   `(%edit "visual" "!" ,@arguments)])
+
+
 
 
 ;;; Main
