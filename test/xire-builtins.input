@@ -494,6 +494,38 @@
 
 
 
+(test-section "(when ...)")  ;{{{2
+
+(test* "It should be compiled properly."
+       (list (join "if 1" "echo 2" "endif")
+             (join "if 1" "echo 2" "echo 3" "endif"))
+       (map compile-statement
+            '((when 1 (echo 2))
+              (when 1 (echo 2) (echo 3)))))
+
+(test* "It should raise error if the number of operands is less than 2."
+       (test-error <error>)
+       (compile-statement '(when 1)))
+
+
+
+
+(test-section "(unless ...)")  ;{{{2
+
+(test* "It should be compiled properly."
+       (list (join "if (!1)" "echo 2" "endif")
+             (join "if (!1)" "echo 2" "echo 3" "endif"))
+       (map compile-statement
+            '((unless 1 (echo 2))
+              (unless 1 (echo 2) (echo 3)))))
+
+(test* "It should raise error if the number of operands is less than 2."
+       (test-error <error>)
+       (compile-statement '(unless 1)))
+
+
+
+
 (test-section "(while ...)")  ;{{{2
 
 (test* "It should be compiled properly."

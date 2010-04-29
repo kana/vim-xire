@@ -729,6 +729,13 @@
          "endif"
          "\n")])
 
+(define-xire-statement when context
+  [(condition body ..1)
+   (xire-compile `(if ,condition (begin ,@body)) context)])
+(define-xire-statement unless context
+  [(condition body ..1)
+   (xire-compile `(when (not ,condition) ,@body) context)])
+
 (define-xire-statement while context
   [(condition statement ..1)
    (list "while"

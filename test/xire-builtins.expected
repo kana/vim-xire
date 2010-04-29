@@ -82,6 +82,12 @@ test It should raise error if the number of operands is less than 1., expects #<
 test It should be compiled properly., expects ("if 1\necho 2\nendif\n" "if 1\necho 2\nelse\necho 3\nendif\n") ==> ok
 test It should raise error if the number of operands is less than 2., expects #<<error>> ==> ok
 test It should raise error if the number of operands is greater than 3., expects #<<error>> ==> ok
+<(when ...)>-------------------------------------------------------------------
+test It should be compiled properly., expects ("if 1\necho 2\nendif\n" "if 1\necho 2\necho 3\nendif\n") ==> ok
+test It should raise error if the number of operands is less than 2., expects #<<error>> ==> ok
+<(unless ...)>-----------------------------------------------------------------
+test It should be compiled properly., expects ("if (!1)\necho 2\nendif\n" "if (!1)\necho 2\necho 3\nendif\n") ==> ok
+test It should raise error if the number of operands is less than 2., expects #<<error>> ==> ok
 <(while ...)>------------------------------------------------------------------
 test It should be compiled properly., expects ("while 1\necho 2\nendwhile\n" "while 1\necho 2\necho 3\nendwhile\n") ==> ok
 test It should raise error if the number of operands is less than 2., expects #<<error>> ==> ok
