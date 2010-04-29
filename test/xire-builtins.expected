@@ -117,5 +117,11 @@ test It should succeed for ordinary option list with all options., expects ("++b
 test It should fail for invalid option list., expects #<<error>> ==> ok
 <(echo expression ...)>--------------------------------------------------------
 test It should be compiled properly., expects ("echo \n" "echo 1\n" "echo 1 2\n" "echo 1 (2 + 3)\n") ==> ok
+<(edit)>-----------------------------------------------------------------------
+test It should be compiled properly., expects ("edit\n" "edit `='ordinary-path'`\n" "edit `='path with spaces'`\n" "edit `='path''with\\strange`characters'`\n" "edit #\n" "edit #3\n" "edit `=(\"foo\" . \"bar\")`\n" "edit `find . -name ver\\\\*.c -print`\n" "edit ++encoding=utf-8 ++fileformat=unix `='foo'`\n") ==> ok
+test It should fail for invalid form., expects #<<error>> ==> ok
+<(edit!)>----------------------------------------------------------------------
+test It should be compiled properly., expects ("edit!\n" "edit! `='ordinary-path'`\n" "edit! `='path with spaces'`\n" "edit! `='path''with\\strange`characters'`\n" "edit! #\n" "edit! #3\n" "edit! `=(\"foo\" . \"bar\")`\n" "edit! `find . -name ver\\\\*.c -print`\n" "edit! ++encoding=utf-8 ++fileformat=unix `='foo'`\n") ==> ok
+test It should fail for invalid form., expects #<<error>> ==> ok
 passed.
 passed.

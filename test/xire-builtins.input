@@ -690,6 +690,66 @@
 
 
 
+(test-section "(edit)")  ;{{{2
+
+(test* "It should be compiled properly."
+       '("edit\n"
+         "edit `='ordinary-path'`\n"
+         "edit `='path with spaces'`\n"
+         "edit `='path''with\\strange`characters'`\n"
+         "edit #\n"
+         "edit #3\n"
+         "edit `=(\"foo\" . \"bar\")`\n"
+         "edit `find . -name ver\\\\*.c -print`\n"
+         "edit ++encoding=utf-8 ++fileformat=unix `='foo'`\n")
+       (map compile-statement
+            '((edit)
+              (edit "ordinary-path")
+              (edit "path with spaces")
+              (edit "path'with\\strange`characters")
+              (edit :alternate)
+              (edit :buffer 3)
+              (edit :expression (.. "foo" "bar"))
+              (edit :command "find . -name ver\\*.c -print")
+              (edit "foo" :encoding "utf-8" :fileformat "unix"))))
+
+(test* "It should fail for invalid form."
+       (test-error <error>)
+       (compile-statement '(edit foo bar)))
+
+
+
+
+(test-section "(edit!)")  ;{{{2
+
+(test* "It should be compiled properly."
+       '("edit!\n"
+         "edit! `='ordinary-path'`\n"
+         "edit! `='path with spaces'`\n"
+         "edit! `='path''with\\strange`characters'`\n"
+         "edit! #\n"
+         "edit! #3\n"
+         "edit! `=(\"foo\" . \"bar\")`\n"
+         "edit! `find . -name ver\\\\*.c -print`\n"
+         "edit! ++encoding=utf-8 ++fileformat=unix `='foo'`\n")
+       (map compile-statement
+            '((edit!)
+              (edit! "ordinary-path")
+              (edit! "path with spaces")
+              (edit! "path'with\\strange`characters")
+              (edit! :alternate)
+              (edit! :buffer 3)
+              (edit! :expression (.. "foo" "bar"))
+              (edit! :command "find . -name ver\\*.c -print")
+              (edit! "foo" :encoding "utf-8" :fileformat "unix"))))
+
+(test* "It should fail for invalid form."
+       (test-error <error>)
+       (compile-statement '(edit! foo bar)))
+
+
+
+
 ;(test-section "template")  ;{{{1
 
 ;(test* "title"

@@ -1123,6 +1123,59 @@
                       (map (cut xire-compile <> econtext) expression)))
      "\n")])
 
+(define-xire-statement %edit context
+  ; +cmd is not supported.  Because:
+  ;
+  ; - It's not useful for scripting use.
+  ; - It's possible to write equivalent script easily.
+  ;   For example, ":edit +3 foo" can be written as ":edit foo | 3".
+  ; - And the latter style is more readable than the former style.
+  [(_ :internal bang path . options)
+   (list "edit" bang
+         (map (cut cons " " <>)
+              (parse-++opt options))
+         (if path
+           (list " " path)
+           "")
+         "\n")]
+  ; Entry
+  [; :edit {path}
+   (_ bang (? string? path) . options)
+   `(%edit :internal
+           ,bang
+           ("`='" ,(regexp-replace-all* path #/'/ "''") "'`")
+           ,@options)]
+  [; :edit #
+   (_ bang :alternate . options)
+   `(%edit :internal ,bang "#" ,@options)]
+  [; :edit #[count]
+   (_ bang :buffer (? integer? number) . options)
+   `(%edit :internal ,bang ("#" ,number) ,@options)]
+  [; :edit `command`
+   (_ bang :command command . options)
+   `(%edit :internal
+           ,bang
+           ("`" ,(regexp-replace-all* command #/\\/ "\\\\\\\\") "`")
+           ,@options)]
+  [; :edit `=expression`
+   (_ bang :expression expression . options)
+   `(%edit :internal
+           ,bang
+           ("`="
+            ,(xire-compile expression (make-expression-context context))
+            "`")
+           ,@options)]
+  [; :edit
+   (_ bang . options)
+   `(%edit :internal ,bang #f ,@options)])
+
+(define-xire-statement edit context
+  [(_ . arguments)
+   `(%edit "" ,@arguments)])
+(define-xire-statement edit! context
+  [(_ . arguments)
+   `(%edit "!" ,@arguments)])
+
 
 
 
