@@ -158,15 +158,14 @@
     [(_ "internal" name context [pattern . body] ...)
      (define-xire-macro :statement (name form context)
        (ensure-statement-context form context)
-       (let1 clauses (cdr form)
-         (match clauses
-           [pattern . body]
-           ...)))]
+       (match form
+         [pattern . body]
+         ...))]
     ; Entry
     [(_ name [pattern . body] ...)  ; Basic form.
      (define-xire-statement name context [pattern . body] ...)]
     [(_ name statement)  ; For a simple statement such as :break.
-     (define-xire-statement name context [() '(statement "\n")])]
+     (define-xire-statement name context [(_) '(statement "\n")])]
     [(_ name context [pattern . body] ...)  ; With the name of context.
      (define-xire-statement "internal" name context [pattern . body] ...)]))
 
@@ -177,10 +176,9 @@
     [(_ "internal" name context [pattern . body] ...)
      (define-xire-macro :expression (name form context)
        (ensure-expression-context form context)
-       (let1 clauses (cdr form)
-         (match clauses
-           [pattern . body]
-           ...)))]
+       (match form
+         [pattern . body]
+         ...))]
     ; Entry
     [(_ name [pattern . body] ...)  ; Basic form.
      (define-xire-expression name context [pattern . body] ...)]
@@ -364,11 +362,11 @@
   ; Embed raw Vim script.  This is a temporary stuff until xire supports full
   ; features of Vim script.  Use it carefully and it should not be used if
   ; possible.
-  [(stuffs ...)
+  [(_ stuffs ...)
    (map x->string stuffs)])
 
 (define-xire-statement comment
-  [((? string? comment-string) ...)
+  [(_ (? string? comment-string) ...)
    `("\""
      ,(string-join comment-string " " 'prefix)
      "\n")])
@@ -415,16 +413,16 @@
   (syntax-rules ()
     [(_ name vim-script-operator)  ; 2 <= N
      (define-xire-expression name context
-       [(valueN ..2)
+       [(_ valueN ..2)
         (%compile-nary-operator-exression
           valueN
           vim-script-operator
           context)])]
     [(_ name vim-script-operator initial-value)  ; 1 <= N
      (define-xire-expression name context
-       [(value1)
+       [(_ value1)
         (xire-compile `(name initial-value ,value1) context)]
-       [(valueN ..2)
+       [(_ valueN ..2)
         (%compile-nary-operator-exression
           valueN
           vim-script-operator
@@ -434,7 +432,7 @@
   (syntax-rules ()
     [(_ name vim-script-operator)
      (define-xire-expression name context
-       [(l r)
+       [(_ l r)
         (list "("
               (xire-compile l context)
               " "  ; [*SPACES] to avoid (is v e) ==> (vise)
@@ -450,7 +448,7 @@
 ;;; expr2 ? expr1 : expr1   (?: expr2 expr1 expr1)  if-then-else
 
 (define-xire-expression ?: context
-  [(expression then-part else-part)
+  [(_ expression then-part else-part)
    (list "("
          (xire-compile expression context)
          " ? "
@@ -572,7 +570,7 @@
 ;;;                         and they also serve as unary ones.
 
 (define-xire-expression not context
-  [(expression)
+  [(_ expression)
    (list "("
          "!"
          (xire-compile expression context)
@@ -596,7 +594,7 @@
 ;;;                         FIXME: Need review - :call, call(), funcref().
 
 (define-xire-expression ref context
-  [(container-expression index-expression)
+  [(_ container-expression index-expression)
    (list "("
          "("
          (xire-compile container-expression context)
@@ -608,7 +606,7 @@
          "]"
          ")")])
 (define-xire-expression slice context
-  [(container-expression index1-expression index2-expression)
+  [(_ container-expression index1-expression index2-expression)
    (list "("
          "("
          (xire-compile container-expression context)
@@ -624,7 +622,7 @@
          "]"
          ")")])
 (define-xire-expression -> context
-  [(dictionary (? symbol? member-name))
+  [(_ dictionary (? symbol? member-name))
    (list "("
          "("
          (xire-compile dictionary context)
@@ -633,7 +631,7 @@
          (xire-compile member-name context)
          ")")])
 (define-xire-expression apply context
-  [(function . arguments)
+  [(_ function . arguments)
    `("("
      ,(xire-compile function context)
      "("
@@ -672,12 +670,12 @@
 ;;;                         R5RS doesn't allow such symbol.
 
 (define-xire-expression list context
-  [(valueN ...)
+  [(_ valueN ...)
    `("["
      ,@(intersperse "," (map (cut xire-compile <> context) valueN))
      "]")])
 (define-xire-expression dict context
-  [(and ((key value) ...)
+  [(_ and ((key value) ...)
      (item ...))
    `("{"
      ,@(intersperse ","
@@ -688,13 +686,13 @@
                          item))
      "}")])
 (define-xire-expression & context
-  [((? symbol? option-name))
+  [(_ (? symbol? option-name))
    `("&" ,(x->vim-script-notation option-name))])
 (define-xire-expression $ context
-  [((? symbol? variable-name))
+  [(_ (? symbol? variable-name))
    `("$" ,(x->vim-script-notation variable-name))])
 (define-xire-expression @ context
-  [((? symbol? variable-name))
+  [(_ (? symbol? variable-name))
    `("@" ,(x->vim-script-notation variable-name))])
 
 
@@ -707,11 +705,11 @@
   ; Though there is no equivalent for BEGIN in Vim script, it's necessary to
   ; write multiple statements as a single statement in xire script.  For
   ; example: (if condition (begin statement1 statement2 ...))
-  [(statement ..1)
+  [(_ statement ..1)
    (map (cut xire-compile <> context) statement)])
 
 (define-xire-statement if context
-  [(condition then-part)
+  [(_ condition then-part)
    (list "if"
          " "
          (xire-compile condition (make-expression-context context))
@@ -719,7 +717,7 @@
          (xire-compile then-part context)
          "endif"
          "\n")]
-  [(condition then-part else-part)
+  [(_ condition then-part else-part)
    (list "if"
          " "
          (xire-compile condition (make-expression-context context))
@@ -732,14 +730,14 @@
          "\n")])
 
 (define-xire-statement when context
-  [(condition body ..1)
+  [(_ condition body ..1)
    (xire-compile `(if ,condition (begin ,@body)) context)])
 (define-xire-statement unless context
-  [(condition body ..1)
+  [(_ condition body ..1)
    (xire-compile `(when (not ,condition) ,@body) context)])
 
 (define-xire-statement while context
-  [(condition statement ..1)
+  [(_ condition statement ..1)
    (list "while"
          " "
          (xire-compile condition (make-expression-context context))
@@ -750,7 +748,7 @@
 
 (define-xire-statement for context
    ; :for i in list
-  [((? symbol? variable) list-expression statement ..1)
+  [(_ (? symbol? variable) list-expression statement ..1)
    (list "for"
          " "
          (x->vim-script-notation variable)
@@ -763,7 +761,7 @@
          "endfor"
          "\n")]
   ; for [i, ...] in list-olf-lists
-  [(((? symbol? variable) ..1) list-of-lists-expression statement ..1)
+  [(_ ((? symbol? variable) ..1) list-of-lists-expression statement ..1)
    (list "for"
          " "
          "["
@@ -784,16 +782,16 @@
 (define-xire-statement continue "continue")
 
 (define-xire-statement return context
-  [()
+  [(_)
    '("return" "\n")]
-  [(value-expression)
+  [(_ value-expression)
    (list "return"
          " "
          (xire-compile value-expression (make-expression-context context))
          "\n")])
 
 (define-xire-statement throw context
-  [(value-expression)
+  [(_ value-expression)
    (list "throw"
          " "
          (xire-compile value-expression (make-expression-context context))
@@ -811,7 +809,7 @@
   (syntax-rules ()
     [(_ name minimum-argument-count maximum-argument-count)
      (define-xire-expression name context
-       [(expressions ..0)
+       [(_ expressions ..0)
         (let1 n (length expressions)
           (if (< n minimum-argument-count)
             (errorf "Function ~s takes at least ~s arguments, but got: ~s"
@@ -1079,7 +1077,7 @@
 ;;; ========================================================
 
 (define-xire-statement echo context
-  [(expression ...)
+  [(_ expression ...)
    `("echo"
      " "
      ,@(intersperse " "

@@ -115,11 +115,11 @@
        (parameterize ([xire-environment (make <xire-environment>)])
          (define context (make-expression-context))
          (define-xire-expression my-expression
-           [(a)
+           [(_ a)
             `("style" a ,a)]
-           [(a b)
+           [(_ a b)
             `("style" a ,a b ,b)]
-           [(a . rest)
+           [(_ a . rest)
             `("style" a ,a rest ,rest)])
          (list
            (xire-compile '(my-expression AAA) context)
@@ -131,7 +131,7 @@
        (parameterize ([xire-environment (make <xire-environment>)])
          (define context (make-statement-context))
          (define-xire-expression my-expression
-           [(a . rest)
+           [(_ a . rest)
             `(style a ,a rest ,rest)])
          (xire-compile '(my-expression AAA BBB CCC) context)))
 
@@ -140,7 +140,7 @@
        (parameterize ([xire-environment (make <xire-environment>)])
          (define outer-context (make-expression-context))
          (define-xire-expression my-expression inner-context
-           [()
+           [(_)
             (list "result" (eq? inner-context outer-context))])
          (let1 another-context outer-context
            (xire-compile '(my-expression) another-context))))
@@ -219,11 +219,11 @@
        (parameterize ([xire-environment (make <xire-environment>)])
          (define context (make-statement-context))
          (define-xire-statement my-statement
-           [(a)
+           [(_ a)
             `("style" a ,a)]
-           [(a b)
+           [(_ a b)
             `("style" a ,a b ,b)]
-           [(a . rest)
+           [(_ a . rest)
             `("style" a ,a rest ,rest)])
          (list
            (xire-compile '(my-statement AAA) context)
@@ -235,7 +235,7 @@
        (parameterize ([xire-environment (make <xire-environment>)])
          (define context (make-expression-context))
          (define-xire-statement my-statement
-           [(a . rest)
+           [(_ a . rest)
             `(style a ,a rest ,rest)])
          (xire-compile '(my-statement AAA BBB CCC) context)))
 
@@ -244,7 +244,7 @@
        (parameterize ([xire-environment (make <xire-environment>)])
          (define outer-context (make-statement-context))
          (define-xire-statement my-statement inner-context
-           [()
+           [(_)
             (list "result" (eq? inner-context outer-context))])
          (let1 another-context outer-context
            (xire-compile '(my-statement) another-context))))
