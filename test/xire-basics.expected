@@ -12,9 +12,9 @@ test It should define an nary operator, available only in an expression., expect
 test It should define an N-ary operator, where 2 <= N. (success), expects ("(2 <> 3)" "(4 <> 5 <> 6 <> 7)") ==> ok
 test It should define an N-ary operator, where 2 <= N. (failure), expects #<<error>> ==> ok
 <define-xire-expression>-------------------------------------------------------
-test It should define a xire expression in the current environment., expects ((style a AAA) (style a AAA b BBB) (style a AAA rest (BBB CCC))) ==> ok
+test It should define a xire expression in the current environment., expects (("style" a AAA) ("style" a AAA b BBB) ("style" a AAA rest (BBB CCC))) ==> ok
 test It should define a macro which raises error in non-expression context., expects #<<error>> ==> ok
-test It should accept the name of a context, expects #t ==> ok
+test It should accept the name of a context, expects ("result" #t) ==> ok
 <define-xire-function>---------------------------------------------------------
 test It should define a xire function in the current environment., expects ("(f03())" "(f03(1))" "(f03(1,\"2\"))" "(f03(1,\"2\",'3'))") ==> ok
 test It should raise error for non-expression context., expects #<<error>> ==> ok
@@ -25,9 +25,9 @@ test It should take 1 or more arguments., expects ("(f(1))" "(f(1,2))" "(f(1,2,3
 <define-xire-macro>------------------------------------------------------------
 test It should define a xire macro in the current environment., expects (#f (< (original-form) = context >)) ==> ok
 <define-xire-statement>--------------------------------------------------------
-test It should define a xire statement in the current environment., expects ((style a AAA) (style a AAA b BBB) (style a AAA rest (BBB CCC))) ==> ok
+test It should define a xire statement in the current environment., expects (("style" a AAA) ("style" a AAA b BBB) ("style" a AAA rest (BBB CCC))) ==> ok
 test It should define a macro which raises error for non-statement context., expects #<<error>> ==> ok
-test It should accept the name of a context, expects #t ==> ok
+test It should accept the name of a context, expects ("result" #t) ==> ok
 test It should define a macro for simple statement such :break., expects (("break!" "\n") ("continue!" "\n") ("noel" "\n")) ==> ok
 <x->vim-script-notation>-------------------------------------------------------
 test It should convert 32 bit signed numbers properly., expects ("0" "123" "-456" "789" "2147483647" "-2147483648") ==> ok
@@ -50,6 +50,7 @@ test It should succeed to compile a valid script., expects ("\"" "I am a comment
 test It should succeed to compile a valid expression., expects ("123" "\"string\"" "symbol") ==> ok
 test It should raise error to compile an expression in invalid context., expects #<<error>> ==> ok
 test It should return stuff which is alredy compiled as is., expects #t ==> ok
+test It should repeat macro expansion until given form cannot be expanded., expects ("result" "B" "A") ==> ok
 <xire-context related stuffs>--------------------------------------------------
 test <xire-context> should be available., expects #<class <xire-context>> ==> ok
 test make-toplevel-context should make a proper instance., expects #<class <xire-context>> ==> ok

@@ -231,7 +231,7 @@
      (cond
        [(xire-lookup-macro name context)
         => (lambda (expander)
-             (expander form context))]
+             (xire-compile (expander form context) context))]
        [else
          (report-syntax-error)])]
     [(_ . _)  ; FORM is already compiled.

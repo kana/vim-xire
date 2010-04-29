@@ -109,18 +109,18 @@
 (test-section "define-xire-expression")  ;{{{1
 
 (test* "It should define a xire expression in the current environment."
-       '((style a AAA)
-         (style a AAA b BBB)
-         (style a AAA rest (BBB CCC)))
+       '(("style" a AAA)
+         ("style" a AAA b BBB)
+         ("style" a AAA rest (BBB CCC)))
        (parameterize ([xire-environment (make <xire-environment>)])
          (define context (make-expression-context))
          (define-xire-expression my-expression
            [(a)
-            `(style a ,a)]
+            `("style" a ,a)]
            [(a b)
-            `(style a ,a b ,b)]
+            `("style" a ,a b ,b)]
            [(a . rest)
-            `(style a ,a rest ,rest)])
+            `("style" a ,a rest ,rest)])
          (list
            (xire-compile '(my-expression AAA) context)
            (xire-compile '(my-expression AAA BBB) context)
@@ -136,12 +136,12 @@
          (xire-compile '(my-expression AAA BBB CCC) context)))
 
 (test* "It should accept the name of a context"
-       #t
+       '("result" #t)
        (parameterize ([xire-environment (make <xire-environment>)])
          (define outer-context (make-expression-context))
          (define-xire-expression my-expression inner-context
            [()
-            (eq? inner-context outer-context)])
+            (list "result" (eq? inner-context outer-context))])
          (let1 another-context outer-context
            (xire-compile '(my-expression) another-context))))
 
@@ -213,18 +213,18 @@
 (test-section "define-xire-statement")  ;{{{1
 
 (test* "It should define a xire statement in the current environment."
-       '((style a AAA)
-         (style a AAA b BBB)
-         (style a AAA rest (BBB CCC)))
+       '(("style" a AAA)
+         ("style" a AAA b BBB)
+         ("style" a AAA rest (BBB CCC)))
        (parameterize ([xire-environment (make <xire-environment>)])
          (define context (make-statement-context))
          (define-xire-statement my-statement
            [(a)
-            `(style a ,a)]
+            `("style" a ,a)]
            [(a b)
-            `(style a ,a b ,b)]
+            `("style" a ,a b ,b)]
            [(a . rest)
-            `(style a ,a rest ,rest)])
+            `("style" a ,a rest ,rest)])
          (list
            (xire-compile '(my-statement AAA) context)
            (xire-compile '(my-statement AAA BBB) context)
@@ -240,12 +240,12 @@
          (xire-compile '(my-statement AAA BBB CCC) context)))
 
 (test* "It should accept the name of a context"
-       #t
+       '("result" #t)
        (parameterize ([xire-environment (make <xire-environment>)])
          (define outer-context (make-statement-context))
          (define-xire-statement my-statement inner-context
            [()
-            (eq? inner-context outer-context)])
+            (list "result" (eq? inner-context outer-context))])
          (let1 another-context outer-context
            (xire-compile '(my-statement) another-context))))
 
@@ -400,6 +400,16 @@
          (let1 form '("already" "compiled")
            (eq? (xire-compile form (make-toplevel-context))
                 form))))
+
+(test* "It should repeat macro expansion until given form cannot be expanded."
+       '("result" "B" "A")
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (define-xire-macro :statement (recursion-test form context)
+           (match form
+             [(_) '(recursion-test "A")]
+             [(_ a) `(recursion-test "B" ,a)]
+             [(_ a b) `("result" ,a ,b)]))
+         (xire-compile '(recursion-test) (make-toplevel-context))))
 
 
 
