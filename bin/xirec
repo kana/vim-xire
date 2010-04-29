@@ -1082,6 +1082,33 @@
 ;;; Common utilities
 ;;; ----------------
 
+;; Define an Ex command modifier such as :vertical.
+;;
+;; [*] Consider the following statements.  It's not easy to compile:
+;;
+;;     (define-xire-statement-modifier aboveleft)
+;;     (define-xire-statement-modifier belowright)
+;;     (define-xire-statement-modifier vertical)
+;;
+;;     (aboveleft
+;;       (new)
+;;       (vertical
+;;         (new)
+;;         (belowright
+;;           (new))))
+;;     (vertical
+;;       (begin
+;;         (new)
+;;         (new)))
+(define-syntax define-xire-statement-modifier
+  (syntax-rules ()
+    [(_ name)
+     (define-xire-statement-modifier name (symbol->string 'name))]
+    [(_ name vim-command-name)
+     (define-xire-statement name context
+       [(_ body)  ; FIXME: Support multiple statements.  [*]
+        `(,vim-command-name " " ,(xire-compile body context))])]))
+
 ;; Parse OPTIONS which expresses a list of ++opt.
 ;;
 ;; Examples:

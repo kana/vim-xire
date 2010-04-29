@@ -639,6 +639,35 @@
 
 
 ; Common utilities  ;{{{1
+(test-section "(define-xire-statement-modifier)")  ;{{{2
+
+(test* "It should define a valid modifier."
+       (list (join "ctrl delete")
+             (join "ctrl alt delete"))
+       (parameterize ([xire-environment (xire-environment-copy)])
+         (define-xire-statement-modifier control "ctrl")
+         (define-xire-statement-modifier alt)
+         (define-xire-statement delete "delete")
+         (list (compile-statement '(control (delete)))
+               (compile-statement '(control (alt (delete)))))))
+
+(test* "It should not support multiple statements at the moment."
+       (test-error <error>)
+       (parameterize ([xire-environment (xire-environment-copy)])
+         (define-xire-statement-modifier control "ctrl")
+         (define-xire-statement delete "delete")
+         (compile-statement '(control (delete)
+                                      (delete)))))
+
+(test* "It should fail if trailing script is not a valid statement."
+       (test-error <error>)
+       (parameterize ([xire-environment (xire-environment-copy)])
+         (define-xire-statement-modifier control "ctrl")
+         (compile-statement '(control (+ 1 2)))))
+
+
+
+
 (test-section "(parse-++opt)")  ;{{{2
 
 (test* "It should return the null list for option list without any content."
