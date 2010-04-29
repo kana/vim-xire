@@ -1176,6 +1176,9 @@
   [(_ . arguments)
    `(%edit "!" ,@arguments)])
 
+(define-xire-statement enew "enew")
+(define-xire-statement enew! "enew!")
+
 
 
 

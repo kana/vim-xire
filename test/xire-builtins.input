@@ -750,6 +750,32 @@
 
 
 
+(test-section "(enew)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "enew\n"
+       (compile-statement '(enew)))
+
+(test* "It should fail for invalid form."
+       (test-error <error>)
+       (compile-statement '(enew foo)))
+
+
+
+
+(test-section "(enew!)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "enew!\n"
+       (compile-statement '(enew!)))
+
+(test* "It should fail for invalid form."
+       (test-error <error>)
+       (compile-statement '(enew! foo)))
+
+
+
+
 ;(test-section "template")  ;{{{1
 
 ;(test* "title"
