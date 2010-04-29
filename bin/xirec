@@ -421,7 +421,7 @@
     [(_ name vim-script-operator initial-value)  ; 1 <= N
      (define-xire-expression name context
        [(_ value1)
-        (xire-compile `(name initial-value ,value1) context)]
+        `(name initial-value ,value1)]
        [(_ valueN ..2)
         (%compile-nary-operator-exression
           valueN
@@ -731,10 +731,10 @@
 
 (define-xire-statement when context
   [(_ condition body ..1)
-   (xire-compile `(if ,condition (begin ,@body)) context)])
+   `(if ,condition (begin ,@body))])
 (define-xire-statement unless context
   [(_ condition body ..1)
-   (xire-compile `(when (not ,condition) ,@body) context)])
+   `(when (not ,condition) ,@body)])
 
 (define-xire-statement while context
   [(_ condition statement ..1)
