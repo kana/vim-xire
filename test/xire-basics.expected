@@ -44,12 +44,12 @@ test It should convert regular expressions properly., expects ("''" "'/'" "'\\\\
 <xire-compile>-----------------------------------------------------------------
 test It should raise error for a malformed script: (), expects #<<error>> ==> ok
 test It should raise error for a malformed script: (lambda () #f), expects #<<error>> ==> ok
-test It should raise error for a malformed script: ("already compiled"), expects #<<error>> ==> ok
 test It should raise error for a malformed script: (no-such-macro), expects #<<error>> ==> ok
 test It should raise error for a malformed script: (macro invlaid argument), expects #<<error>> ==> ok
 test It should succeed to compile a valid script., expects ("\"" "I am a comment!") ==> ok
 test It should succeed to compile a valid expression., expects ("123" "\"string\"" "symbol") ==> ok
 test It should raise error to compile an expression in invalid context., expects #<<error>> ==> ok
+test It should return stuff which is alredy compiled as is., expects #t ==> ok
 <xire-context related stuffs>--------------------------------------------------
 test <xire-context> should be available., expects #<class <xire-context>> ==> ok
 test make-toplevel-context should make a proper instance., expects #<class <xire-context>> ==> ok

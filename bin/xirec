@@ -234,6 +234,8 @@
              (expander form context))]
        [else
          (report-syntax-error)])]
+    [(_ . _)  ; FORM is already compiled.
+     form]
     [_
      (cond
        [(x->vim-script-notation form #f)

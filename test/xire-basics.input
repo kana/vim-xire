@@ -360,11 +360,6 @@
        (parameterize ([xire-environment (make <xire-environment>)])
          (xire-compile (lambda () #f) (make-toplevel-context))))
 
-(test* "It should raise error for a malformed script: (\"already compiled\")"
-       (test-error <error>)
-       (parameterize ([xire-environment (make <xire-environment>)])
-         (xire-compile '("already compiled") (make-toplevel-context))))
-
 (test* "It should raise error for a malformed script: (no-such-macro)"
        (test-error <error>)
        (parameterize ([xire-environment (make <xire-environment>)])
@@ -398,6 +393,13 @@
        (parameterize ([xire-environment (make <xire-environment>)])
          (let1 wrong-context (make-statement-context (make-toplevel-context))
            (xire-compile 123 wrong-context))))
+
+(test* "It should return stuff which is alredy compiled as is."
+       #t
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (let1 form '("already" "compiled")
+           (eq? (xire-compile form (make-toplevel-context))
+                form))))
 
 
 
