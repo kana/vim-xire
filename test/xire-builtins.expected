@@ -129,5 +129,11 @@ test It should fail for invalid form., expects #<<error>> ==> ok
 <(enew!)>----------------------------------------------------------------------
 test It should be compiled properly., expects "enew!\n" ==> ok
 test It should fail for invalid form., expects #<<error>> ==> ok
+<(ex)>-------------------------------------------------------------------------
+test It should be compiled properly., expects ("ex\n" "ex `='ordinary-path'`\n" "ex `='path with spaces'`\n" "ex `='path''with\\strange`characters'`\n" "ex #\n" "ex #3\n" "ex `=(\"foo\" . \"bar\")`\n" "ex `find . -name ver\\\\*.c -print`\n" "ex ++encoding=utf-8 ++fileformat=unix `='foo'`\n") ==> ok
+test It should fail for invalid form., expects #<<error>> ==> ok
+<(ex!)>------------------------------------------------------------------------
+test It should be compiled properly., expects ("ex!\n" "ex! `='ordinary-path'`\n" "ex! `='path with spaces'`\n" "ex! `='path''with\\strange`characters'`\n" "ex! #\n" "ex! #3\n" "ex! `=(\"foo\" . \"bar\")`\n" "ex! `find . -name ver\\\\*.c -print`\n" "ex! ++encoding=utf-8 ++fileformat=unix `='foo'`\n") ==> ok
+test It should fail for invalid form., expects #<<error>> ==> ok
 passed.
 passed.

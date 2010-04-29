@@ -776,6 +776,66 @@
 
 
 
+(test-section "(ex)")  ;{{{2
+
+(test* "It should be compiled properly."
+       '("ex\n"
+         "ex `='ordinary-path'`\n"
+         "ex `='path with spaces'`\n"
+         "ex `='path''with\\strange`characters'`\n"
+         "ex #\n"
+         "ex #3\n"
+         "ex `=(\"foo\" . \"bar\")`\n"
+         "ex `find . -name ver\\\\*.c -print`\n"
+         "ex ++encoding=utf-8 ++fileformat=unix `='foo'`\n")
+       (map compile-statement
+            '((ex)
+              (ex "ordinary-path")
+              (ex "path with spaces")
+              (ex "path'with\\strange`characters")
+              (ex :alternate)
+              (ex :buffer 3)
+              (ex :expression (.. "foo" "bar"))
+              (ex :command "find . -name ver\\*.c -print")
+              (ex "foo" :encoding "utf-8" :fileformat "unix"))))
+
+(test* "It should fail for invalid form."
+       (test-error <error>)
+       (compile-statement '(ex foo bar)))
+
+
+
+
+(test-section "(ex!)")  ;{{{2
+
+(test* "It should be compiled properly."
+       '("ex!\n"
+         "ex! `='ordinary-path'`\n"
+         "ex! `='path with spaces'`\n"
+         "ex! `='path''with\\strange`characters'`\n"
+         "ex! #\n"
+         "ex! #3\n"
+         "ex! `=(\"foo\" . \"bar\")`\n"
+         "ex! `find . -name ver\\\\*.c -print`\n"
+         "ex! ++encoding=utf-8 ++fileformat=unix `='foo'`\n")
+       (map compile-statement
+            '((ex!)
+              (ex! "ordinary-path")
+              (ex! "path with spaces")
+              (ex! "path'with\\strange`characters")
+              (ex! :alternate)
+              (ex! :buffer 3)
+              (ex! :expression (.. "foo" "bar"))
+              (ex! :command "find . -name ver\\*.c -print")
+              (ex! "foo" :encoding "utf-8" :fileformat "unix"))))
+
+(test* "It should fail for invalid form."
+       (test-error <error>)
+       (compile-statement '(ex! foo bar)))
+
+
+
+
 ;(test-section "template")  ;{{{1
 
 ;(test* "title"

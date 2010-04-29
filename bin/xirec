@@ -1182,6 +1182,13 @@
 (define-xire-statement enew "enew")
 (define-xire-statement enew! "enew!")
 
+(define-xire-statement ex context
+  [(_ . arguments)
+   `(%edit "ex" "" ,@arguments)])
+(define-xire-statement ex! context
+  [(_ . arguments)
+   `(%edit "ex" "!" ,@arguments)])
+
 
 
 
