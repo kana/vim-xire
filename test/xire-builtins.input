@@ -704,6 +704,51 @@
 
 
 ; Other Ex commands  ;{{{1
+(test-section "(aboveleft)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "aboveleft edit\n"
+       (compile-statement '(aboveleft (edit))))
+
+
+
+
+(test-section "(belowright)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "belowright edit\n"
+       (compile-statement '(belowright (edit))))
+
+
+
+
+(test-section "(botright)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "botright edit\n"
+       (compile-statement '(botright (edit))))
+
+
+
+
+(test-section "(browse)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "browse edit\n"
+       (compile-statement '(browse (edit))))
+
+
+
+
+(test-section "(confirm)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "confirm edit\n"
+       (compile-statement '(confirm (edit))))
+
+
+
+
 (test-section "(echo expression ...)")  ;{{{2
 
 (test* "It should be compiled properly."
@@ -921,6 +966,141 @@
 (test* "It should fail for invalid form."
        (test-error <error>)
        (compile-statement '(find! foo bar)))
+
+
+
+
+(test-section "(hide)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "hide edit\n"
+       (compile-statement '(hide (edit))))
+
+
+
+
+(test-section "(keepalt)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "keepalt edit\n"
+       (compile-statement '(keepalt (edit))))
+
+
+
+
+(test-section "(keepjumps)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "keepjumps edit\n"
+       (compile-statement '(keepjumps (edit))))
+
+
+
+
+(test-section "(keepmarks)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "keepmarks edit\n"
+       (compile-statement '(keepmarks (edit))))
+
+
+
+
+(test-section "(leftabove)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "leftabove edit\n"
+       (compile-statement '(leftabove (edit))))
+
+
+
+
+(test-section "(lockmarks)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "lockmarks edit\n"
+       (compile-statement '(lockmarks (edit))))
+
+
+
+
+(test-section "(noautocmd)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "noautocmd edit\n"
+       (compile-statement '(noautocmd (edit))))
+
+
+
+
+(test-section "(rightbelow)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "rightbelow edit\n"
+       (compile-statement '(rightbelow (edit))))
+
+
+
+
+(test-section "(sandbox)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "sandbox edit\n"
+       (compile-statement '(sandbox (edit))))
+
+
+
+
+(test-section "(silent)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "silent edit\n"
+       (compile-statement '(silent (edit))))
+
+
+
+
+(test-section "(tab)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "tab edit\n"
+       (compile-statement '(tab (edit))))
+
+
+
+
+(test-section "(topleft)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "topleft edit\n"
+       (compile-statement '(topleft (edit))))
+
+
+
+
+(test-section "(unsilent)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "unsilent edit\n"
+       (compile-statement '(unsilent (edit))))
+
+
+
+
+(test-section "(verbose)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "verbose edit\n"
+       (compile-statement '(verbose (edit))))
+
+
+
+
+(test-section "(vertical)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "vertical edit\n"
+       (compile-statement '(vertical (edit))))
 
 
 

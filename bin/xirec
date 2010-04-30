@@ -1138,6 +1138,26 @@
                   (_ "nobinary" nobinary)))))
 
 
+;;; Commands - A
+;;; ------------
+
+(define-xire-statement-modifier aboveleft)
+
+
+;;; Commands - B
+;;; ------------
+
+(define-xire-statement-modifier belowright)
+(define-xire-statement-modifier botright)
+(define-xire-statement-modifier browse)
+
+
+;;; Commands - C
+;;; ------------
+
+(define-xire-statement-modifier confirm)
+
+
 ;;; Commands - E
 ;;; ------------
 
@@ -1230,8 +1250,64 @@
    `(%edit "find" "!" ,@arguments)])
 
 
+;;; Commands - H
+;;; ------------
+
+(define-xire-statement-modifier hide)
+
+
+;;; Commands - K
+;;; ------------
+
+(define-xire-statement-modifier keepalt)
+(define-xire-statement-modifier keepjumps)
+(define-xire-statement-modifier keepmarks)
+
+
+;;; Commands - L
+;;; ------------
+
+(define-xire-statement-modifier leftabove)
+(define-xire-statement-modifier lockmarks)
+
+
+;;; Commands - N
+;;; ------------
+
+(define-xire-statement-modifier noautocmd)
+
+
+;;; Commands - R
+;;; ------------
+
+(define-xire-statement-modifier rightbelow)
+
+
+;;; Commands - S
+;;; ------------
+
+(define-xire-statement-modifier sandbox)
+(define-xire-statement-modifier silent)
+
+
+;;; Commands - T
+;;; ------------
+
+(define-xire-statement-modifier tab)
+(define-xire-statement-modifier topleft)
+
+
+;;; Commands - U
+;;; ------------
+
+(define-xire-statement-modifier unsilent)
+
+
 ;;; Commands - V
 ;;; ------------
+
+(define-xire-statement-modifier verbose)
+(define-xire-statement-modifier vertical)
 
 (define-xire-statement view context
   [(_ . arguments)

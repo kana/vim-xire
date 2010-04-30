@@ -119,6 +119,16 @@ test It should return the null list for option list without any content., expect
 test It should succeed for ordinary option list with a few options., expects ("++encoding=utf-8" "++fileformat=unix") ==> ok
 test It should succeed for ordinary option list with all options., expects ("++bad=X" "++binary" "++edit" "++encoding=utf-8" "++fileformat=unix" "++nobinary") ==> ok
 test It should fail for invalid option list., expects #<<error>> ==> ok
+<(aboveleft)>------------------------------------------------------------------
+test It should be compiled properly., expects "aboveleft edit\n" ==> ok
+<(belowright)>-----------------------------------------------------------------
+test It should be compiled properly., expects "belowright edit\n" ==> ok
+<(botright)>-------------------------------------------------------------------
+test It should be compiled properly., expects "botright edit\n" ==> ok
+<(browse)>---------------------------------------------------------------------
+test It should be compiled properly., expects "browse edit\n" ==> ok
+<(confirm)>--------------------------------------------------------------------
+test It should be compiled properly., expects "confirm edit\n" ==> ok
 <(echo expression ...)>--------------------------------------------------------
 test It should be compiled properly., expects ("echo \n" "echo 1\n" "echo 1 2\n" "echo 1 (2 + 3)\n") ==> ok
 <(edit)>-----------------------------------------------------------------------
@@ -145,6 +155,36 @@ test It should fail for invalid form., expects #<<error>> ==> ok
 <(find!)>----------------------------------------------------------------------
 test It should be compiled properly., expects ("find!\n" "find! `='ordinary-path'`\n" "find! `='path with spaces'`\n" "find! `='path''with\\strange`characters'`\n" "find! #\n" "find! #3\n" "find! `=(\"foo\" . \"bar\")`\n" "find! `find . -name ver\\\\*.c -print`\n" "find! ++encoding=utf-8 ++fileformat=unix `='foo'`\n") ==> ok
 test It should fail for invalid form., expects #<<error>> ==> ok
+<(hide)>-----------------------------------------------------------------------
+test It should be compiled properly., expects "hide edit\n" ==> ok
+<(keepalt)>--------------------------------------------------------------------
+test It should be compiled properly., expects "keepalt edit\n" ==> ok
+<(keepjumps)>------------------------------------------------------------------
+test It should be compiled properly., expects "keepjumps edit\n" ==> ok
+<(keepmarks)>------------------------------------------------------------------
+test It should be compiled properly., expects "keepmarks edit\n" ==> ok
+<(leftabove)>------------------------------------------------------------------
+test It should be compiled properly., expects "leftabove edit\n" ==> ok
+<(lockmarks)>------------------------------------------------------------------
+test It should be compiled properly., expects "lockmarks edit\n" ==> ok
+<(noautocmd)>------------------------------------------------------------------
+test It should be compiled properly., expects "noautocmd edit\n" ==> ok
+<(rightbelow)>-----------------------------------------------------------------
+test It should be compiled properly., expects "rightbelow edit\n" ==> ok
+<(sandbox)>--------------------------------------------------------------------
+test It should be compiled properly., expects "sandbox edit\n" ==> ok
+<(silent)>---------------------------------------------------------------------
+test It should be compiled properly., expects "silent edit\n" ==> ok
+<(tab)>------------------------------------------------------------------------
+test It should be compiled properly., expects "tab edit\n" ==> ok
+<(topleft)>--------------------------------------------------------------------
+test It should be compiled properly., expects "topleft edit\n" ==> ok
+<(unsilent)>-------------------------------------------------------------------
+test It should be compiled properly., expects "unsilent edit\n" ==> ok
+<(verbose)>--------------------------------------------------------------------
+test It should be compiled properly., expects "verbose edit\n" ==> ok
+<(vertical)>-------------------------------------------------------------------
+test It should be compiled properly., expects "vertical edit\n" ==> ok
 <(view)>-----------------------------------------------------------------------
 test It should be compiled properly., expects ("view\n" "view `='ordinary-path'`\n" "view `='path with spaces'`\n" "view `='path''with\\strange`characters'`\n" "view #\n" "view #3\n" "view `=(\"foo\" . \"bar\")`\n" "view `find . -name ver\\\\*.c -print`\n" "view ++encoding=utf-8 ++fileformat=unix `='foo'`\n") ==> ok
 test It should fail for invalid form., expects #<<error>> ==> ok
