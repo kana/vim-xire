@@ -1204,8 +1204,7 @@
 (define-xire-statement %args context
   [(_ name ((? path-pattern? path) ...) . options)
    `(,name
-     ,(map (cut cons " " <>)
-          (parse-++opt options))
+     ,(compile-++opt options)
      ,(map (compose (cut cons " " <>)
                     (cut compile-path <> context))
            path)
@@ -1273,8 +1272,7 @@
   ; - And the latter style is more readable than the former style.
   [(_ :internal command-name bang path . options)
    (list command-name bang
-         (map (cut cons " " <>)
-              (parse-++opt options))
+         (compile-++opt options)
          (if path
            (list " " path)
            "")
