@@ -162,13 +162,22 @@
        (match form
          [pattern . body]
          ...))]
-    ; Entry
-    [(_ name [pattern . body] ...)  ; Basic form.
-     (define-xire-statement name context [pattern . body] ...)]
-    [(_ name statement)  ; For a simple statement such as :break.
-     (define-xire-statement name context [(_) '(statement "\n")])]
-    [(_ name context [pattern . body] ...)  ; With the name of context.
-     (define-xire-statement "internal" name context [pattern . body] ...)]))
+    ; Entry forms (sort by complexity, for proper pattern matching)
+    [(_ name [pattern1 . body1] [patternN . bodyN] ...)  ; Basic form.
+     (define-xire-statement name context
+       [pattern1 . body1]
+       [patternN . bodyN]
+       ...)]
+    [(_ name context [pattern1 . body1] [patternN . bodyN] ...)  ; + context.
+     (define-xire-statement "internal" name context
+       [pattern1 . body1]
+       [patternN . bodyN]
+       ...)]
+    [(_ name command-name)  ; For a simple statement such as :break.
+     (define-xire-statement name
+       [(_)
+        '(command-name "\n")])]
+    ))
 
 ;; Define new xire expression in the current environment.
 ;; This is a wrapper for define-xire-macro.
