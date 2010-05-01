@@ -1126,6 +1126,12 @@
     [_
      (errorf "Invalid path: ~s" path)]))
 
+;; Compile a list of PATHS in a sense of COMPILE-PATH.
+(define (compile-paths paths context)
+  (intersperse " "
+               (map (cut compile-path <> context)
+                    paths)))
+
 ;; Define an Ex command modifier such as :vertical.
 ;;
 ;; [*] Consider the following statements.  It's not easy to compile:

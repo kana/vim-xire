@@ -703,6 +703,33 @@
 
 
 
+(test-section "(compile-paths)")  ;{{{2
+
+(test* "It should compile valid paths properly."
+       (string-join '("`='foo''bar'`"
+                      "#"
+                      "#3"
+                      "`echo 'fo\\\\o'`"
+                      "`=(\"foo\" . \"bar\")`"
+                      "**/%<.[ch]")
+                    " ")
+       (tree->string
+         (compile-paths 
+           '("foo'bar"
+             (:alternate)
+             (:buffer 3)
+             (:command "echo 'fo\\o'")
+             (:expression (.. "foo" "bar"))
+             (:raw "**/%<.[ch]"))
+           (make-statement-context))))
+
+(test* "It should fail for invalid paths."
+       (test-error <error>)
+       (compile-paths '((:invalid "path")) (make-statement-context)))
+
+
+
+
 (test-section "(define-xire-statement-modifier)")  ;{{{2
 
 (test* "It should define a valid modifier."

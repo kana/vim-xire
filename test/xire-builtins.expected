@@ -118,6 +118,9 @@ test It should fail for invalid option list., expects #<<error>> ==> ok
 <(compile-path)>---------------------------------------------------------------
 test It should compile a valid path properly., expects ("`='foo''bar'`" "#" "#3" "`echo 'fo\\\\o'`" "`=(\"foo\" . \"bar\")`" "**/%<.[ch]") ==> ok
 test It should fail for invalid path., expects #<<error>> ==> ok
+<(compile-paths)>--------------------------------------------------------------
+test It should compile valid paths properly., expects "`='foo''bar'` # #3 `echo 'fo\\\\o'` `=(\"foo\" . \"bar\")` **/%<.[ch]" ==> ok
+test It should fail for invalid paths., expects #<<error>> ==> ok
 <(define-xire-statement-modifier)>---------------------------------------------
 test It should define a valid modifier., expects ("ctrl delete\n" "ctrl alt delete\n") ==> ok
 test It should not support multiple statements at the moment., expects #<<error>> ==> ok
