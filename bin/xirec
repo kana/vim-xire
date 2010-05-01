@@ -1201,6 +1201,23 @@
 
 (define-xire-statement-modifier aboveleft)
 
+(define-xire-statement %argedit context
+  [(_ bang path . options)
+   (let-keywords options ([count #f]
+                          . rest-options)
+     `(,(or count "")
+       "argedit" ,bang
+       ,(compile-++opt rest-options)
+       " "
+       ,(compile-path path context)
+       "\n"))])
+(define-xire-statement argedit
+  [(_ . arguments)
+   `(%argedit "" ,@arguments)])
+(define-xire-statement argedit!
+  [(_ . arguments)
+   `(%argedit "!" ,@arguments)])
+
 (define-xire-statement %args context
   [(_ name ((? path-pattern? path) ...) . options)
    `(,name

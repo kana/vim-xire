@@ -831,6 +831,58 @@
 
 
 
+(test-section "(argedit)")  ;{{{2
+
+(test* "It should be compiled properly."
+       (list (join "argedit `='foo'`")
+             (join "argedit ++encoding=utf-8 `='foo'`")
+             (join "8argedit ++encoding=utf-8 `='foo'`"))
+       (map compile-statement
+            '((argedit "foo")
+              (argedit "foo" :encoding "utf-8")
+              (argedit "foo" :count 8 :encoding "utf-8"))))
+
+(test* "It should fail without any argument."
+       (test-error <error>)
+       (compile-statement '(argedit)))
+
+(test* "It should fail with invalid path."
+       (test-error <error>)
+       (compile-statement '(argedit 'invalid-path)))
+
+(test* "It should fail without a path."
+       (test-error <error>)
+       (compile-statement '(argedit :encoding utf-8)))
+
+
+
+
+(test-section "(argedit!)")  ;{{{2
+
+(test* "It should be compiled properly."
+       (list (join "argedit! `='foo'`")
+             (join "argedit! ++encoding=utf-8 `='foo'`")
+             (join "8argedit! ++encoding=utf-8 `='foo'`"))
+       (map compile-statement
+            '((argedit! "foo")
+              (argedit! "foo" :encoding "utf-8")
+              (argedit! "foo" :count 8 :encoding "utf-8"))))
+
+(test* "It should fail without any argument."
+       (test-error <error>)
+       (compile-statement '(argedit!)))
+
+(test* "It should fail with invalid path."
+       (test-error <error>)
+       (compile-statement '(argedit! 'invalid-path)))
+
+(test* "It should fail without a path."
+       (test-error <error>)
+       (compile-statement '(argedit! :encoding utf-8)))
+
+
+
+
 (test-section "(args)")  ;{{{2
 
 (test* "It should be compiled properly."
