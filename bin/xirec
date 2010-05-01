@@ -1280,6 +1280,20 @@
 ;;; Commands - F
 ;;; ------------
 
+(define-xire-statement %file context
+  [(_ bang)
+   `("file" ,bang "\n")]
+  [(_ bang #f)
+   `("0" "file" ,bang "\n")]
+  [(_ bang path)
+   `("file" ,bang " " ,(escape-path path) "\n")])
+(define-xire-statement file context
+  [(_ . arguments)
+   `(%file "" ,@arguments)])
+(define-xire-statement file! context
+  [(_ . arguments)
+   `(%file "!" ,@arguments)])
+
 (define-xire-statement files :!)
 
 (define-xire-statement find context

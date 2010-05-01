@@ -1127,6 +1127,50 @@
 
 
 
+(test-section "(file)")  ;{{{2
+
+(test* "It should be compiled properly."
+       (list (join "file")
+             (join "0file")
+             (join "file `='foo bar baz'`"))
+       (map compile-statement
+            '((file)
+              (file #f)
+              (file "foo bar baz"))))
+
+(test* "It should fail if too many arguments are given."
+       (test-error <error>)
+       (compile-statement '(file "foo" "bar")))
+
+(test* "It should fail if non-#f and non-string argument is given."
+       (test-error <error>)
+       (compile-statement '(file #t)))
+
+
+
+
+(test-section "(file!)")  ;{{{2
+
+(test* "It should be compiled properly."
+       (list (join "file!")
+             (join "0file!")
+             (join "file! `='foo bar baz'`"))
+       (map compile-statement
+            '((file!)
+              (file! #f)
+              (file! "foo bar baz"))))
+
+(test* "It should fail if too many arguments are given."
+       (test-error <error>)
+       (compile-statement '(file! "foo" "bar")))
+
+(test* "It should fail if non-#f and non-string argument is given."
+       (test-error <error>)
+       (compile-statement '(file! #t)))
+
+
+
+
 (test-section "(files)")  ;{{{2
 
 (test* "It should be compiled properly."
