@@ -792,6 +792,42 @@
 
 
 
+(test-section "(args)")  ;{{{2
+
+(test* "It should be compiled properly."
+       (list (join "args")
+             (join "args ++encoding=utf-8 `='foo'`")
+             (join "args **/*.c **/*.h"))
+       (map compile-statement
+            '((args)
+              (args "foo" :encoding "utf-8")
+              (args ((:raw "**/*.c") (:raw "**/*.h"))))))
+
+(test* "It should fail for invalid argument."
+       (test-error <error>)
+       (compile-statement '(args 0)))
+
+
+
+
+(test-section "(args!)")  ;{{{2
+
+(test* "It should be compiled properly."
+       (list (join "args!")
+             (join "args! ++encoding=utf-8 `='foo'`")
+             (join "args! **/*.c **/*.h"))
+       (map compile-statement
+            '((args!)
+              (args! "foo" :encoding "utf-8")
+              (args! ((:raw "**/*.c") (:raw "**/*.h"))))))
+
+(test* "It should fail for invalid argument."
+       (test-error <error>)
+       (compile-statement '(args! 0)))
+
+
+
+
 (test-section "(ascii)")  ;{{{2
 
 (test* "It should be compiled properly."

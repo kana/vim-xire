@@ -130,6 +130,12 @@ test It should return true for a path., expects (#t #t #t #t #t #t) ==> ok
 test It should return false for a non-path., expects (#f #f #f #f #f) ==> ok
 <(aboveleft)>------------------------------------------------------------------
 test It should be compiled properly., expects "aboveleft edit\n" ==> ok
+<(args)>-----------------------------------------------------------------------
+test It should be compiled properly., expects ("args\n" "args ++encoding=utf-8 `='foo'`\n" "args **/*.c **/*.h\n") ==> ok
+test It should fail for invalid argument., expects #<<error>> ==> ok
+<(args!)>----------------------------------------------------------------------
+test It should be compiled properly., expects ("args!\n" "args! ++encoding=utf-8 `='foo'`\n" "args! **/*.c **/*.h\n") ==> ok
+test It should fail for invalid argument., expects #<<error>> ==> ok
 <(ascii)>----------------------------------------------------------------------
 test It should be compiled properly., expects "ascii\n" ==> ok
 test It should fail if extra argument is given., expects #<<error>> ==> ok
