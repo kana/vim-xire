@@ -1116,6 +1116,8 @@
      `("`="
        ,(xire-compile xire-expression (make-expression-context context))
        "`")]
+    [(:raw raw-path)
+     raw-path]
     [_
      (errorf "Invalid path: ~s" path)]))
 

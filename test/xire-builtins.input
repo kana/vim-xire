@@ -646,14 +646,16 @@
          "#"
          "#3"
          "`echo 'fo\\\\o'`"
-         "`=(\"foo\" . \"bar\")`")
+         "`=(\"foo\" . \"bar\")`"
+         "**/%<.[ch]")
        (map (compose tree->string
                      (cut compile-path <> (make-statement-context)))
             '("foo'bar"
               (:alternate)
               (:buffer 3)
               (:command "echo 'fo\\o'")
-              (:expression (.. "foo" "bar")))))
+              (:expression (.. "foo" "bar"))
+              (:raw "**/%<.[ch]"))))
 
 (test* "It should fail for invalid path."
        (test-error <error>)
