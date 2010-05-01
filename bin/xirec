@@ -791,9 +791,9 @@
          "endfor"
          "\n")])
 
-(define-xire-statement break "break")
+(define-xire-statement break)
 
-(define-xire-statement continue "continue")
+(define-xire-statement continue)
 
 (define-xire-statement return context
   [(_)
@@ -1239,8 +1239,8 @@
   [(_ . arguments)
    `(%edit "edit" "!" ,@arguments)])
 
-(define-xire-statement enew "enew")
-(define-xire-statement enew! "enew!")
+(define-xire-statement enew)
+(define-xire-statement enew!)
 
 (define-xire-statement ex context
   [(_ . arguments)
