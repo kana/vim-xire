@@ -252,16 +252,21 @@
 (test* "It should define a macro for simple statement such :break."
        '(("break!" "\n")
          ("continue" "\n")
-         ("noel" "\n"))
+         ("noel" "\n")
+         ("bang" "\n")
+         ("bang!" "\n"))
        (parameterize ([xire-environment (make <xire-environment>)])
          (define context (make-statement-context))
          (define-xire-statement break "break!")
          (define-xire-statement continue)
          (define-xire-statement wreathlit "noel")
+         (define-xire-statement bang :!)
          (map (cut xire-compile <> context)
               '((break)
                 (continue)
-                (wreathlit)))))
+                (wreathlit)
+                (bang)
+                (bang!)))))
 
 
 

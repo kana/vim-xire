@@ -173,6 +173,11 @@
        [pattern1 . body1]
        [patternN . bodyN]
        ...)]
+    [(_ name :!)  ; Shorthand for (_ name) and (_ name!).
+     (let1 name! (string->symbol (string-append (symbol->string 'name) "!"))
+       (define-xire-statement name)
+       (eval `(define-xire-statement ,name!)  ; FIXME: Refine.
+             (current-module)))]
     [(_ name command-name)  ; For a simple statement such as :break.
      (define-xire-statement name
        [(_)
