@@ -1160,6 +1160,15 @@
                   (_ "fileformat" fileformat)
                   (_ "nobinary" nobinary)))))
 
+;; Determine whether a given object X is valid as a path or not.
+(define (path-pattern? x)
+  (match x
+    [(or (? string?)
+         ((? keyword?) . _))  ; Rough checking to avoid DRY with compile-path.
+     #t]
+    [_
+     #f]))
+
 
 ;;; Commands - A
 ;;; ------------

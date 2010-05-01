@@ -122,6 +122,9 @@ test It should return the null list for option list without any content., expect
 test It should succeed for ordinary option list with a few options., expects ("++encoding=utf-8" "++fileformat=unix") ==> ok
 test It should succeed for ordinary option list with all options., expects ("++bad=X" "++binary" "++edit" "++encoding=utf-8" "++fileformat=unix" "++nobinary") ==> ok
 test It should fail for invalid option list., expects #<<error>> ==> ok
+<(path-pattern?)>--------------------------------------------------------------
+test It should return true for a path., expects (#t #t #t #t #t #t) ==> ok
+test It should return false for a non-path., expects (#f #f #f #f #f) ==> ok
 <(aboveleft)>------------------------------------------------------------------
 test It should be compiled properly., expects "aboveleft edit\n" ==> ok
 <(ascii)>----------------------------------------------------------------------

@@ -733,6 +733,30 @@
 
 
 
+(test-section "(path-pattern?)")  ;{{{2
+
+(test* "It should return true for a path."
+       '(#t #t #t #t #t #t)
+       (map path-pattern?
+            '("ordinary path"
+              (:alternate)
+              (:buffer 3)
+              (:command "echo 'foo'")
+              (:expression (.. "foo" "bar"))
+              (:this-is-not-valid "but" "accepted"))))
+
+(test* "It should return false for a non-path."
+       '(#f #f #f #f #f)
+       (map path-pattern?
+            '(not-a-path
+              (alternate)
+              (buffer 3)
+              (command "echo 'foo'")
+              (expression (.. "foo" "bar")))))
+
+
+
+
 ; Other Ex commands  ;{{{1
 (test-section "(aboveleft)")  ;{{{2
 
