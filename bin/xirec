@@ -1100,6 +1100,25 @@
 ;;; Common utilities
 ;;; ----------------
 
+;; Compile a given PATH into a valid one for argument for :edit-like commands.
+;; Assumption: (path-pattern? PATH) ==> #t
+(define (compile-path path context)
+  (match path
+    [(? string?)
+     (escape-path path)]
+    [(:alternate)
+     "#"]
+    [(:buffer (? integer? number))
+     `("#" ,number)]
+    [(:command shell-command)
+     `("`" ,(regexp-replace-all* shell-command #/\\/ "\\\\\\\\") "`")]
+    [(:expression xire-expression)
+     `("`="
+       ,(xire-compile xire-expression (make-expression-context context))
+       "`")]
+    [_
+     (errorf "Invalid path: ~s" path)]))
+
 ;; Define an Ex command modifier such as :vertical.
 ;;
 ;; [*] Consider the following statements.  It's not easy to compile:

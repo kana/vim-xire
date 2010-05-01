@@ -639,6 +639,29 @@
 
 
 ; Common utilities  ;{{{1
+(test-section "(compile-path)")  ;{{{2
+
+(test* "It should compile a valid path properly."
+       '("`='foo''bar'`"
+         "#"
+         "#3"
+         "`echo 'fo\\\\o'`"
+         "`=(\"foo\" . \"bar\")`")
+       (map (compose tree->string
+                     (cut compile-path <> (make-statement-context)))
+            '("foo'bar"
+              (:alternate)
+              (:buffer 3)
+              (:command "echo 'fo\\o'")
+              (:expression (.. "foo" "bar")))))
+
+(test* "It should fail for invalid path."
+       (test-error <error>)
+       (compile-path '(:invalid "path") (make-statement-context)))
+
+
+
+
 (test-section "(define-xire-statement-modifier)")  ;{{{2
 
 (test* "It should define a valid modifier."
