@@ -1127,6 +1127,11 @@
        [(_ body)  ; FIXME: Support multiple statements.  [*]
         `(,vim-command-name " " ,(xire-compile body context))])]))
 
+;; Escape a given PATH with `={expr}` notation to avoid special meaning of
+;; metacharacters in arguments for :edit-like Ex commands.
+(define (escape-path path)
+  `("`='" ,(regexp-replace-all* path #/'/ "''") "'`"))
+
 ;; Parse OPTIONS which expresses a list of ++opt.
 ;;
 ;; Examples:
@@ -1224,7 +1229,7 @@
    `(%edit :internal
            ,command-name
            ,bang
-           ("`='" ,(regexp-replace-all* path #/'/ "''") "'`")
+           ,(escape-path path)
            ,@options)]
   [; :edit #
    (_ command-name bang :alternate . options)

@@ -668,6 +668,36 @@
 
 
 
+(test-section "(escape-path)")  ;{{{2
+
+(test* "It should escape a given path properly."
+       '("`=''`"
+         "`=''''`"
+         "`='\\'`"
+         "`='\"'`"
+         "`='%'`"
+         "`='#'`"
+         "`='|'`"
+         "`='''\\\" %#|'`"
+         "`='Apple Banana Cherry'`")
+       (map (compose tree->string escape-path)
+            '(""
+              "'"
+              "\\"
+              "\""
+              "%"
+              "#"
+              "|"
+              "'\\\" %#|"
+              "Apple Banana Cherry")))
+
+(test* "It should fail for non-string argument."
+       (test-error <error>)
+       (escape-path 'symbol))
+
+
+
+
 (test-section "(parse-++opt)")  ;{{{2
 
 (test* "It should return the null list for option list without any content."

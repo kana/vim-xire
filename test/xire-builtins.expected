@@ -114,6 +114,9 @@ test It should be compiled properly., expects "(abs(1))" ==> ok
 test It should define a valid modifier., expects ("ctrl delete\n" "ctrl alt delete\n") ==> ok
 test It should not support multiple statements at the moment., expects #<<error>> ==> ok
 test It should fail if trailing script is not a valid statement., expects #<<error>> ==> ok
+<(escape-path)>----------------------------------------------------------------
+test It should escape a given path properly., expects ("`=''`" "`=''''`" "`='\\'`" "`='\"'`" "`='%'`" "`='#'`" "`='|'`" "`='''\\\" %#|'`" "`='Apple Banana Cherry'`") ==> ok
+test It should fail for non-string argument., expects #<<error>> ==> ok
 <(parse-++opt)>----------------------------------------------------------------
 test It should return the null list for option list without any content., expects () ==> ok
 test It should succeed for ordinary option list with a few options., expects ("++encoding=utf-8" "++fileformat=unix") ==> ok
