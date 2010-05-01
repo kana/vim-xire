@@ -1212,9 +1212,8 @@
    (let-keywords options ([count #f])
      `(,(or count "")
        "argadd"
-       ,(map (compose (cut cons " " <>)
-                      (cut compile-path <> context))
-             path)
+       " "
+       ,(compile-paths path context)
        "\n"))]
   [(_ (? path-pattern? path) . options)
    `(argadd (,path) ,@options)])
@@ -1240,9 +1239,8 @@
   [(_ bang ((? path-pattern? path) ...) . options)
    `("args" ,bang
      ,(compile-++opt options)
-     ,(map (compose (cut cons " " <>)
-                    (cut compile-path <> context))
-           path)
+     " "
+     ,(compile-paths path context)
      "\n")]
   [(_ bang (? path-pattern? path) . options)
    `(%args ,bang (,path) ,@options)]
