@@ -203,11 +203,11 @@ test It should be compiled properly., expects "exusage\n" ==> ok
 test It should fail if extra argument is given., expects #<<error>> ==> ok
 test It should fail if bang is given., expects #<<error>> ==> ok
 <(file)>-----------------------------------------------------------------------
-test It should be compiled properly., expects ("file\n" "0file\n" "file `='foo bar baz'`\n") ==> ok
+test It should be compiled properly., expects ("file\n" "0file\n" "file `='foo bar baz'`\n" "file #3\n") ==> ok
 test It should fail if too many arguments are given., expects #<<error>> ==> ok
 test It should fail if non-#f and non-string argument is given., expects #<<error>> ==> ok
 <(file!)>----------------------------------------------------------------------
-test It should be compiled properly., expects ("file!\n" "0file!\n" "file! `='foo bar baz'`\n") ==> ok
+test It should be compiled properly., expects ("file!\n" "0file!\n" "file! `='foo bar baz'`\n" "file! #3\n") ==> ok
 test It should fail if too many arguments are given., expects #<<error>> ==> ok
 test It should fail if non-#f and non-string argument is given., expects #<<error>> ==> ok
 <(files)>----------------------------------------------------------------------

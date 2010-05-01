@@ -1179,11 +1179,13 @@
 (test* "It should be compiled properly."
        (list (join "file")
              (join "0file")
-             (join "file `='foo bar baz'`"))
+             (join "file `='foo bar baz'`")
+             (join "file #3"))
        (map compile-statement
             '((file)
               (file #f)
-              (file "foo bar baz"))))
+              (file "foo bar baz")
+              (file (:buffer 3)))))
 
 (test* "It should fail if too many arguments are given."
        (test-error <error>)
@@ -1201,11 +1203,13 @@
 (test* "It should be compiled properly."
        (list (join "file!")
              (join "0file!")
-             (join "file! `='foo bar baz'`"))
+             (join "file! `='foo bar baz'`")
+             (join "file! #3"))
        (map compile-statement
             '((file!)
               (file! #f)
-              (file! "foo bar baz"))))
+              (file! "foo bar baz")
+              (file! (:buffer 3)))))
 
 (test* "It should fail if too many arguments are given."
        (test-error <error>)

@@ -1292,7 +1292,7 @@
   [(_ bang #f)
    `("0" "file" ,bang "\n")]
   [(_ bang path)
-   `("file" ,bang " " ,(escape-path path) "\n")])
+   `("file" ,bang " " ,(compile-path path context) "\n")])
 (define-xire-statement file context
   [(_ . arguments)
    `(%file "" ,@arguments)])
