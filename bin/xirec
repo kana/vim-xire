@@ -1160,6 +1160,7 @@
 ;;; ------------
 
 (define-xire-statement-modifier aboveleft)
+(define-xire-statement ascii)
 
 
 ;;; Commands - B
@@ -1168,12 +1169,26 @@
 (define-xire-statement-modifier belowright)
 (define-xire-statement-modifier botright)
 (define-xire-statement-modifier browse)
+(define-xire-statement buffers :!)
 
 
 ;;; Commands - C
 ;;; ------------
 
+(define-xire-statement changes)
+(define-xire-statement checkpath :!)
+(define-xire-statement close :!)
+(define-xire-statement comclear)
 (define-xire-statement-modifier confirm)
+(define-xire-statement cquit :!)
+
+
+;;; Commands - D
+;;; ------------
+
+(define-xire-statement diffoff :!)
+(define-xire-statement diffthis)
+(define-xire-statement diffupdate)
 
 
 ;;; Commands - E
@@ -1254,9 +1269,13 @@
   [(_ . arguments)
    `(%edit "ex" "!" ,@arguments)])
 
+(define-xire-statement exusage)
+
 
 ;;; Commands - F
 ;;; ------------
+
+(define-xire-statement files :!)
 
 (define-xire-statement find context
   ; FIXME: Support count.
@@ -1267,11 +1286,26 @@
   [(_ . arguments)
    `(%edit "find" "!" ,@arguments)])
 
+(define-xire-statement finish)
+(define-xire-statement fixdel)
+
 
 ;;; Commands - H
 ;;; ------------
 
 (define-xire-statement-modifier hide)
+
+
+;;; Commands - I
+;;; ------------
+
+(define-xire-statement intro)
+
+
+;;; Commands - J
+;;; ------------
+
+(define-xire-statement jumps)
 
 
 ;;; Commands - K
@@ -1286,18 +1320,55 @@
 ;;; ------------
 
 (define-xire-statement-modifier leftabove)
+(define-xire-statement loadkeymap)
 (define-xire-statement-modifier lockmarks)
+(define-xire-statement ls :!)
+
+
+;;; Commands - M
+;;; ------------
+
+(define-xire-statement messages)
 
 
 ;;; Commands - N
 ;;; ------------
 
 (define-xire-statement-modifier noautocmd)
+(define-xire-statement nohlsearch)
+
+
+;;; Commands - O
+;;; ------------
+
+(define-xire-statement oldfiles :!)
+(define-xire-statement only :!)
+(define-xire-statement options)
+
+
+;;; Commands - P
+;;; ------------
+
+(define-xire-statement pclose :!)
+(define-xire-statement preserve)
+(define-xire-statement ptlast :!)
+(define-xire-statement pwd)
+
+
+;;; Commands - Q
+;;; ------------
+
+(define-xire-statement qall :!)
+(define-xire-statement quit :!)
+(define-xire-statement quitall :!)
 
 
 ;;; Commands - R
 ;;; ------------
 
+(define-xire-statement redo)
+(define-xire-statement redraw :!)
+(define-xire-statement redrawstatus :!)
 (define-xire-statement-modifier rightbelow)
 
 
@@ -1305,19 +1376,44 @@
 ;;; ------------
 
 (define-xire-statement-modifier sandbox)
+(define-xire-statement sbfirst)
+(define-xire-statement sblast)
+(define-xire-statement sbrewind)
+(define-xire-statement scriptnames)
+(define-xire-statement shell)
 (define-xire-statement-modifier silent)
+(define-xire-statement spelldump :!)
+(define-xire-statement spellinfo)
+(define-xire-statement spellrepall)
+(define-xire-statement startgreplace :!)
+(define-xire-statement startinsert :!)
+(define-xire-statement startreplace :!)
+(define-xire-statement stop :!)
+(define-xire-statement stopinsert :!)
+(define-xire-statement suspend :!)
+(define-xire-statement swapname)
+(define-xire-statement syncbind)
 
 
 ;;; Commands - T
 ;;; ------------
 
 (define-xire-statement-modifier tab)
+(define-xire-statement tabfirst)
+(define-xire-statement tablast)
+(define-xire-statement tabonly :!)
+(define-xire-statement tabrewind)
+(define-xire-statement tabs)
+(define-xire-statement tags)
+(define-xire-statement tlast :!)
 (define-xire-statement-modifier topleft)
 
 
 ;;; Commands - U
 ;;; ------------
 
+(define-xire-statement undojoin)
+(define-xire-statement undolist)
 (define-xire-statement-modifier unsilent)
 
 
@@ -1340,6 +1436,21 @@
 (define-xire-statement visual! context
   [(_ . arguments)
    `(%edit "visual" "!" ,@arguments)])
+
+(define-xire-statement viusage)
+
+
+;;; Commands - W
+;;; ------------
+
+(define-xire-statement wall :!)
+
+
+;;; Commands - X
+;;; ------------
+
+(define-xire-statement X)
+(define-xire-statement xall :!)
 
 
 

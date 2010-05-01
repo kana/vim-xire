@@ -121,14 +121,54 @@ test It should succeed for ordinary option list with all options., expects ("++b
 test It should fail for invalid option list., expects #<<error>> ==> ok
 <(aboveleft)>------------------------------------------------------------------
 test It should be compiled properly., expects "aboveleft edit\n" ==> ok
+<(ascii)>----------------------------------------------------------------------
+test It should be compiled properly., expects "ascii\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
 <(belowright)>-----------------------------------------------------------------
 test It should be compiled properly., expects "belowright edit\n" ==> ok
 <(botright)>-------------------------------------------------------------------
 test It should be compiled properly., expects "botright edit\n" ==> ok
 <(browse)>---------------------------------------------------------------------
 test It should be compiled properly., expects "browse edit\n" ==> ok
+<(buffers)>--------------------------------------------------------------------
+test It should be compiled properly., expects "buffers\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "buffers!\n" ==> ok
+<(changes)>--------------------------------------------------------------------
+test It should be compiled properly., expects "changes\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(checkpath)>------------------------------------------------------------------
+test It should be compiled properly., expects "checkpath\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "checkpath!\n" ==> ok
+<(close)>----------------------------------------------------------------------
+test It should be compiled properly., expects "close\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "close!\n" ==> ok
+<(comclear)>-------------------------------------------------------------------
+test It should be compiled properly., expects "comclear\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
 <(confirm)>--------------------------------------------------------------------
 test It should be compiled properly., expects "confirm edit\n" ==> ok
+<(cquit)>----------------------------------------------------------------------
+test It should be compiled properly., expects "cquit\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "cquit!\n" ==> ok
+<(diffoff)>--------------------------------------------------------------------
+test It should be compiled properly., expects "diffoff\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "diffoff!\n" ==> ok
+<(diffthis)>-------------------------------------------------------------------
+test It should be compiled properly., expects "diffthis\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(diffupdate)>-----------------------------------------------------------------
+test It should be compiled properly., expects "diffupdate\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
 <(echo expression ...)>--------------------------------------------------------
 test It should be compiled properly., expects ("echo \n" "echo 1\n" "echo 1 2\n" "echo 1 (2 + 3)\n") ==> ok
 <(edit)>-----------------------------------------------------------------------
@@ -149,14 +189,38 @@ test It should fail for invalid form., expects #<<error>> ==> ok
 <(ex!)>------------------------------------------------------------------------
 test It should be compiled properly., expects ("ex!\n" "ex! `='ordinary-path'`\n" "ex! `='path with spaces'`\n" "ex! `='path''with\\strange`characters'`\n" "ex! #\n" "ex! #3\n" "ex! `=(\"foo\" . \"bar\")`\n" "ex! `find . -name ver\\\\*.c -print`\n" "ex! ++encoding=utf-8 ++fileformat=unix `='foo'`\n") ==> ok
 test It should fail for invalid form., expects #<<error>> ==> ok
+<(exusage)>--------------------------------------------------------------------
+test It should be compiled properly., expects "exusage\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(files)>----------------------------------------------------------------------
+test It should be compiled properly., expects "files\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "files!\n" ==> ok
 <(find)>-----------------------------------------------------------------------
 test It should be compiled properly., expects ("find\n" "find `='ordinary-path'`\n" "find `='path with spaces'`\n" "find `='path''with\\strange`characters'`\n" "find #\n" "find #3\n" "find `=(\"foo\" . \"bar\")`\n" "find `find . -name ver\\\\*.c -print`\n" "find ++encoding=utf-8 ++fileformat=unix `='foo'`\n") ==> ok
 test It should fail for invalid form., expects #<<error>> ==> ok
 <(find!)>----------------------------------------------------------------------
 test It should be compiled properly., expects ("find!\n" "find! `='ordinary-path'`\n" "find! `='path with spaces'`\n" "find! `='path''with\\strange`characters'`\n" "find! #\n" "find! #3\n" "find! `=(\"foo\" . \"bar\")`\n" "find! `find . -name ver\\\\*.c -print`\n" "find! ++encoding=utf-8 ++fileformat=unix `='foo'`\n") ==> ok
 test It should fail for invalid form., expects #<<error>> ==> ok
+<(finish)>---------------------------------------------------------------------
+test It should be compiled properly., expects "finish\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(fixdel)>---------------------------------------------------------------------
+test It should be compiled properly., expects "fixdel\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
 <(hide)>-----------------------------------------------------------------------
 test It should be compiled properly., expects "hide edit\n" ==> ok
+<(intro)>----------------------------------------------------------------------
+test It should be compiled properly., expects "intro\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(jumps)>----------------------------------------------------------------------
+test It should be compiled properly., expects "jumps\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
 <(keepalt)>--------------------------------------------------------------------
 test It should be compiled properly., expects "keepalt edit\n" ==> ok
 <(keepjumps)>------------------------------------------------------------------
@@ -165,20 +229,188 @@ test It should be compiled properly., expects "keepjumps edit\n" ==> ok
 test It should be compiled properly., expects "keepmarks edit\n" ==> ok
 <(leftabove)>------------------------------------------------------------------
 test It should be compiled properly., expects "leftabove edit\n" ==> ok
+<(loadkeymap)>-----------------------------------------------------------------
+test It should be compiled properly., expects "loadkeymap\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
 <(lockmarks)>------------------------------------------------------------------
 test It should be compiled properly., expects "lockmarks edit\n" ==> ok
+<(ls)>-------------------------------------------------------------------------
+test It should be compiled properly., expects "ls\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "ls!\n" ==> ok
+<(messages)>-------------------------------------------------------------------
+test It should be compiled properly., expects "messages\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
 <(noautocmd)>------------------------------------------------------------------
 test It should be compiled properly., expects "noautocmd edit\n" ==> ok
+<(nohlsearch)>-----------------------------------------------------------------
+test It should be compiled properly., expects "nohlsearch\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(oldfiles)>-------------------------------------------------------------------
+test It should be compiled properly., expects "oldfiles\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "oldfiles!\n" ==> ok
+<(only)>-----------------------------------------------------------------------
+test It should be compiled properly., expects "only\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "only!\n" ==> ok
+<(options)>--------------------------------------------------------------------
+test It should be compiled properly., expects "options\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(pclose)>---------------------------------------------------------------------
+test It should be compiled properly., expects "pclose\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "pclose!\n" ==> ok
+<(preserve)>-------------------------------------------------------------------
+test It should be compiled properly., expects "preserve\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(ptlast)>---------------------------------------------------------------------
+test It should be compiled properly., expects "ptlast\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "ptlast!\n" ==> ok
+<(pwd)>------------------------------------------------------------------------
+test It should be compiled properly., expects "pwd\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(qall)>-----------------------------------------------------------------------
+test It should be compiled properly., expects "qall\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "qall!\n" ==> ok
+<(quit)>-----------------------------------------------------------------------
+test It should be compiled properly., expects "quit\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "quit!\n" ==> ok
+<(quitall)>--------------------------------------------------------------------
+test It should be compiled properly., expects "quitall\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "quitall!\n" ==> ok
+<(redo)>-----------------------------------------------------------------------
+test It should be compiled properly., expects "redo\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(redraw)>---------------------------------------------------------------------
+test It should be compiled properly., expects "redraw\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "redraw!\n" ==> ok
+<(redrawstatus)>---------------------------------------------------------------
+test It should be compiled properly., expects "redrawstatus\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "redrawstatus!\n" ==> ok
 <(rightbelow)>-----------------------------------------------------------------
 test It should be compiled properly., expects "rightbelow edit\n" ==> ok
 <(sandbox)>--------------------------------------------------------------------
 test It should be compiled properly., expects "sandbox edit\n" ==> ok
+<(sbfirst)>--------------------------------------------------------------------
+test It should be compiled properly., expects "sbfirst\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(sblast)>---------------------------------------------------------------------
+test It should be compiled properly., expects "sblast\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(sbrewind)>-------------------------------------------------------------------
+test It should be compiled properly., expects "sbrewind\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(scriptnames)>----------------------------------------------------------------
+test It should be compiled properly., expects "scriptnames\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(shell)>----------------------------------------------------------------------
+test It should be compiled properly., expects "shell\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
 <(silent)>---------------------------------------------------------------------
 test It should be compiled properly., expects "silent edit\n" ==> ok
+<(spelldump)>------------------------------------------------------------------
+test It should be compiled properly., expects "spelldump\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "spelldump!\n" ==> ok
+<(spellinfo)>------------------------------------------------------------------
+test It should be compiled properly., expects "spellinfo\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(spellrepall)>----------------------------------------------------------------
+test It should be compiled properly., expects "spellrepall\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(startgreplace)>--------------------------------------------------------------
+test It should be compiled properly., expects "startgreplace\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "startgreplace!\n" ==> ok
+<(startinsert)>----------------------------------------------------------------
+test It should be compiled properly., expects "startinsert\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "startinsert!\n" ==> ok
+<(startreplace)>---------------------------------------------------------------
+test It should be compiled properly., expects "startreplace\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "startreplace!\n" ==> ok
+<(stop)>-----------------------------------------------------------------------
+test It should be compiled properly., expects "stop\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "stop!\n" ==> ok
+<(stopinsert)>-----------------------------------------------------------------
+test It should be compiled properly., expects "stopinsert\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "stopinsert!\n" ==> ok
+<(suspend)>--------------------------------------------------------------------
+test It should be compiled properly., expects "suspend\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "suspend!\n" ==> ok
+<(swapname)>-------------------------------------------------------------------
+test It should be compiled properly., expects "swapname\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(syncbind)>-------------------------------------------------------------------
+test It should be compiled properly., expects "syncbind\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
 <(tab)>------------------------------------------------------------------------
 test It should be compiled properly., expects "tab edit\n" ==> ok
+<(tabfirst)>-------------------------------------------------------------------
+test It should be compiled properly., expects "tabfirst\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(tablast)>--------------------------------------------------------------------
+test It should be compiled properly., expects "tablast\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(tabonly)>--------------------------------------------------------------------
+test It should be compiled properly., expects "tabonly\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "tabonly!\n" ==> ok
+<(tabrewind)>------------------------------------------------------------------
+test It should be compiled properly., expects "tabrewind\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(tabs)>-----------------------------------------------------------------------
+test It should be compiled properly., expects "tabs\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(tags)>-----------------------------------------------------------------------
+test It should be compiled properly., expects "tags\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(tlast)>----------------------------------------------------------------------
+test It should be compiled properly., expects "tlast\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "tlast!\n" ==> ok
 <(topleft)>--------------------------------------------------------------------
 test It should be compiled properly., expects "topleft edit\n" ==> ok
+<(undojoin)>-------------------------------------------------------------------
+test It should be compiled properly., expects "undojoin\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(undolist)>-------------------------------------------------------------------
+test It should be compiled properly., expects "undolist\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
 <(unsilent)>-------------------------------------------------------------------
 test It should be compiled properly., expects "unsilent edit\n" ==> ok
 <(verbose)>--------------------------------------------------------------------
@@ -197,5 +429,21 @@ test It should fail for invalid form., expects #<<error>> ==> ok
 <(visual!)>--------------------------------------------------------------------
 test It should be compiled properly., expects ("visual!\n" "visual! `='ordinary-path'`\n" "visual! `='path with spaces'`\n" "visual! `='path''with\\strange`characters'`\n" "visual! #\n" "visual! #3\n" "visual! `=(\"foo\" . \"bar\")`\n" "visual! `find . -name ver\\\\*.c -print`\n" "visual! ++encoding=utf-8 ++fileformat=unix `='foo'`\n") ==> ok
 test It should fail for invalid form., expects #<<error>> ==> ok
+<(viusage)>--------------------------------------------------------------------
+test It should be compiled properly., expects "viusage\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(wall)>-----------------------------------------------------------------------
+test It should be compiled properly., expects "wall\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "wall!\n" ==> ok
+<(X)>--------------------------------------------------------------------------
+test It should be compiled properly., expects "X\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(xall)>-----------------------------------------------------------------------
+test It should be compiled properly., expects "xall\n" ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should be compiled properly with bang., expects "xall!\n" ==> ok
 passed.
 passed.

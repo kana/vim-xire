@@ -713,6 +713,23 @@
 
 
 
+(test-section "(ascii)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "ascii\n"
+       (compile-statement '(ascii)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(ascii foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(ascii!)))
+
+
+
+
 (test-section "(belowright)")  ;{{{2
 
 (test* "It should be compiled properly."
@@ -740,11 +757,164 @@
 
 
 
+(test-section "(buffers)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "buffers\n"
+       (compile-statement '(buffers)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(buffers foo)))
+
+(test* "It should be compiled properly with bang."
+       "buffers!\n"
+       (compile-statement '(buffers!)))
+
+
+
+
+(test-section "(changes)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "changes\n"
+       (compile-statement '(changes)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(changes foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(changes!)))
+
+
+
+
+(test-section "(checkpath)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "checkpath\n"
+       (compile-statement '(checkpath)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(checkpath foo)))
+
+(test* "It should be compiled properly with bang."
+       "checkpath!\n"
+       (compile-statement '(checkpath!)))
+
+
+
+
+(test-section "(close)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "close\n"
+       (compile-statement '(close)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(close foo)))
+
+(test* "It should be compiled properly with bang."
+       "close!\n"
+       (compile-statement '(close!)))
+
+
+
+
+(test-section "(comclear)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "comclear\n"
+       (compile-statement '(comclear)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(comclear foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(comclear!)))
+
+
+
+
 (test-section "(confirm)")  ;{{{2
 
 (test* "It should be compiled properly."
        "confirm edit\n"
        (compile-statement '(confirm (edit))))
+
+
+
+
+(test-section "(cquit)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "cquit\n"
+       (compile-statement '(cquit)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(cquit foo)))
+
+(test* "It should be compiled properly with bang."
+       "cquit!\n"
+       (compile-statement '(cquit!)))
+
+
+
+
+(test-section "(diffoff)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "diffoff\n"
+       (compile-statement '(diffoff)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(diffoff foo)))
+
+(test* "It should be compiled properly with bang."
+       "diffoff!\n"
+       (compile-statement '(diffoff!)))
+
+
+
+
+(test-section "(diffthis)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "diffthis\n"
+       (compile-statement '(diffthis)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(diffthis foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(diffthis!)))
+
+
+
+
+(test-section "(diffupdate)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "diffupdate\n"
+       (compile-statement '(diffupdate)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(diffupdate foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(diffupdate!)))
 
 
 
@@ -910,6 +1080,40 @@
 
 
 
+(test-section "(exusage)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "exusage\n"
+       (compile-statement '(exusage)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(exusage foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(exusage!)))
+
+
+
+
+(test-section "(files)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "files\n"
+       (compile-statement '(files)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(files foo)))
+
+(test* "It should be compiled properly with bang."
+       "files!\n"
+       (compile-statement '(files!)))
+
+
+
+
 (test-section "(find)")  ;{{{2
 
 (test* "It should be compiled properly."
@@ -970,11 +1174,79 @@
 
 
 
+(test-section "(finish)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "finish\n"
+       (compile-statement '(finish)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(finish foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(finish!)))
+
+
+
+
+(test-section "(fixdel)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "fixdel\n"
+       (compile-statement '(fixdel)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(fixdel foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(fixdel!)))
+
+
+
+
 (test-section "(hide)")  ;{{{2
 
 (test* "It should be compiled properly."
        "hide edit\n"
        (compile-statement '(hide (edit))))
+
+
+
+
+(test-section "(intro)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "intro\n"
+       (compile-statement '(intro)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(intro foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(intro!)))
+
+
+
+
+(test-section "(jumps)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "jumps\n"
+       (compile-statement '(jumps)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(jumps foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(jumps!)))
 
 
 
@@ -1015,6 +1287,23 @@
 
 
 
+(test-section "(loadkeymap)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "loadkeymap\n"
+       (compile-statement '(loadkeymap)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(loadkeymap foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(loadkeymap!)))
+
+
+
+
 (test-section "(lockmarks)")  ;{{{2
 
 (test* "It should be compiled properly."
@@ -1024,11 +1313,283 @@
 
 
 
+(test-section "(ls)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "ls\n"
+       (compile-statement '(ls)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(ls foo)))
+
+(test* "It should be compiled properly with bang."
+       "ls!\n"
+       (compile-statement '(ls!)))
+
+
+
+
+(test-section "(messages)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "messages\n"
+       (compile-statement '(messages)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(messages foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(messages!)))
+
+
+
+
 (test-section "(noautocmd)")  ;{{{2
 
 (test* "It should be compiled properly."
        "noautocmd edit\n"
        (compile-statement '(noautocmd (edit))))
+
+
+
+
+(test-section "(nohlsearch)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "nohlsearch\n"
+       (compile-statement '(nohlsearch)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(nohlsearch foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(nohlsearch!)))
+
+
+
+
+(test-section "(oldfiles)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "oldfiles\n"
+       (compile-statement '(oldfiles)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(oldfiles foo)))
+
+(test* "It should be compiled properly with bang."
+       "oldfiles!\n"
+       (compile-statement '(oldfiles!)))
+
+
+
+
+(test-section "(only)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "only\n"
+       (compile-statement '(only)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(only foo)))
+
+(test* "It should be compiled properly with bang."
+       "only!\n"
+       (compile-statement '(only!)))
+
+
+
+
+(test-section "(options)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "options\n"
+       (compile-statement '(options)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(options foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(options!)))
+
+
+
+
+(test-section "(pclose)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "pclose\n"
+       (compile-statement '(pclose)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(pclose foo)))
+
+(test* "It should be compiled properly with bang."
+       "pclose!\n"
+       (compile-statement '(pclose!)))
+
+
+
+
+(test-section "(preserve)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "preserve\n"
+       (compile-statement '(preserve)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(preserve foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(preserve!)))
+
+
+
+
+(test-section "(ptlast)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "ptlast\n"
+       (compile-statement '(ptlast)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(ptlast foo)))
+
+(test* "It should be compiled properly with bang."
+       "ptlast!\n"
+       (compile-statement '(ptlast!)))
+
+
+
+
+(test-section "(pwd)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "pwd\n"
+       (compile-statement '(pwd)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(pwd foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(pwd!)))
+
+
+
+
+(test-section "(qall)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "qall\n"
+       (compile-statement '(qall)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(qall foo)))
+
+(test* "It should be compiled properly with bang."
+       "qall!\n"
+       (compile-statement '(qall!)))
+
+
+
+
+(test-section "(quit)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "quit\n"
+       (compile-statement '(quit)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(quit foo)))
+
+(test* "It should be compiled properly with bang."
+       "quit!\n"
+       (compile-statement '(quit!)))
+
+
+
+
+(test-section "(quitall)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "quitall\n"
+       (compile-statement '(quitall)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(quitall foo)))
+
+(test* "It should be compiled properly with bang."
+       "quitall!\n"
+       (compile-statement '(quitall!)))
+
+
+
+
+(test-section "(redo)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "redo\n"
+       (compile-statement '(redo)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(redo foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(redo!)))
+
+
+
+
+(test-section "(redraw)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "redraw\n"
+       (compile-statement '(redraw)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(redraw foo)))
+
+(test* "It should be compiled properly with bang."
+       "redraw!\n"
+       (compile-statement '(redraw!)))
+
+
+
+
+(test-section "(redrawstatus)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "redrawstatus\n"
+       (compile-statement '(redrawstatus)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(redrawstatus foo)))
+
+(test* "It should be compiled properly with bang."
+       "redrawstatus!\n"
+       (compile-statement '(redrawstatus!)))
 
 
 
@@ -1051,11 +1612,283 @@
 
 
 
+(test-section "(sbfirst)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "sbfirst\n"
+       (compile-statement '(sbfirst)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(sbfirst foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(sbfirst!)))
+
+
+
+
+(test-section "(sblast)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "sblast\n"
+       (compile-statement '(sblast)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(sblast foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(sblast!)))
+
+
+
+
+(test-section "(sbrewind)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "sbrewind\n"
+       (compile-statement '(sbrewind)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(sbrewind foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(sbrewind!)))
+
+
+
+
+(test-section "(scriptnames)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "scriptnames\n"
+       (compile-statement '(scriptnames)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(scriptnames foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(scriptnames!)))
+
+
+
+
+(test-section "(shell)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "shell\n"
+       (compile-statement '(shell)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(shell foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(shell!)))
+
+
+
+
 (test-section "(silent)")  ;{{{2
 
 (test* "It should be compiled properly."
        "silent edit\n"
        (compile-statement '(silent (edit))))
+
+
+
+
+(test-section "(spelldump)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "spelldump\n"
+       (compile-statement '(spelldump)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(spelldump foo)))
+
+(test* "It should be compiled properly with bang."
+       "spelldump!\n"
+       (compile-statement '(spelldump!)))
+
+
+
+
+(test-section "(spellinfo)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "spellinfo\n"
+       (compile-statement '(spellinfo)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(spellinfo foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(spellinfo!)))
+
+
+
+
+(test-section "(spellrepall)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "spellrepall\n"
+       (compile-statement '(spellrepall)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(spellrepall foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(spellrepall!)))
+
+
+
+
+(test-section "(startgreplace)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "startgreplace\n"
+       (compile-statement '(startgreplace)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(startgreplace foo)))
+
+(test* "It should be compiled properly with bang."
+       "startgreplace!\n"
+       (compile-statement '(startgreplace!)))
+
+
+
+
+(test-section "(startinsert)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "startinsert\n"
+       (compile-statement '(startinsert)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(startinsert foo)))
+
+(test* "It should be compiled properly with bang."
+       "startinsert!\n"
+       (compile-statement '(startinsert!)))
+
+
+
+
+(test-section "(startreplace)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "startreplace\n"
+       (compile-statement '(startreplace)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(startreplace foo)))
+
+(test* "It should be compiled properly with bang."
+       "startreplace!\n"
+       (compile-statement '(startreplace!)))
+
+
+
+
+(test-section "(stop)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "stop\n"
+       (compile-statement '(stop)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(stop foo)))
+
+(test* "It should be compiled properly with bang."
+       "stop!\n"
+       (compile-statement '(stop!)))
+
+
+
+
+(test-section "(stopinsert)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "stopinsert\n"
+       (compile-statement '(stopinsert)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(stopinsert foo)))
+
+(test* "It should be compiled properly with bang."
+       "stopinsert!\n"
+       (compile-statement '(stopinsert!)))
+
+
+
+
+(test-section "(suspend)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "suspend\n"
+       (compile-statement '(suspend)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(suspend foo)))
+
+(test* "It should be compiled properly with bang."
+       "suspend!\n"
+       (compile-statement '(suspend!)))
+
+
+
+
+(test-section "(swapname)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "swapname\n"
+       (compile-statement '(swapname)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(swapname foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(swapname!)))
+
+
+
+
+(test-section "(syncbind)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "syncbind\n"
+       (compile-statement '(syncbind)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(syncbind foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(syncbind!)))
 
 
 
@@ -1069,11 +1902,164 @@
 
 
 
+(test-section "(tabfirst)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "tabfirst\n"
+       (compile-statement '(tabfirst)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(tabfirst foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(tabfirst!)))
+
+
+
+
+(test-section "(tablast)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "tablast\n"
+       (compile-statement '(tablast)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(tablast foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(tablast!)))
+
+
+
+
+(test-section "(tabonly)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "tabonly\n"
+       (compile-statement '(tabonly)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(tabonly foo)))
+
+(test* "It should be compiled properly with bang."
+       "tabonly!\n"
+       (compile-statement '(tabonly!)))
+
+
+
+
+(test-section "(tabrewind)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "tabrewind\n"
+       (compile-statement '(tabrewind)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(tabrewind foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(tabrewind!)))
+
+
+
+
+(test-section "(tabs)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "tabs\n"
+       (compile-statement '(tabs)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(tabs foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(tabs!)))
+
+
+
+
+(test-section "(tags)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "tags\n"
+       (compile-statement '(tags)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(tags foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(tags!)))
+
+
+
+
+(test-section "(tlast)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "tlast\n"
+       (compile-statement '(tlast)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(tlast foo)))
+
+(test* "It should be compiled properly with bang."
+       "tlast!\n"
+       (compile-statement '(tlast!)))
+
+
+
+
 (test-section "(topleft)")  ;{{{2
 
 (test* "It should be compiled properly."
        "topleft edit\n"
        (compile-statement '(topleft (edit))))
+
+
+
+
+(test-section "(undojoin)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "undojoin\n"
+       (compile-statement '(undojoin)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(undojoin foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(undojoin!)))
+
+
+
+
+(test-section "(undolist)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "undolist\n"
+       (compile-statement '(undolist)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(undolist foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(undolist!)))
 
 
 
@@ -1221,6 +2207,74 @@
 (test* "It should fail for invalid form."
        (test-error <error>)
        (compile-statement '(visual! foo bar)))
+
+
+
+
+(test-section "(viusage)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "viusage\n"
+       (compile-statement '(viusage)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(viusage foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(viusage!)))
+
+
+
+
+(test-section "(wall)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "wall\n"
+       (compile-statement '(wall)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(wall foo)))
+
+(test* "It should be compiled properly with bang."
+       "wall!\n"
+       (compile-statement '(wall!)))
+
+
+
+
+(test-section "(X)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "X\n"
+       (compile-statement '(X)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(X foo)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(X!)))
+
+
+
+
+(test-section "(xall)")  ;{{{2
+
+(test* "It should be compiled properly."
+       "xall\n"
+       (compile-statement '(xall)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(xall foo)))
+
+(test* "It should be compiled properly with bang."
+       "xall!\n"
+       (compile-statement '(xall!)))
 
 
 
