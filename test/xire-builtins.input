@@ -1028,10 +1028,10 @@
               (edit "ordinary-path")
               (edit "path with spaces")
               (edit "path'with\\strange`characters")
-              (edit :alternate)
-              (edit :buffer 3)
-              (edit :expression (.. "foo" "bar"))
-              (edit :command "find . -name ver\\*.c -print")
+              (edit (:alternate))
+              (edit (:buffer 3))
+              (edit (:expression (.. "foo" "bar")))
+              (edit (:command "find . -name ver\\*.c -print"))
               (edit "foo" :encoding "utf-8" :fileformat "unix"))))
 
 (test* "It should fail for invalid form."
@@ -1058,10 +1058,10 @@
               (edit! "ordinary-path")
               (edit! "path with spaces")
               (edit! "path'with\\strange`characters")
-              (edit! :alternate)
-              (edit! :buffer 3)
-              (edit! :expression (.. "foo" "bar"))
-              (edit! :command "find . -name ver\\*.c -print")
+              (edit! (:alternate))
+              (edit! (:buffer 3))
+              (edit! (:expression (.. "foo" "bar")))
+              (edit! (:command "find . -name ver\\*.c -print"))
               (edit! "foo" :encoding "utf-8" :fileformat "unix"))))
 
 (test* "It should fail for invalid form."
@@ -1114,10 +1114,10 @@
               (ex "ordinary-path")
               (ex "path with spaces")
               (ex "path'with\\strange`characters")
-              (ex :alternate)
-              (ex :buffer 3)
-              (ex :expression (.. "foo" "bar"))
-              (ex :command "find . -name ver\\*.c -print")
+              (ex (:alternate))
+              (ex (:buffer 3))
+              (ex (:expression (.. "foo" "bar")))
+              (ex (:command "find . -name ver\\*.c -print"))
               (ex "foo" :encoding "utf-8" :fileformat "unix"))))
 
 (test* "It should fail for invalid form."
@@ -1144,10 +1144,10 @@
               (ex! "ordinary-path")
               (ex! "path with spaces")
               (ex! "path'with\\strange`characters")
-              (ex! :alternate)
-              (ex! :buffer 3)
-              (ex! :expression (.. "foo" "bar"))
-              (ex! :command "find . -name ver\\*.c -print")
+              (ex! (:alternate))
+              (ex! (:buffer 3))
+              (ex! (:expression (.. "foo" "bar")))
+              (ex! (:command "find . -name ver\\*.c -print"))
               (ex! "foo" :encoding "utf-8" :fileformat "unix"))))
 
 (test* "It should fail for invalid form."
@@ -1252,10 +1252,10 @@
               (find "ordinary-path")
               (find "path with spaces")
               (find "path'with\\strange`characters")
-              (find :alternate)
-              (find :buffer 3)
-              (find :expression (.. "foo" "bar"))
-              (find :command "find . -name ver\\*.c -print")
+              (find (:alternate))
+              (find (:buffer 3))
+              (find (:expression (.. "foo" "bar")))
+              (find (:command "find . -name ver\\*.c -print"))
               (find "foo" :encoding "utf-8" :fileformat "unix"))))
 
 (test* "It should fail for invalid form."
@@ -1282,10 +1282,10 @@
               (find! "ordinary-path")
               (find! "path with spaces")
               (find! "path'with\\strange`characters")
-              (find! :alternate)
-              (find! :buffer 3)
-              (find! :expression (.. "foo" "bar"))
-              (find! :command "find . -name ver\\*.c -print")
+              (find! (:alternate))
+              (find! (:buffer 3))
+              (find! (:expression (.. "foo" "bar")))
+              (find! (:command "find . -name ver\\*.c -print"))
               (find! "foo" :encoding "utf-8" :fileformat "unix"))))
 
 (test* "It should fail for invalid form."
@@ -2229,10 +2229,10 @@
               (view "ordinary-path")
               (view "path with spaces")
               (view "path'with\\strange`characters")
-              (view :alternate)
-              (view :buffer 3)
-              (view :expression (.. "foo" "bar"))
-              (view :command "find . -name ver\\*.c -print")
+              (view (:alternate))
+              (view (:buffer 3))
+              (view (:expression (.. "foo" "bar")))
+              (view (:command "find . -name ver\\*.c -print"))
               (view "foo" :encoding "utf-8" :fileformat "unix"))))
 
 (test* "It should fail for invalid form."
@@ -2259,10 +2259,10 @@
               (view! "ordinary-path")
               (view! "path with spaces")
               (view! "path'with\\strange`characters")
-              (view! :alternate)
-              (view! :buffer 3)
-              (view! :expression (.. "foo" "bar"))
-              (view! :command "find . -name ver\\*.c -print")
+              (view! (:alternate))
+              (view! (:buffer 3))
+              (view! (:expression (.. "foo" "bar")))
+              (view! (:command "find . -name ver\\*.c -print"))
               (view! "foo" :encoding "utf-8" :fileformat "unix"))))
 
 (test* "It should fail for invalid form."
@@ -2289,10 +2289,10 @@
               (visual "ordinary-path")
               (visual "path with spaces")
               (visual "path'with\\strange`characters")
-              (visual :alternate)
-              (visual :buffer 3)
-              (visual :expression (.. "foo" "bar"))
-              (visual :command "find . -name ver\\*.c -print")
+              (visual (:alternate))
+              (visual (:buffer 3))
+              (visual (:expression (.. "foo" "bar")))
+              (visual (:command "find . -name ver\\*.c -print"))
               (visual "foo" :encoding "utf-8" :fileformat "unix"))))
 
 (test* "It should fail for invalid form."
@@ -2319,10 +2319,10 @@
               (visual! "ordinary-path")
               (visual! "path with spaces")
               (visual! "path'with\\strange`characters")
-              (visual! :alternate)
-              (visual! :buffer 3)
-              (visual! :expression (.. "foo" "bar"))
-              (visual! :command "find . -name ver\\*.c -print")
+              (visual! (:alternate))
+              (visual! (:buffer 3))
+              (visual! (:expression (.. "foo" "bar")))
+              (visual! (:command "find . -name ver\\*.c -print"))
               (visual! "foo" :encoding "utf-8" :fileformat "unix"))))
 
 (test* "It should fail for invalid form."

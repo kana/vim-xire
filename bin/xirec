@@ -1253,33 +1253,11 @@
          "\n")]
   ; Entry
   [; :edit {path}
-   (_ command-name bang (? string? path) . options)
+   (_ command-name bang (? path-pattern? path) . options)
    `(%edit :internal
            ,command-name
            ,bang
-           ,(escape-path path)
-           ,@options)]
-  [; :edit #
-   (_ command-name bang :alternate . options)
-   `(%edit :internal ,command-name ,bang "#" ,@options)]
-  [; :edit #[count]
-   (_ command-name bang :buffer (? integer? number) . options)
-   `(%edit :internal ,command-name ,bang ("#" ,number) ,@options)]
-  [; :edit `command`
-   (_ command-name bang :command command . options)
-   `(%edit :internal
-           ,command-name
-           ,bang
-           ("`" ,(regexp-replace-all* command #/\\/ "\\\\\\\\") "`")
-           ,@options)]
-  [; :edit `=expression`
-   (_ command-name bang :expression expression . options)
-   `(%edit :internal
-           ,command-name
-           ,bang
-           ("`="
-            ,(xire-compile expression (make-expression-context context))
-            "`")
+           ,(compile-path path context)
            ,@options)]
   [; :edit
    (_ command-name bang . options)
