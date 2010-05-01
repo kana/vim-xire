@@ -135,6 +135,11 @@ test It should return true for a path., expects (#t #t #t #t #t #t) ==> ok
 test It should return false for a non-path., expects (#f #f #f #f #f) ==> ok
 <(aboveleft)>------------------------------------------------------------------
 test It should be compiled properly., expects "aboveleft edit\n" ==> ok
+<(argadd)>---------------------------------------------------------------------
+test It should be compiled properly., expects ("argadd `='foo'`\n" "argadd `='foo'` `='bar'`\n" "8argadd `='foo'` `='bar'`\n") ==> ok
+test It should fail without any argument., expects #<<error>> ==> ok
+test It should fail with invalid path., expects #<<error>> ==> ok
+test It should fail without a path., expects #<<error>> ==> ok
 <(argedit)>--------------------------------------------------------------------
 test It should be compiled properly., expects ("argedit `='foo'`\n" "argedit ++encoding=utf-8 `='foo'`\n" "8argedit ++encoding=utf-8 `='foo'`\n") ==> ok
 test It should fail without any argument., expects #<<error>> ==> ok

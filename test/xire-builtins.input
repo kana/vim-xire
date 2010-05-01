@@ -831,6 +831,32 @@
 
 
 
+(test-section "(argadd)")  ;{{{2
+
+(test* "It should be compiled properly."
+       (list (join "argadd `='foo'`")
+             (join "argadd `='foo'` `='bar'`")
+             (join "8argadd `='foo'` `='bar'`"))
+       (map compile-statement
+            '((argadd "foo")
+              (argadd ("foo" "bar"))
+              (argadd ("foo" "bar") :count 8))))
+
+(test* "It should fail without any argument."
+       (test-error <error>)
+       (compile-statement '(argadd)))
+
+(test* "It should fail with invalid path."
+       (test-error <error>)
+       (compile-statement '(argadd 'invalid-path)))
+
+(test* "It should fail without a path."
+       (test-error <error>)
+       (compile-statement '(argadd :count 8)))
+
+
+
+
 (test-section "(argedit)")  ;{{{2
 
 (test* "It should be compiled properly."

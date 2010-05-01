@@ -1201,6 +1201,18 @@
 
 (define-xire-statement-modifier aboveleft)
 
+(define-xire-statement argadd context
+  [(_ ((? path-pattern? path) ...) . options)
+   (let-keywords options ([count #f])
+     `(,(or count "")
+       "argadd"
+       ,(map (compose (cut cons " " <>)
+                      (cut compile-path <> context))
+             path)
+       "\n"))]
+  [(_ (? path-pattern? path) . options)
+   `(argadd (,path) ,@options)])
+
 (define-xire-statement %argedit context
   [(_ bang path . options)
    (let-keywords options ([count #f]
