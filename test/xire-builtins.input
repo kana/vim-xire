@@ -639,6 +639,45 @@
 
 
 ; Common utilities  ;{{{1
+(test-section "(compile-++opt)")  ;{{{2
+
+(test* "It should return empty string for option list without any content."
+       ""
+       (tree->string (compile-++opt '())))
+
+(test* "It should return compiled result option list with a few options."
+       (string-join '("++encoding=utf-8"
+                      "++fileformat=unix")
+                    " "
+                    'prefix)
+       (tree->string
+         (compile-++opt '(:encoding "utf-8"
+                          :fileformat "unix"))))
+
+(test* "It should succeed for ordinary option list with all options."
+       (string-join '("++bad=X"
+                      "++binary"
+                      "++edit"
+                      "++encoding=utf-8"
+                      "++fileformat=unix"
+                      "++nobinary")
+                    " "
+                    'prefix)
+       (tree->string
+         (compile-++opt '(:bad "X"
+                          :binary #t
+                          :edit #t
+                          :encoding "utf-8"
+                          :fileformat "unix"
+                          :nobinary #t))))
+
+(test* "It should fail for invalid option list."
+       (test-error <error>)
+       (compile-++opt '(:invalid!? #t)))
+
+
+
+
 (test-section "(compile-path)")  ;{{{2
 
 (test* "It should compile a valid path properly."

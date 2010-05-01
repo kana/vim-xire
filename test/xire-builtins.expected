@@ -110,6 +110,11 @@ test It should raise error if the number of operands is less than 1., expects #<
 test It should raise error if the number of operands is greater than 1., expects #<<error>> ==> ok
 <(abs ...)>--------------------------------------------------------------------
 test It should be compiled properly., expects "(abs(1))" ==> ok
+<(compile-++opt)>--------------------------------------------------------------
+test It should return empty string for option list without any content., expects "" ==> ok
+test It should return compiled result option list with a few options., expects " ++encoding=utf-8 ++fileformat=unix" ==> ok
+test It should succeed for ordinary option list with all options., expects " ++bad=X ++binary ++edit ++encoding=utf-8 ++fileformat=unix ++nobinary" ==> ok
+test It should fail for invalid option list., expects #<<error>> ==> ok
 <(compile-path)>---------------------------------------------------------------
 test It should compile a valid path properly., expects ("`='foo''bar'`" "#" "#3" "`echo 'fo\\\\o'`" "`=(\"foo\" . \"bar\")`" "**/%<.[ch]") ==> ok
 test It should fail for invalid path., expects #<<error>> ==> ok

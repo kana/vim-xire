@@ -1100,6 +1100,11 @@
 ;;; Common utilities
 ;;; ----------------
 
+;; Compile OPTIONS which expresses a list of ++opt.
+(define (compile-++opt options)
+  (map (cut cons " " <>)
+       (parse-++opt options)))
+
 ;; Compile a given PATH into a valid one for argument for :edit-like commands.
 ;; Assumption: (path-pattern? PATH) ==> #t
 (define (compile-path path context)
