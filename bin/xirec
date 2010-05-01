@@ -1219,23 +1219,23 @@
    `(%argedit "!" ,@arguments)])
 
 (define-xire-statement %args context
-  [(_ name ((? path-pattern? path) ...) . options)
-   `(,name
+  [(_ bang ((? path-pattern? path) ...) . options)
+   `("args" ,bang
      ,(compile-++opt options)
      ,(map (compose (cut cons " " <>)
                     (cut compile-path <> context))
            path)
      "\n")]
-  [(_ name (? path-pattern? path) . options)
-   `(%args ,name (,path) ,@options)]
-  [(_ name)
-   `(,name"\n")])
+  [(_ bang (? path-pattern? path) . options)
+   `(%args ,bang (,path) ,@options)]
+  [(_ bang)
+   `("args" ,bang "\n")])
 (define-xire-statement args
   [(_ . arguments)
-   `(%args "args" ,@arguments)])
+   `(%args "" ,@arguments)])
 (define-xire-statement args!
   [(_ . arguments)
-   `(%args "args!" ,@arguments)])
+   `(%args "!" ,@arguments)])
 
 (define-xire-statement ascii)
 
