@@ -177,6 +177,10 @@
      (define-xire-statement name
        [(_)
         '(command-name "\n")])]
+    [(_ name)  ; Shorthand for (define-xire-statement command "command")
+     (define-xire-statement name
+       [(_)
+        `(,(symbol->string 'name) "\n")])]
     ))
 
 ;; Define new xire expression in the current environment.
