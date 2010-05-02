@@ -1339,6 +1339,24 @@
 
 
 
+(test-section "(execute)")  ;{{{2
+
+(test* "It should be compiled properly."
+       (list (join "execute")
+             (join "execute \"echo\"")
+             (join "execute \"echo\" (1 + 3)"))
+       (map compile-statement
+            '((execute)
+              (execute "echo")
+              (execute "echo" (+ 1 3)))))
+
+(test* "It should fail if non-expression argument is given."
+       (test-error <error>)
+       (compile-statement '(execute (echo))))
+
+
+
+
 (test-section "(exusage)")  ;{{{2
 
 (test* "It should be compiled properly."

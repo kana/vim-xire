@@ -1339,6 +1339,17 @@
   [(_ . arguments)
    `(%edit "ex" "!" ,@arguments)])
 
+(define-xire-statement execute context
+  ; FIXME: Add more convenient form for xire scripting.
+  ;        Because we have to write raw Vim script as a series of expressions
+  ;        in the following form and it's awful.
+  [(_ . expressions)
+   `("execute"
+     ,(map (compose (cut cons " " <>)
+                    (cut xire-compile <> (make-expression-context context)))
+          expressions)
+     "\n")])
+
 (define-xire-statement exusage)
 
 
