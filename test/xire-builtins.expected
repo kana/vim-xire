@@ -278,6 +278,11 @@ test It should be compiled properly., expects "keepjumps edit\n" ==> ok
 test It should be compiled properly., expects "keepmarks edit\n" ==> ok
 <(leftabove)>------------------------------------------------------------------
 test It should be compiled properly., expects "leftabove edit\n" ==> ok
+<(let)>------------------------------------------------------------------------
+test It should be compiled properly., expects ("let\n" "let variable\n" "let s:\n" "let apple = (1 + 2)\n" "let g:apple = \"sweet\"\n" "let @a = \"sweet\"\n" "let &apple = \"sweet\"\n" "let &l:apple = \"sweet\"\n" "let ((apple)[((1 + 2))]) = \"sweet\"\n" "let ((apple)[(\"core\")]) = \"bitter\"\n" "let ((apple)[(1):(2)]) = \"empty\"\n") ==> ok
+test It should fail for invalid form - too many arguments., expects #<<error>> ==> ok
+test It should fail for invalid form - invalid expression., expects #<<error>> ==> ok
+test It should fail for invalid form - invalid variable name., expects #<<error>> ==> ok
 <(loadkeymap)>-----------------------------------------------------------------
 test It should be compiled properly., expects "loadkeymap\n" ==> ok
 test It should fail if extra argument is given., expects #<<error>> ==> ok

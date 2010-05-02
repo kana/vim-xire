@@ -1612,6 +1612,48 @@
 
 
 
+(test-section "(let)")  ;{{{2
+
+(test* "It should be compiled properly."
+       (list (join "let")
+             (join "let variable")
+             (join "let s:")
+             (join "let apple = (1 + 2)")
+             (join "let g:apple = \"sweet\"")
+             (join "let @a = \"sweet\"")
+             (join "let &apple = \"sweet\"")
+             (join "let &l:apple = \"sweet\"")
+             (join "let ((apple)[((1 + 2))]) = \"sweet\"")
+             (join "let ((apple)[(\"core\")]) = \"bitter\"")
+             (join "let ((apple)[(1):(2)]) = \"empty\""))
+       (map compile-statement
+            '((let)
+              (let variable)
+              (let s:)
+              (let apple (+ 1 2))
+              (let g:apple "sweet")
+              (let (@ a) "sweet")
+              (let (& apple) "sweet")
+              (let (& l:apple) "sweet")
+              (let (ref apple (+ 1 2)) "sweet")
+              (let (ref apple "core") "bitter")
+              (let (slice apple 1 2) "empty"))))
+
+(test* "It should fail for invalid form - too many arguments."
+       (test-error <error>)
+       (compile-statement '(let x y z)))
+
+(test* "It should fail for invalid form - invalid expression."
+       (test-error <error>)
+       (compile-statement '(let x (y z))))
+
+(test* "It should fail for invalid form - invalid variable name."
+       (test-error <error>)
+       (compile-statement '(let (x y) z)))
+
+
+
+
 (test-section "(loadkeymap)")  ;{{{2
 
 (test* "It should be compiled properly."

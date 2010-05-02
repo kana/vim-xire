@@ -1415,6 +1415,31 @@
 ;;; ------------
 
 (define-xire-statement-modifier leftabove)
+
+(define-xire-statement let context
+  ; FIXME: Consider better name - :let is like set! rather than let in Scheme.
+  ; FIXME: Support :let-unpack
+  ; FIXME: Support :let+=, etc
+  [; ":let name[i] = ...", ":let &option = ..." and other variants are
+   ; expressed as "(let (ref name i ) ...)", "(let (& option) ...)", etc.
+   (_ name expression)
+   `("let"
+     " "
+     ,(xire-compile name (make-expression-context context))
+     " "
+     "="
+     " "
+     ,(xire-compile expression (make-expression-context context))
+     "\n")]
+  [(_ name)
+   `("let"
+     " "
+     ,(xire-compile name (make-expression-context context))
+     "\n")]
+  [(_)
+   '("let"
+     "\n")])
+
 (define-xire-statement loadkeymap)
 (define-xire-statement-modifier lockmarks)
 (define-xire-statement ls :!)
