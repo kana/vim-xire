@@ -327,7 +327,7 @@
 ;;
 ;;      (o) \. \.. \... (arbitrary byte, in octal digits)
 ;;      (x) \x.         (arbitrary byte, in single hex digit)
-;;      (X) \X. \X..    (equivalent to \x. and \..)
+;;      (X) \X. \X..    (equivalent to \x. and \x..)
 ;;      (U) \U....      (equivalent to \u....)
 ;;      (b) \b          (equivalent to \<BS>)
 ;;      (e) \e          (equivalent to \<Esc>)
