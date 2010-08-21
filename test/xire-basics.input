@@ -363,7 +363,7 @@
 (test* "It should raise error for a malformed script: (lambda () #f)"
        (test-error <error>)
        (parameterize ([xire-environment (make <xire-environment>)])
-         (xire-compile (lambda () #f) (make-toplevel-context))))
+         (xire-compile '(lambda () #f) (make-toplevel-context))))
 
 (test* "It should raise error for a malformed script: (no-such-macro)"
        (test-error <error>)
