@@ -667,7 +667,6 @@
 ;;; 'string'                N/A                     literal string
 ;;; [expr1, ...]            (list expr1 ...)        list
 ;;; {expr1: expr1, ...}     (dict (key value) ...)  dictionary
-;;; &option                 (& "option")            option value
 ;;; &option                 (& option)              option value
 ;;; &l:option               (& l:option)            local option value
 ;;; &g:option               (& g:option)            global option value
