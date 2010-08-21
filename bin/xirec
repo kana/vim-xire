@@ -270,6 +270,11 @@
                   context
                   (make-expression-context context))))
 
+;; Compile a list of xire script FORMS then return a resulting Vim script.
+;; This is an abbreviated form of xire-compile for typical use.
+(define (xire-compile-forms forms context)
+  (map (cut xire-compile <> context) forms))
+
 ;; Convert a given Scheme OBJECT into a string which represents
 ;; a corresponding Vim script object.
 (define (x->vim-script-notation object :optional (raise-error-p #t))

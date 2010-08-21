@@ -447,6 +447,53 @@
 
 
 
+(test-section "xire-compile-forms")  ;{{{1
+
+(test* "It should succeed to compile a list of valid expressions."
+       '("123" "\"string\"" "symbol")
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (xire-compile-forms
+           '(123 "string" symbol)
+           (make-expression-context))))
+
+(test* "It should succeed to compile a list of valid statements."
+       '(("\"" "foo")
+         ("\"" "bar")
+         ("\"" "baz"))
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (define-xire-macro :statement (comment form context)
+           (match-let1 (_ comment-string) form
+             `("\"" ,comment-string)))
+         (xire-compile-forms
+           '((comment "foo")
+             (comment "bar")
+             (comment "baz"))
+           (make-toplevel-context))))
+
+(test* "It should raise error for invalid context - expressions in statement."
+       (test-error <error>)
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (xire-compile-forms
+           '((comment "foo")
+             "bar"
+             (comment "baz"))
+           (make-statement-context))))
+
+(test* "It should raise error for invalid context - statements in expression."
+       (test-error <error>)
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (define-xire-macro :statement (comment form context)
+           (match-let1 (_ comment-string) form
+             `("\"" ,comment-string)))
+         (xire-compile-forms
+           '("foo"
+             (comment "bar")
+             "bar")
+           (make-expression-context))))
+
+
+
+
 (test-section "xire-context related stuffs")  ;{{{1
 
 (test* "<xire-context> should be available."
