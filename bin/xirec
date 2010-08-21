@@ -738,7 +738,7 @@
   [(_ condition then-part)
    (list "if"
          " "
-         (xire-compile condition (make-expression-context context))
+         (xire-compile-expression condition context)
          "\n"
          (xire-compile then-part context)
          "endif"
@@ -746,7 +746,7 @@
   [(_ condition then-part else-part)
    (list "if"
          " "
-         (xire-compile condition (make-expression-context context))
+         (xire-compile-expression condition context)
          "\n"
          (xire-compile then-part context)
          "else"
@@ -766,7 +766,7 @@
   [(_ condition statement ..1)
    (list "while"
          " "
-         (xire-compile condition (make-expression-context context))
+         (xire-compile-expression condition context)
          "\n"
          (xire-compile `(begin ,@statement) context)
          "endwhile"
@@ -781,7 +781,7 @@
          " "
          "in"
          " "
-         (xire-compile list-expression (make-expression-context context))
+         (xire-compile-expression list-expression context)
          "\n"
          (xire-compile `(begin ,@statement) context)
          "endfor"
@@ -796,8 +796,7 @@
          " "
          "in"
          " "
-         (xire-compile list-of-lists-expression
-                       (make-expression-context context))
+         (xire-compile-expression list-of-lists-expression context)
          "\n"
          (xire-compile `(begin ,@statement) context)
          "endfor"
@@ -813,14 +812,14 @@
   [(_ value-expression)
    (list "return"
          " "
-         (xire-compile value-expression (make-expression-context context))
+         (xire-compile-expression value-expression context)
          "\n")])
 
 (define-xire-statement throw context
   [(_ value-expression)
    (list "throw"
          " "
-         (xire-compile value-expression (make-expression-context context))
+         (xire-compile-expression value-expression context)
          "\n")])
 
 ; FIXME: Equivalents for :try, :catch, :finally and :endtry.
@@ -1126,7 +1125,7 @@
      `("`" ,(regexp-replace-all* shell-command #/\\/ "\\\\\\\\") "`")]
     [(:expression xire-expression)
      `("`="
-       ,(xire-compile xire-expression (make-expression-context context))
+       ,(xire-compile-expression xire-expression context)
        "`")]
     [(:raw raw-path)
      raw-path]
@@ -1432,16 +1431,16 @@
    (_ name expression)
    `("let"
      " "
-     ,(xire-compile name (make-expression-context context))
+     ,(xire-compile-expression name context)
      " "
      "="
      " "
-     ,(xire-compile expression (make-expression-context context))
+     ,(xire-compile-expression expression context)
      "\n")]
   [(_ name)
    `("let"
      " "
-     ,(xire-compile name (make-expression-context context))
+     ,(xire-compile-expression name context)
      "\n")]
   [(_)
    '("let"
