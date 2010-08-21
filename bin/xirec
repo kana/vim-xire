@@ -438,7 +438,7 @@
 (define (%compile-nary-operator-exression forms vim-script-operator context)
   `("("
     ,@(intersperse `(" " ,vim-script-operator " ")
-                   (map (cut xire-compile <> context) forms))
+                   (xire-compile-forms forms context))
     ")"))
 
 (define-syntax define-nary-operator
@@ -667,7 +667,7 @@
    `("("
      ,(xire-compile function context)
      "("
-     ,@(intersperse "," (map (cut xire-compile <> context) arguments))
+     ,@(intersperse "," (xire-compile-forms arguments context))
      ")"
      ")")])
 
@@ -703,7 +703,7 @@
 (define-xire-expression list context
   [(_ valueN ...)
    `("["
-     ,@(intersperse "," (map (cut xire-compile <> context) valueN))
+     ,@(intersperse "," (xire-compile-forms valueN context))
      "]")])
 (define-xire-expression dict context
   [(_ and ((key value) ...)
@@ -737,7 +737,7 @@
   ; write multiple statements as a single statement in xire script.  For
   ; example: (if condition (begin statement1 statement2 ...))
   [(_ statement ..1)
-   (map (cut xire-compile <> context) statement)])
+   (xire-compile-forms statement context)])
 
 (define-xire-statement if context
   [(_ condition then-part)
@@ -855,8 +855,9 @@
               'name
               "("
               (intersperse ","
-                           (let1 econtext (make-expression-context context)
-                             (map (cut xire-compile <> econtext) expressions)))
+                           (xire-compile-forms
+                             expressions
+                             (make-expression-context context)))
               ")"
               ")")])]))
 
@@ -1303,8 +1304,9 @@
    `("echo"
      " "
      ,@(intersperse " "
-                    (let1 econtext (make-expression-context context)
-                      (map (cut xire-compile <> econtext) expression)))
+                    (xire-compile-forms
+                      expression
+                      (make-expression-context context)))
      "\n")])
 
 (define-xire-statement %edit context
@@ -1356,9 +1358,8 @@
   ;        in the following form and it's awful.
   [(_ . expressions)
    `("execute"
-     ,(map (compose (cut cons " " <>)
-                    (cut xire-compile <> (make-expression-context context)))
-          expressions)
+     ,(map (cut cons " " <>)
+           (xire-compile-forms expressions (make-expression-context context)))
      "\n")])
 
 (define-xire-statement exusage)
