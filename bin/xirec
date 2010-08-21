@@ -1506,6 +1506,55 @@
 (define-xire-statement sblast)
 (define-xire-statement sbrewind)
 (define-xire-statement scriptnames)
+
+(define-xire-statement %set context
+  ; FIXME: Support usage described in :help :set-termcap.
+  ; FIXME: Support the following forms:
+  ;
+  ;   :set {option}={value}
+  ;   :set {option}:{value}
+  ;   :set {option}+={value}
+  ;   :set {option}-={value}
+  ;   :set {option}^={value}
+  ;
+  ; Use :let at this moment.  It's not frequently used.  Though it's a bit
+  ; difficult to write equivalent to +=/-=/^=.
+  ; Point: How to express {value} in xire script?
+  ; :help to view - option-backslash, :set_env
+  [; :set - Show all options that differ from their default value.
+   (_ command-name)
+   `(,command-name
+     "\n")]
+  [; :set all
+   ; :set termcap
+   ; :set {option}?
+   ; :set {option}
+   ; :set no{option}
+   ; :set {option}!
+   ; :set inv{option}
+   ; :set {option}&
+   ; :set {option}&vi
+   ; :set {option}&vim
+   ; :set all&
+   ; :set {option}<
+   ; :setlocal {option}<
+   ; FIXME: Think a better notation.
+   (_ command-name (? symbol? option-name))
+   `(,command-name
+     " "
+     ,(symbol->string option-name)  ; Output "?", "!" and others as is.
+     "\n")])
+
+(define-xire-statement set
+  [(_ . arguments)
+   `(%set "set" ,@arguments)])
+(define-xire-statement setglobal
+  [(_ . arguments)
+   `(%set "setglobal" ,@arguments)])
+(define-xire-statement setlocal
+  [(_ . arguments)
+   `(%set "setlocal" ,@arguments)])
+
 (define-xire-statement shell)
 (define-xire-statement-modifier silent)
 (define-xire-statement spelldump :!)

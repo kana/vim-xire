@@ -2047,6 +2047,132 @@
 
 
 
+(test-section "(set)")  ;{{{2
+
+(test* "It should be compiled properly."
+       '("set\n"
+         "set all\n"
+         "set termcap\n"
+         "set wrap?\n"
+         "set wrap\n"
+         "set nowrap\n"
+         "set wrap!\n"
+         "set invwrap\n"
+         "set wrap&\n"
+         "set wrap&vi\n"
+         "set wrap&vim\n"
+         "set all&\n"
+         "set wrap<\n")
+       (map compile-statement
+            '((set)
+              (set all)
+              (set termcap)
+              (set wrap?)
+              (set wrap)
+              (set nowrap)
+              (set wrap!)
+              (set invwrap)
+              (set wrap&)
+              (set wrap&vi)
+              (set wrap&vim)
+              (set all&)
+              (set wrap<))))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(set x y)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(set!)))
+
+
+
+
+(test-section "(setglobal)")  ;{{{2
+
+(test* "It should be compiled properly."
+       '("setglobal\n"
+         "setglobal all\n"
+         "setglobal termcap\n"
+         "setglobal wrap?\n"
+         "setglobal wrap\n"
+         "setglobal nowrap\n"
+         "setglobal wrap!\n"
+         "setglobal invwrap\n"
+         "setglobal wrap&\n"
+         "setglobal wrap&vi\n"
+         "setglobal wrap&vim\n"
+         "setglobal all&\n"
+         "setglobal wrap<\n")
+       (map compile-statement
+            '((setglobal)
+              (setglobal all)
+              (setglobal termcap)
+              (setglobal wrap?)
+              (setglobal wrap)
+              (setglobal nowrap)
+              (setglobal wrap!)
+              (setglobal invwrap)
+              (setglobal wrap&)
+              (setglobal wrap&vi)
+              (setglobal wrap&vim)
+              (setglobal all&)
+              (setglobal wrap<))))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(setglobal x y)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(set!)))
+
+
+
+
+(test-section "(setlocal)")  ;{{{2
+
+(test* "It should be compiled properly."
+       '("setlocal\n"
+         "setlocal all\n"
+         "setlocal termcap\n"
+         "setlocal wrap?\n"
+         "setlocal wrap\n"
+         "setlocal nowrap\n"
+         "setlocal wrap!\n"
+         "setlocal invwrap\n"
+         "setlocal wrap&\n"
+         "setlocal wrap&vi\n"
+         "setlocal wrap&vim\n"
+         "setlocal all&\n"
+         "setlocal wrap<\n")
+       (map compile-statement
+            '((setlocal)
+              (setlocal all)
+              (setlocal termcap)
+              (setlocal wrap?)
+              (setlocal wrap)
+              (setlocal nowrap)
+              (setlocal wrap!)
+              (setlocal invwrap)
+              (setlocal wrap&)
+              (setlocal wrap&vi)
+              (setlocal wrap&vim)
+              (setlocal all&)
+              (setlocal wrap<))))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(setlocal x y)))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(set!)))
+
+
+
+
 (test-section "(shell)")  ;{{{2
 
 (test* "It should be compiled properly."

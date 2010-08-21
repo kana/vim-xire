@@ -375,6 +375,18 @@ test It should fail if bang is given., expects #<<error>> ==> ok
 test It should be compiled properly., expects "scriptnames\n" ==> ok
 test It should fail if extra argument is given., expects #<<error>> ==> ok
 test It should fail if bang is given., expects #<<error>> ==> ok
+<(set)>------------------------------------------------------------------------
+test It should be compiled properly., expects ("set\n" "set all\n" "set termcap\n" "set wrap?\n" "set wrap\n" "set nowrap\n" "set wrap!\n" "set invwrap\n" "set wrap&\n" "set wrap&vi\n" "set wrap&vim\n" "set all&\n" "set wrap<\n") ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(setglobal)>------------------------------------------------------------------
+test It should be compiled properly., expects ("setglobal\n" "setglobal all\n" "setglobal termcap\n" "setglobal wrap?\n" "setglobal wrap\n" "setglobal nowrap\n" "setglobal wrap!\n" "setglobal invwrap\n" "setglobal wrap&\n" "setglobal wrap&vi\n" "setglobal wrap&vim\n" "setglobal all&\n" "setglobal wrap<\n") ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
+<(setlocal)>-------------------------------------------------------------------
+test It should be compiled properly., expects ("setlocal\n" "setlocal all\n" "setlocal termcap\n" "setlocal wrap?\n" "setlocal wrap\n" "setlocal nowrap\n" "setlocal wrap!\n" "setlocal invwrap\n" "setlocal wrap&\n" "setlocal wrap&vi\n" "setlocal wrap&vim\n" "setlocal all&\n" "setlocal wrap<\n") ==> ok
+test It should fail if extra argument is given., expects #<<error>> ==> ok
+test It should fail if bang is given., expects #<<error>> ==> ok
 <(shell)>----------------------------------------------------------------------
 test It should be compiled properly., expects "shell\n" ==> ok
 test It should fail if extra argument is given., expects #<<error>> ==> ok
