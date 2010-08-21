@@ -210,20 +210,20 @@
 ;;; Compiler
 ;;; ========
 
-;; Translate xire script into Vim script.
-;; Xire script is read from INP and resulting Vim script is written into OUTP.
-(define (xire-translate inp outp
+;; Translate xire script into Vim script.  Xire script is read from INPUT-PORT
+;; and resulting Vim script is written into OUTPUT-PORT.
+(define (xire-translate input-port output-port
                         :key (environment (xire-environment-copy))
                              (scheme-environment (make-module #f)))
   (define compiled-vim-script-tree (list))
   (define (finish)
-    (write-tree (reverse compiled-vim-script-tree) outp))
+    (write-tree (reverse compiled-vim-script-tree) output-port))
   (define context (make-toplevel-context))
 
   (eval '(extend user) scheme-environment)
   (parameterize ([xire-environment environment])
     (let loop ()
-      (match (read inp)
+      (match (read input-port)
         [(? eof-object?)
          (finish)]
         [(and ((or 'define-xire-macro)
@@ -244,7 +244,7 @@
   (define (report-syntax-error)
     (errorf "Invalid xire form: ~s" form))
   (match form
-    [((? symbol? name) . args)
+    [((? symbol? name) . arguments)
      (cond
        [(xire-lookup-macro name context)
         => (lambda (expander)
@@ -1633,7 +1633,7 @@
 ;;; Main
 ;;; ====
 
-(define (main args)
+(define (main arguments)
   ; FIXME: NIY
   0)
 
