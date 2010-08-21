@@ -51,6 +51,10 @@ test It should succeed to compile a valid expression., expects ("123" "\"string\
 test It should raise error to compile an expression in invalid context., expects #<<error>> ==> ok
 test It should return stuff which is alredy compiled as is., expects #t ==> ok
 test It should repeat macro expansion until given form cannot be expanded., expects ("result" "B" "A") ==> ok
+<xire-compile-expression>------------------------------------------------------
+test It should succeed to compile a valid form with an expression context., expects ("123" "\"string\"" "symbol") ==> ok
+test It should use an expression context derived from a given context., expects ("123" "\"string\"" "symbol") ==> ok
+test It should raise error for non-expression script., expects #<<error>> ==> ok
 <xire-context related stuffs>--------------------------------------------------
 test <xire-context> should be available., expects #<class <xire-context>> ==> ok
 test make-toplevel-context should make a proper instance., expects #<class <xire-context>> ==> ok

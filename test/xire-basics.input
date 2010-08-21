@@ -419,6 +419,34 @@
 
 
 
+(test-section "xire-compile-expression")  ;{{{1
+
+(test* "It should succeed to compile a valid form with an expression context."
+       '("123" "\"string\"" "symbol")
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (let1 context (make-expression-context)
+           (map (cut xire-compile-expression <> context)
+                '(123 "string" symbol)))))
+
+(test* "It should use an expression context derived from a given context."
+       '("123" "\"string\"" "symbol")
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (let1 context (make-toplevel-context)
+           (map (cut xire-compile-expression <> context)
+                '(123 "string" symbol)))))
+
+(test* "It should raise error for non-expression script."
+       (test-error <error>)
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (define-xire-macro :statement (comment form context)
+           (match-let1 (_ comment-string) form
+             `("\"" ,comment-string)))
+         (xire-compile-expression '(comment "I am a comment!")
+                                  (make-toplevel-context))))
+
+
+
+
 (test-section "xire-context related stuffs")  ;{{{1
 
 (test* "<xire-context> should be available."
