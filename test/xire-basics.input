@@ -230,14 +230,16 @@
            (xire-compile '(my-statement AAA BBB) context)
            (xire-compile '(my-statement AAA BBB CCC) context))))
 
-(test* "It should define a macro which raises error for non-statement context."
-       (test-error <error>)
+(test* "It should define a xire macro in statement scope."
+       '(#t #f)
        (parameterize ([xire-environment (make <xire-environment>)])
-         (define context (make-expression-context))
          (define-xire-statement my-statement
            [(_ a . rest)
             `(style a ,a rest ,rest)])
-         (xire-compile '(my-statement AAA BBB CCC) context)))
+         (map boolean
+           (list
+             (xire-lookup-macro 'my-statement (make-statement-context))
+             (xire-lookup-macro 'my-statement (make-expression-context))))))
 
 (test* "It should accept the name of a context"
        '("result" #t)
@@ -416,6 +418,11 @@
              [(_ a b) `("result" ,a ,b)]))
          (xire-compile '(recursion-test) (make-toplevel-context))))
 
+(test* "It should succeed to compile a form that seems to be a function call."
+       "(foo(bar,baz))"
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (compile-as-string '(foo bar baz) (make-expression-context))))
+
 
 
 
@@ -435,14 +442,16 @@
            (map (cut xire-compile-expression <> context)
                 '(123 "string" symbol)))))
 
-(test* "It should raise error for non-expression script."
-       (test-error <error>)
+(test* "It should treat unknown expression macro as a function call."
+       ; See also xire-compile.
+       "(comment(\"I am a comment!\"))"
        (parameterize ([xire-environment (make <xire-environment>)])
          (define-xire-macro :statement (comment form context)
            (match-let1 (_ comment-string) form
              `("\"" ,comment-string)))
-         (xire-compile-expression '(comment "I am a comment!")
-                                  (make-toplevel-context))))
+         (tree->string
+           (xire-compile-expression '(comment "I am a comment!")
+                                    (make-toplevel-context)))))
 
 
 
@@ -479,17 +488,20 @@
              (comment "baz"))
            (make-statement-context))))
 
-(test* "It should raise error for invalid context - statements in expression."
-       (test-error <error>)
+(test* "It should treat as a function call - statements in expression."
+       '("\"foo\""
+         "(comment(\"bar\"))"  ; intentionally - see xire-compile.
+         "\"baz\"")
        (parameterize ([xire-environment (make <xire-environment>)])
          (define-xire-macro :statement (comment form context)
            (match-let1 (_ comment-string) form
              `("\"" ,comment-string)))
-         (xire-compile-forms
-           '("foo"
-             (comment "bar")
-             "bar")
-           (make-expression-context))))
+         (map tree->string
+           (xire-compile-forms
+             '("foo"
+               (comment "bar")
+               "baz")
+             (make-expression-context)))))
 
 
 

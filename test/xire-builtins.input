@@ -30,10 +30,6 @@
              (compile-statement '(RAW "" "\"" " " "Apple"))
              (compile-statement '(RAW "banana\n" "cherry\n" "dandelion\n"))))
 
-(test* "It should not be compiled in expression context."
-       (test-error <error>)
-       (compile-expression '(RAW "")))
-
 
 
 
@@ -54,10 +50,6 @@
 (test* "It should raise error for invalid arguments"
        (test-error <error>)
        (compile-statement '(comment "a" #\b "c")))
-
-(test* "It should raise error for non-statement context"
-       (test-error <error>)
-       (compile-expression '(comment "a")))
 
 
 
@@ -1350,9 +1342,9 @@
               (execute "echo")
               (execute "echo" (+ 1 3)))))
 
-(test* "It should fail if non-expression argument is given."
+(test* "It should fail if invalid expression is given."
        (test-error <error>)
-       (compile-statement '(execute (echo))))
+       (compile-statement `(execute ,(lambda () 'dummy))))
 
 
 
@@ -1645,11 +1637,11 @@
 
 (test* "It should fail for invalid form - invalid expression."
        (test-error <error>)
-       (compile-statement '(let x (y z))))
+       (compile-statement `(let x ,(lambda () 'dummy))))
 
 (test* "It should fail for invalid form - invalid variable name."
        (test-error <error>)
-       (compile-statement '(let (x y) z)))
+       (compile-statement `(let ,(lambda () 'dummy) z)))
 
 
 

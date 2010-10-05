@@ -250,7 +250,18 @@
         => (lambda (expander)
              (xire-compile (expander form context) context))]
        [else
-         (report-syntax-error)])]
+         ; Treat "(foo ...)" form as a function call, where foo is not known
+         ; as a xire macro.  This convention is to simplify the compiler.
+         ;
+         ; FIXME: How about treating "(foo ...)" in a statement context as
+         ; ":call foo(...)"?
+         (ensure-expression-context form context)
+         `("("
+           ,(x->vim-script-notation name)
+           "("
+           ,@(intersperse "," (xire-compile-forms arguments context))
+           ")"
+           ")")])]
     [(_ . _)  ; FORM is already compiled.
      form]
     [_
