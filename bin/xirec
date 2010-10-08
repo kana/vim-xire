@@ -1651,7 +1651,7 @@
 ;;; ====
 
 (define (main arguments)
-  ; FIXME: NIY
+  (xire-translate (current-input-port) (current-output-port))
   0)
 
 

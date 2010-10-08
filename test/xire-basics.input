@@ -3,6 +3,7 @@
 (use gauche.test)
 (test-start "xire-basics")
 (load "./bin/xirec")
+(define %main main)
 (set! main #f)
 
 (define (hash-table-sorted-keys ht)
@@ -269,6 +270,17 @@
                 (wreathlit)
                 (bang)
                 (bang!)))))
+
+
+
+
+(test-section "main")  ;{{{1
+
+(test* "It should read/write the standard input/output."
+       (compile-as-string '(return (?: x y z)) (make-toplevel-context))
+       (with-string-io
+         "(return (?: x y z))"
+         (lambda () (%main '()))))
 
 
 
