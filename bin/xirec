@@ -1407,6 +1407,34 @@
 (define-xire-statement finish)
 (define-xire-statement fixdel)
 
+(define-xire-statement %function context
+  [(_ bang
+      ((? symbol? name) . arguments)
+      ((? keyword? options) ...)
+      . statements)
+   (let1 expression-context (make-expression-context context)
+     `("function" ,bang
+       " "
+       ,(xire-compile name expression-context)
+       "("
+       ,(intersperse
+          ","
+          (map (cut xire-compile <> expression-context) arguments))
+       ")"
+       ,(map (cut list " " <>) options)
+       "\n"
+       ,(map (cut xire-compile <> context) statements)
+       "endfunction" "\n"
+       ))]
+  [(_ bang ((? symbol? name) . arguments) . statements)
+   `(%function ,bang (,name ,@arguments) () ,@statements)])
+(define-xire-statement function context
+  [(_ . arguments)
+   `(%function "" ,@arguments)])
+(define-xire-statement function! context
+  [(_ . arguments)
+   `(%function "!" ,@arguments)])
+
 
 ;;; Commands - H
 ;;; ------------

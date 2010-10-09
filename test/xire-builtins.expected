@@ -258,6 +258,10 @@ test It should fail if bang is given., expects #<<error>> ==> ok
 test It should be compiled properly., expects "fixdel\n" ==> ok
 test It should fail if extra argument is given., expects #<<error>> ==> ok
 test It should fail if bang is given., expects #<<error>> ==> ok
+<(function)>-------------------------------------------------------------------
+test It should be compiled properly without any option., expects "function F(a,b,c,...)\nlet sum = (a:a + a:b + a:c + a:000)\nreturn sum\nendfunction\n" ==> ok
+test It should be compiled properly with bang., expects "function! F(a,b,c,...)\nlet sum = (a:a + a:b + a:c + a:000)\nreturn sum\nendfunction\n" ==> ok
+test It should be compiled properly with attributes., expects "function F(a,b,c,...) abort dict range\nlet sum = (a:a + a:b + a:c + a:000)\nreturn sum\nendfunction\n" ==> ok
 <(hide)>-----------------------------------------------------------------------
 test It should be compiled properly., expects "hide edit\n" ==> ok
 <(intro)>----------------------------------------------------------------------

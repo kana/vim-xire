@@ -1525,6 +1525,41 @@
 
 
 
+(test-section "(function)")  ;{{{2
+
+(test* "It should be compiled properly without any option."
+       (join
+         "function F(a,b,c,...)"
+         "let sum = (a:a + a:b + a:c + a:000)"
+         "return sum"
+         "endfunction")
+       (compile-statement '(function (F a b c ...)
+                             (let sum (+ a:a a:b a:c a:000))
+                             (return sum))))
+
+(test* "It should be compiled properly with bang."
+       (join
+         "function! F(a,b,c,...)"
+         "let sum = (a:a + a:b + a:c + a:000)"
+         "return sum"
+         "endfunction")
+       (compile-statement '(function! (F a b c ...)
+                             (let sum (+ a:a a:b a:c a:000))
+                             (return sum))))
+
+(test* "It should be compiled properly with attributes."
+       (join
+         "function F(a,b,c,...) abort dict range"
+         "let sum = (a:a + a:b + a:c + a:000)"
+         "return sum"
+         "endfunction")
+       (compile-statement '(function (F a b c ...) (:abort :dict :range)
+                             (let sum (+ a:a a:b a:c a:000))
+                             (return sum))))
+
+
+
+
 (test-section "(hide)")  ;{{{2
 
 (test* "It should be compiled properly."
