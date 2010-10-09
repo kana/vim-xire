@@ -294,6 +294,10 @@
   (define MAXIMUM-NUMBER (- (ash 1 31) 1))
 
   (cond
+    [(boolean? object)
+     (if object
+       1
+       0)]
     [(number? object)
      (cond
        [(< object MINIMAL-NUMBER)
@@ -1410,8 +1414,7 @@
 (define-xire-statement %function context
   [(_ bang
       ((? symbol? name) . arguments)
-      ((? keyword? options) ...)
-      . statements)
+      ((? keyword? options) ...) . statements)
    (let1 expression-context (make-expression-context context)
      `("function" ,bang
        " "

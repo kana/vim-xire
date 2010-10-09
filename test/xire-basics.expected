@@ -32,6 +32,8 @@ test It should define a macro for simple statement such :break., expects (("brea
 <main>-------------------------------------------------------------------------
 test It should read/write the standard input/output., expects "return (x ? y : z)\n" ==> ok
 <x->vim-script-notation>-------------------------------------------------------
+test It should convert #f into corresponding value., expects 0 ==> ok
+test It should convert #t into corresponding value., expects 1 ==> ok
 test It should convert 32 bit signed numbers properly., expects ("0" "123" "-456" "789" "2147483647" "-2147483648") ==> ok
 test It should fail to convert numbers beyond 32 bit signed ones (+)., expects #<<error>> ==> ok
 test It should fail to convert numbers beyond 32 bit signed ones (-)., expects #<<error>> ==> ok

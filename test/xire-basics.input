@@ -287,6 +287,13 @@
 
 (test-section "x->vim-script-notation")  ;{{{1
 
+(test* "It should convert #f into corresponding value."
+       0
+       (x->vim-script-notation #f))
+(test* "It should convert #t into corresponding value."
+       1
+       (x->vim-script-notation #t))
+
 (test* "It should convert 32 bit signed numbers properly."
        '("0" "123" "-456" "789" "2147483647" "-2147483648")
        (map x->vim-script-notation
