@@ -103,5 +103,6 @@ test It should raise error for a malformed script: (no-such-macro), expects #<<e
 test It should raise error for a malformed script: (macro invlaid argument), expects #<<error>> ==> ok
 test It should succeed to compile a valid script: (macro vlaid argument), expects "\"valid argument" ==> ok
 test It should succeed to compile the empty script., expects "" ==> ok
+test It should evaluate scheme expressions embedded in xire script., expects evaluated ==> ok
 passed.
 passed.

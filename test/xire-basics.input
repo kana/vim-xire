@@ -859,6 +859,15 @@
        (call-with-string-io ""
          (cut xire-translate <> <> :environment (make <xire-environment>))))
 
+(test* "It should evaluate scheme expressions embedded in xire script."
+       'evaluated
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (let1 e (make-module #f)
+           (call-with-string-io
+             "(scheme (define result 0) (set! result 'evaluated))"
+             (cut xire-translate <> <> :scheme-environment e))
+           (eval 'result e))))
+
 
 
 

@@ -231,6 +231,9 @@
               form)
          (eval form scheme-environment)
          (loop)]
+        [('scheme . scheme-expressions)
+         (eval `(begin ,@scheme-expressions) scheme-environment)
+         (loop)]
         [(and (name . _) form)
          (push! compiled-vim-script-tree (xire-compile form context))
          (loop)]))))
