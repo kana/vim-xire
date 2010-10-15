@@ -56,6 +56,7 @@ test It should raise error to compile an expression in invalid context., expects
 test It should return stuff which is alredy compiled as is., expects #t ==> ok
 test It should repeat macro expansion until given form cannot be expanded., expects ("result" "B" "A") ==> ok
 test It should succeed to compile a form that seems to be a function call., expects "(foo(bar,baz))" ==> ok
+test It should raise error for unknown macro in non-expression context., expects #<<error>> ==> ok
 <xire-compile-expression>------------------------------------------------------
 test It should succeed to compile a valid form with an expression context., expects ("123" "\"string\"" "symbol") ==> ok
 test It should use an expression context derived from a given context., expects ("123" "\"string\"" "symbol") ==> ok

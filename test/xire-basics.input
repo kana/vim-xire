@@ -442,6 +442,11 @@
        (parameterize ([xire-environment (make <xire-environment>)])
          (compile-as-string '(foo bar baz) (make-expression-context))))
 
+(test* "It should raise error for unknown macro in non-expression context."
+       (test-error <error>)
+       (parameterize ([xire-environment (make <xire-environment>)])
+         (compile-as-string '(cons 1 2) (make-toplevel-context))))
+
 
 
 
