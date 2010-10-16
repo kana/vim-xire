@@ -44,7 +44,7 @@ test It should be compiled properly., expects "((array)[(123)])" ==> ok
 test It should raise error if the number of operands is less than 2., expects #<<error>> ==> ok
 test It should raise error if the number of operands is greater than 2., expects #<<error>> ==> ok
 <(slice array index1 index2)>--------------------------------------------------
-test It should be compiled properly., expects "((array)[(123):(456)])" ==> ok
+test It should be compiled properly., expects ("((array)[(123):(456)])" "((array)[:(456)])" "((array)[(123):])") ==> ok
 test It should raise error if the number of operands is less than 3., expects #<<error>> ==> ok
 test It should raise error if the number of operands is greater than 3., expects #<<error>> ==> ok
 <(-> dictionary member)>-------------------------------------------------------
