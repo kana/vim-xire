@@ -285,6 +285,13 @@
 
 
 
+(test-section "string->vim-script-string-notation")  ;{{{1
+
+; See test for (x->vim-script-notation).
+
+
+
+
 (test-section "x->vim-script-notation")  ;{{{1
 
 (test* "It should convert #f into corresponding value."
