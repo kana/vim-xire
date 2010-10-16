@@ -54,6 +54,8 @@ test It should raise error if the number of operands is greater than 2., expects
 <(apply function argument ...)>------------------------------------------------
 test It should be compiled properly., expects ("(function())" "(function(1))" "(function(1,2))" "(function(1,2,3))") ==> ok
 test It should raise error if the number of operands is less than 1., expects #<<error>> ==> ok
+<(kbd key-sequence-string)>----------------------------------------------------
+test It should be compiled properly., expects ("\"\"" "\"abc\"" "\"\\<BS>\"" "\"i\\\"foo'\\<BS>\\\"\"" "\"<<\"" "\"<<foo\\<C-x>bar>>\"" "\"\\<Esc>/derive\\<Return>\\<Esc>A\\<C-w>new-topic\"") ==> ok
 <(list expression ...)>--------------------------------------------------------
 test It should be compiled properly., expects ("[]" "[1]" "[1,2]" "[1,2,3]") ==> ok
 <(dict (key value) ...)>-------------------------------------------------------

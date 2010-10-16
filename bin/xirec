@@ -365,7 +365,7 @@
 ;;      - (b) and (e): Use "\xNN" instead.
 ;;      - (U): Incompatible with Gauche's "\UNNNNNNNN" notation and it is
 ;;        rarely used.
-;;      - (k): Use (keyseq <Key> ...) form instead. [KEYSEQ]  FIXME: Review.
+;;      - (k): Use (kbd "<Key> ...") form instead.  [KEYSEQ]
 ;;
 ;; [KEYSEQ]
 ;;     In Vim script, it's necessary to write special key sequences in
@@ -380,12 +380,34 @@
 ;;         (a) visualmode() ==# "\<C-v>"
 ;;         (b) 0 <= index(["\<C-c>", "\<Esc>"], nr2char(getchar()))
 ;;
-;;     But it's possible to write equivalent Vim script if (keyseq <Key> ...)
+;;     But it's possible to write equivalent Vim script if (kbd "<Key> ...")
 ;;     form is available.  So that it's not a problem even if we cannot write
 ;;     "\<Key>" directly in xire script.
 (define (string->vim-script-string-notation s)
   ; FIXME: Check the above limitations are met.
   (format "~s" s))
+
+;; Translate a key sequence string S into equivalent Vim script string.
+;; For example, "ixyx<BS>z" will be translated into "ixyx\<BS>z".
+;;
+;; The format of a key sequence string S is almost same as {rhs} for
+;; :map-family in Vim script.  Note that we define the following convention to
+;; simplify writing xire script and the compiler implementation:
+;;
+;; (a) Don't use ``\'' directly.  Use ``<Bslash>'' instead.  Because ``\'' is
+;;     processed by Scheme reader, so that we have to escape ``\'' and such
+;;     escaping makes script unreadable.
+(define (string->vim-script-key-sequence-string s)
+  (list
+    #\"
+    (regexp-replace-all*
+      s
+      #/<[^<>]+>/
+      (lambda (m)
+        (string-append "\\" (rxmatch-substring m)))
+      #/"/
+      "\\\\\"")
+    #\"))
 
 ;; Convert identifier conventions between Scheme and Vim script.  For example,
 ;; Scheme usually uses hyphen (-) to join words in an identifier, while Vim
@@ -693,6 +715,7 @@
 ;;; number                  Scheme number           number constant
 ;;; "string"                Scheme string           string with \-notation
 ;;; 'string'                N/A                     literal string
+;;; "string'\<BS>"          (kbd "string'<BS>")     string with key sequence
 ;;; [expr1, ...]            (list expr1 ...)        list
 ;;; {expr1: expr1, ...}     (dict (key value) ...)  dictionary
 ;;; &option                 (& option)              option value
@@ -715,6 +738,9 @@
 ;;;                         NB: Gauche can read "@" as a valid symbol, but
 ;;;                         R5RS doesn't allow such symbol.
 
+(define-xire-expression kbd context
+  [(_ key-sequence-string)
+   (string->vim-script-key-sequence-string key-sequence-string)])
 (define-xire-expression list context
   [(_ valueN ...)
    `("["

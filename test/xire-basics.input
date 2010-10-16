@@ -285,6 +285,13 @@
 
 
 
+(test-section "string->vim-script-key-sequence-string")  ;{{{1
+
+; See test for (kbd).
+
+
+
+
 (test-section "string->vim-script-string-notation")  ;{{{1
 
 ; See test for (x->vim-script-notation).

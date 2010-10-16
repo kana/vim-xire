@@ -356,6 +356,28 @@
 
 
 
+(test-section "(kbd key-sequence-string)")  ;{{{2
+
+(test* "It should be compiled properly."
+       '("\"\""
+         "\"abc\""
+         "\"\\<BS>\""
+         "\"i\\\"foo'\\<BS>\\\"\""
+         "\"<<\""
+         "\"<<foo\\<C-x>bar>>\""
+         "\"\\<Esc>/derive\\<Return>\\<Esc>A\\<C-w>new-topic\"")
+       (map compile-expression
+            '((kbd "")
+              (kbd "abc")
+              (kbd "<BS>")
+              (kbd "i\"foo'<BS>\"")
+              (kbd "<<")
+              (kbd "<<foo<C-x>bar>>")
+              (kbd "<Esc>/derive<Return><Esc>A<C-w>new-topic"))))
+
+
+
+
 (test-section "(list expression ...)")  ;{{{2
 
 (test* "It should be compiled properly."

@@ -31,6 +31,7 @@ test It should accept the name of a context, expects ("result" #t) ==> ok
 test It should define a macro for simple statement such :break., expects (("break!" "\n") ("continue" "\n") ("noel" "\n") ("bang" "\n") ("bang!" "\n")) ==> ok
 <main>-------------------------------------------------------------------------
 test It should read/write the standard input/output., expects "return (x ? y : z)\n" ==> ok
+<string->vim-script-key-sequence-string>---------------------------------------
 <string->vim-script-string-notation>-------------------------------------------
 <x->vim-script-notation>-------------------------------------------------------
 test It should convert #f into corresponding value., expects 0 ==> ok
