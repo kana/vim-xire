@@ -297,6 +297,87 @@ test It should be compiled properly., expects "lockmarks edit\n" ==> ok
 test It should be compiled properly., expects "ls\n" ==> ok
 test It should fail if extra argument is given., expects #<<error>> ==> ok
 test It should be compiled properly with bang., expects "ls!\n" ==> ok
+<(map)>------------------------------------------------------------------------
+test It should be compiled properly., expects ("map  lhs rhs\n" "map <buffer><expr><script><special><unique> lhs \"rhs\"\n") ==> ok
+test It should accept form without options., expects "map  lhs rhs\n" ==> ok
+test It should fail if invalid option is given., expects #<<error>> ==> ok
+test It should fail if non-string rhs is given for non-<expr> mode., expects #<<error>> ==> ok
+test It should be compiled properly., expects ("map!  lhs rhs\n" "map! <buffer><expr><script><special><unique> lhs \"rhs\"\n") ==> ok
+test It should accept form without options., expects "map!  lhs rhs\n" ==> ok
+test It should fail if invalid option is given., expects #<<error>> ==> ok
+test It should fail if non-string rhs is given for non-<expr> mode., expects #<<error>> ==> ok
+test It should be compiled properly., expects ("cmap  lhs rhs\n" "cmap <buffer><expr><script><special><unique> lhs \"rhs\"\n") ==> ok
+test It should accept form without options., expects "cmap  lhs rhs\n" ==> ok
+test It should fail if invalid option is given., expects #<<error>> ==> ok
+test It should fail if non-string rhs is given for non-<expr> mode., expects #<<error>> ==> ok
+test It should be compiled properly., expects ("imap  lhs rhs\n" "imap <buffer><expr><script><special><unique> lhs \"rhs\"\n") ==> ok
+test It should accept form without options., expects "imap  lhs rhs\n" ==> ok
+test It should fail if invalid option is given., expects #<<error>> ==> ok
+test It should fail if non-string rhs is given for non-<expr> mode., expects #<<error>> ==> ok
+test It should be compiled properly., expects ("lmap  lhs rhs\n" "lmap <buffer><expr><script><special><unique> lhs \"rhs\"\n") ==> ok
+test It should accept form without options., expects "lmap  lhs rhs\n" ==> ok
+test It should fail if invalid option is given., expects #<<error>> ==> ok
+test It should fail if non-string rhs is given for non-<expr> mode., expects #<<error>> ==> ok
+test It should be compiled properly., expects ("nmap  lhs rhs\n" "nmap <buffer><expr><script><special><unique> lhs \"rhs\"\n") ==> ok
+test It should accept form without options., expects "nmap  lhs rhs\n" ==> ok
+test It should fail if invalid option is given., expects #<<error>> ==> ok
+test It should fail if non-string rhs is given for non-<expr> mode., expects #<<error>> ==> ok
+test It should be compiled properly., expects ("omap  lhs rhs\n" "omap <buffer><expr><script><special><unique> lhs \"rhs\"\n") ==> ok
+test It should accept form without options., expects "omap  lhs rhs\n" ==> ok
+test It should fail if invalid option is given., expects #<<error>> ==> ok
+test It should fail if non-string rhs is given for non-<expr> mode., expects #<<error>> ==> ok
+test It should be compiled properly., expects ("smap  lhs rhs\n" "smap <buffer><expr><script><special><unique> lhs \"rhs\"\n") ==> ok
+test It should accept form without options., expects "smap  lhs rhs\n" ==> ok
+test It should fail if invalid option is given., expects #<<error>> ==> ok
+test It should fail if non-string rhs is given for non-<expr> mode., expects #<<error>> ==> ok
+test It should be compiled properly., expects ("vmap  lhs rhs\n" "vmap <buffer><expr><script><special><unique> lhs \"rhs\"\n") ==> ok
+test It should accept form without options., expects "vmap  lhs rhs\n" ==> ok
+test It should fail if invalid option is given., expects #<<error>> ==> ok
+test It should fail if non-string rhs is given for non-<expr> mode., expects #<<error>> ==> ok
+test It should be compiled properly., expects ("xmap  lhs rhs\n" "xmap <buffer><expr><script><special><unique> lhs \"rhs\"\n") ==> ok
+test It should accept form without options., expects "xmap  lhs rhs\n" ==> ok
+test It should fail if invalid option is given., expects #<<error>> ==> ok
+test It should fail if non-string rhs is given for non-<expr> mode., expects #<<error>> ==> ok
+test It should be compiled properly., expects ("noremap  lhs rhs\n" "noremap <buffer><expr><script><special><unique> lhs \"rhs\"\n") ==> ok
+test It should accept form without options., expects "noremap  lhs rhs\n" ==> ok
+test It should fail if invalid option is given., expects #<<error>> ==> ok
+test It should fail if non-string rhs is given for non-<expr> mode., expects #<<error>> ==> ok
+test It should be compiled properly., expects ("noremap!  lhs rhs\n" "noremap! <buffer><expr><script><special><unique> lhs \"rhs\"\n") ==> ok
+test It should accept form without options., expects "noremap!  lhs rhs\n" ==> ok
+test It should fail if invalid option is given., expects #<<error>> ==> ok
+test It should fail if non-string rhs is given for non-<expr> mode., expects #<<error>> ==> ok
+test It should be compiled properly., expects ("cnoremap  lhs rhs\n" "cnoremap <buffer><expr><script><special><unique> lhs \"rhs\"\n") ==> ok
+test It should accept form without options., expects "cnoremap  lhs rhs\n" ==> ok
+test It should fail if invalid option is given., expects #<<error>> ==> ok
+test It should fail if non-string rhs is given for non-<expr> mode., expects #<<error>> ==> ok
+test It should be compiled properly., expects ("inoremap  lhs rhs\n" "inoremap <buffer><expr><script><special><unique> lhs \"rhs\"\n") ==> ok
+test It should accept form without options., expects "inoremap  lhs rhs\n" ==> ok
+test It should fail if invalid option is given., expects #<<error>> ==> ok
+test It should fail if non-string rhs is given for non-<expr> mode., expects #<<error>> ==> ok
+test It should be compiled properly., expects ("lnoremap  lhs rhs\n" "lnoremap <buffer><expr><script><special><unique> lhs \"rhs\"\n") ==> ok
+test It should accept form without options., expects "lnoremap  lhs rhs\n" ==> ok
+test It should fail if invalid option is given., expects #<<error>> ==> ok
+test It should fail if non-string rhs is given for non-<expr> mode., expects #<<error>> ==> ok
+test It should be compiled properly., expects ("nnoremap  lhs rhs\n" "nnoremap <buffer><expr><script><special><unique> lhs \"rhs\"\n") ==> ok
+test It should accept form without options., expects "nnoremap  lhs rhs\n" ==> ok
+test It should fail if invalid option is given., expects #<<error>> ==> ok
+test It should fail if non-string rhs is given for non-<expr> mode., expects #<<error>> ==> ok
+test It should be compiled properly., expects ("onoremap  lhs rhs\n" "onoremap <buffer><expr><script><special><unique> lhs \"rhs\"\n") ==> ok
+test It should accept form without options., expects "onoremap  lhs rhs\n" ==> ok
+test It should fail if invalid option is given., expects #<<error>> ==> ok
+test It should fail if non-string rhs is given for non-<expr> mode., expects #<<error>> ==> ok
+test It should be compiled properly., expects ("snoremap  lhs rhs\n" "snoremap <buffer><expr><script><special><unique> lhs \"rhs\"\n") ==> ok
+test It should accept form without options., expects "snoremap  lhs rhs\n" ==> ok
+test It should fail if invalid option is given., expects #<<error>> ==> ok
+test It should fail if non-string rhs is given for non-<expr> mode., expects #<<error>> ==> ok
+test It should be compiled properly., expects ("vnoremap  lhs rhs\n" "vnoremap <buffer><expr><script><special><unique> lhs \"rhs\"\n") ==> ok
+test It should accept form without options., expects "vnoremap  lhs rhs\n" ==> ok
+test It should fail if invalid option is given., expects #<<error>> ==> ok
+test It should fail if non-string rhs is given for non-<expr> mode., expects #<<error>> ==> ok
+test It should be compiled properly., expects ("xnoremap  lhs rhs\n" "xnoremap <buffer><expr><script><special><unique> lhs \"rhs\"\n") ==> ok
+test It should accept form without options., expects "xnoremap  lhs rhs\n" ==> ok
+test It should fail if invalid option is given., expects #<<error>> ==> ok
+test It should fail if non-string rhs is given for non-<expr> mode., expects #<<error>> ==> ok
 <(messages)>-------------------------------------------------------------------
 test It should be compiled properly., expects "messages\n" ==> ok
 test It should fail if extra argument is given., expects #<<error>> ==> ok

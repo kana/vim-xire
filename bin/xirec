@@ -1528,6 +1528,71 @@
 ;;; Commands - M
 ;;; ------------
 
+(define-xire-statement %map context
+  ; FIXME: (*1) How about the following case?
+  ;        :map <expr> lhs "\<lt>C-x>"
+  [(_ (? symbol? mode)
+      (? boolean? remapp)
+      (and ((? keyword? _) ..0) options)
+      (? string? lhs)
+      rhs)
+   (let* ([bangp (eq? mode '!)]
+          [exprp (memq :expr options)]
+          [%command (list
+                      (if bangp "" (symbol->string mode))
+                      (if remapp "map" "noremap")
+                      (if bangp "!" ""))]
+          [%options (map (lambda (o)
+                           (match o
+                                  [:buffer "<buffer>"]
+                                  [:expr "<expr>"]
+                                  [:script "<script>"]
+                                  [:silent "<silent>"]
+                                  [:special "<special>"]
+                                  [:unique "<unique>"]
+                                  [else (error "Invalid :map option:" o)]))
+                         options)]
+          [%rhs (if exprp
+                  (xire-compile-expression rhs context)  ; (*1)
+                  rhs)])
+     (when (and (not exprp) (not (string? rhs)))
+       (error "rhs must be a string:" rhs))
+     (list
+       %command
+       " "
+       %options
+       " "
+       lhs
+       " "
+       %rhs
+       "\n"))]
+  [(c (? symbol? mode)
+      (? boolean? remapp)
+      (? string? lhs)
+      rhs)
+   `(,c ,mode ,remapp () ,lhs ,rhs)])
+
+(define-xire-statement map [(_ . arguments) `(%map || #t ,@arguments)])
+(define-xire-statement map! [(_ . arguments) `(%map ! #t ,@arguments)])
+(define-xire-statement cmap [(_ . arguments) `(%map c #t ,@arguments)])
+(define-xire-statement imap [(_ . arguments) `(%map i #t ,@arguments)])
+(define-xire-statement lmap [(_ . arguments) `(%map l #t ,@arguments)])
+(define-xire-statement nmap [(_ . arguments) `(%map n #t ,@arguments)])
+(define-xire-statement omap [(_ . arguments) `(%map o #t ,@arguments)])
+(define-xire-statement smap [(_ . arguments) `(%map s #t ,@arguments)])
+(define-xire-statement vmap [(_ . arguments) `(%map v #t ,@arguments)])
+(define-xire-statement xmap [(_ . arguments) `(%map x #t ,@arguments)])
+(define-xire-statement noremap [(_ . arguments) `(%map || #f ,@arguments)])
+(define-xire-statement noremap! [(_ . arguments) `(%map ! #f ,@arguments)])
+(define-xire-statement cnoremap [(_ . arguments) `(%map c #f ,@arguments)])
+(define-xire-statement inoremap [(_ . arguments) `(%map i #f ,@arguments)])
+(define-xire-statement lnoremap [(_ . arguments) `(%map l #f ,@arguments)])
+(define-xire-statement nnoremap [(_ . arguments) `(%map n #f ,@arguments)])
+(define-xire-statement onoremap [(_ . arguments) `(%map o #f ,@arguments)])
+(define-xire-statement snoremap [(_ . arguments) `(%map s #f ,@arguments)])
+(define-xire-statement vnoremap [(_ . arguments) `(%map v #f ,@arguments)])
+(define-xire-statement xnoremap [(_ . arguments) `(%map x #f ,@arguments)])
+
 (define-xire-statement messages)
 
 

@@ -1750,6 +1750,36 @@
 
 
 
+(test-section "(map)")  ;{{{2
+
+(let1 commands '(map map! cmap imap lmap
+                 nmap omap smap vmap xmap
+                 noremap noremap! cnoremap inoremap lnoremap
+                 nnoremap onoremap snoremap vnoremap xnoremap)
+  (map
+    (lambda (c)
+      (test* "It should be compiled properly."
+             (list
+               #`",c  lhs rhs\n"
+               #`",c <buffer><expr><script><special><unique> lhs \"rhs\"\n")
+             (map
+               (cut compile-statement <>)
+               `((,c () "lhs" "rhs")
+                 (,c (:buffer :expr :script :special :unique) "lhs" "rhs"))))
+      (test* "It should accept form without options."
+             (compile-statement `(,c () "lhs" "rhs"))
+             (compile-statement `(,c "lhs" "rhs")))
+      (test* "It should fail if invalid option is given."
+             (test-error <error>)
+             (compile-statement `(,c (<x>) "lhs" "rhs")))
+      (test* "It should fail if non-string rhs is given for non-<expr> mode."
+             (test-error <error>)
+             (compile-statement `(,c () "lhs" rhs))))
+    commands))
+
+
+
+
 (test-section "(messages)")  ;{{{2
 
 (test* "It should be compiled properly."
