@@ -1,6 +1,6 @@
 Testing xire-basics ...                                          Testing xire-basics ===========================================================
 <convert-identifier-conventions>-----------------------------------------------
-test It should convert properly., expects ("foo_bar_baz" "x_to_y" "set_x" "set_p" "$*@%") ==> ok
+test It should convert properly., expects ("foo_bar_baz" "x_to_y" "set_x" "set_p" "foo_bar" "$*@%") ==> ok
 <define-binary-operator>-------------------------------------------------------
 test It should define a binary operator in the current context., expects "(0 <> 1)" ==> ok
 test It should define a binary operator, available only in an expression., expects #<<error>> ==> ok
