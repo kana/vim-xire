@@ -126,8 +126,9 @@ FIXME: Add details.
 ------------------------------------------------------------------------------
 EXPRESSIONS				     *xire-mapping-to-vim-expressions*
 
-FIXME: Add details.
+Search bin/xirec with "Built-in xire macros - Expressions".
 
+FIXME: Write more friendly documentation.
 
 ------------------------------------------------------------------------------
 FUNCTIONS				       *xire-mapping-to-vim-functions*
