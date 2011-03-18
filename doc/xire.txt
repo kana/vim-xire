@@ -31,7 +31,6 @@ Interface               |xire-interface|
   External Commands       |xire-external-commands|
 Xire Script             |xire-script|
 Vim to Xire Mapping     |xire-mapping-to-vim|
-  Objects                  |xire-mapping-to-vim-objects|
   Expressions              |xire-mapping-to-vim-expressions|
   Functions                |xire-mapping-to-vim-functions|
   Ex Commands              |xire-mapping-to-vim-ex-commands|
@@ -115,12 +114,6 @@ VIM TO XIRE MAPPING				*xire-mapping-to-vim*
 The following are simple tables of objects, functions and Ex commands in Vim
 script with the corresponding xire expressions.  It's for the convenience of
 people familiar to Vim script.
-
-
-------------------------------------------------------------------------------
-OBJECTS						*xire-mapping-to-vim-objects*
-
-FIXME: Add details.
 
 
 ------------------------------------------------------------------------------
