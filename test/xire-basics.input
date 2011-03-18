@@ -23,14 +23,14 @@
          "set_x"
          "set_p"
          "foo_bar"
-         "$*@%")
+         "$*@#")
        (map convert-identifier-conventions
             '("foo-bar-baz"
               "x->y"
               "set!"
               "set?"
               "foo-bar"
-              "$*@%")))
+              "$*@#")))
 
 
 
