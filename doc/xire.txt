@@ -134,10 +134,16 @@ function(expr1, ...)    (function expr1 ...)
 ------------------------------------------------------------------------------
 EX COMMANDS				     *xire-mapping-to-vim-ex-commands*
 
-|:echo| {expr} ...
-	(echo {expr} ...)
+Search bin/xirec with
+"Built-in xire macros - Control flow"
+"Built-in xire macros - Ex commands (except control flow)".
 
-FIXME: Add details.
+Currently, not all Ex commands are available in xire script.  If you find that
+what you want you use is not available, please write and send a patch for the
+Ex commands.  Because there are more than 500 Ex commands in Vim and it's hard
+to write their equivalents only by one person.
+
+FIXME: Write more friendly documentation.
 
 
 
