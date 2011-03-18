@@ -23,6 +23,7 @@
          "set_x"
          "set_p"
          "foo_bar"
+         "_internal"
          "$*@#")
        (map convert-identifier-conventions
             '("foo-bar-baz"
@@ -30,6 +31,7 @@
               "set!"
               "set?"
               "foo-bar"
+              "%internal"
               "$*@#")))
 
 
