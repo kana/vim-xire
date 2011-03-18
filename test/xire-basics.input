@@ -327,12 +327,12 @@
        (test-error <error>)
        (x->vim-script-notation 1/2))
 
-(test* "It should convert C-friendly symbols properly."
+(test* "It should convert Vim-script friendly symbols properly."
        '("bufnr" "synIDattr" "has_key")
        (map x->vim-script-notation
             '(bufnr synIDattr has_key)))
 
-(test* "It should convert also non-C-friendly symbols properly."
+(test* "It should convert also non-Vim-script-friendly symbols properly."
        '("predicate_p" "mutate_x" "x_to_y")
        (map x->vim-script-notation
             '(predicate? mutate! x->y)))
