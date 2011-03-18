@@ -632,11 +632,8 @@
 ;;; -----
 ;;;
 ;;; ! expr7                 (! expr7)               logical NOT
-;;; - expr7                 N/A                     unary minus
-;;; + expr7                 N/A                     unary plus
-;;;
-;;;                         NB: xire provides n-ary +/- operators
-;;;                         and they also serve as unary ones.
+;;; - expr7                 (- expr7) [*]           unary minus
+;;; + expr7                 (+ expr7) [*]           unary plus
 
 (define-xire-expression not context
   [(_ expression)
@@ -644,7 +641,7 @@
          "!"
          (xire-compile expression context)
          ")")])
-; unary +/- operators are provided as a part of n-ary +/- operators.
+; [*] ... unary +/- operators are provided as a part of n-ary +/- operators.
 
 
 ;;; expr8
