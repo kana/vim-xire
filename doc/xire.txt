@@ -126,7 +126,9 @@ FIXME: Write more friendly documentation.
 ------------------------------------------------------------------------------
 FUNCTIONS				       *xire-mapping-to-vim-functions*
 
-FIXME: Add details.
+Vim script              Xire script
+--------------------    --------------------
+function(expr1, ...)    (function expr1 ...)
 
 
 ------------------------------------------------------------------------------
