@@ -33,6 +33,17 @@ test It should define a macro for simple statement such :break., expects (("brea
 test It should read/write the standard input/output., expects "return (x ? y : z)\n" ==> ok
 <string->vim-script-key-sequence-string>---------------------------------------
 <string->vim-script-string-notation>-------------------------------------------
+<x->address-notation>----------------------------------------------------------
+test It should convert a number to an absolute address., expects "123" ==> ok
+test It should convert |.| to the current line address., expects "." ==> ok
+test It should convert $ to the last line address., expects "$" ==> ok
+test It should convert % to the entire range address., expects "%" ==> ok
+test It should convert 'm to a corresponding mark address., expects ("'" "m") ==> ok
+test It should convert #/regexp/ to a corresponding pattern address., expects ("/" "\\<foo\\>" "/") ==> ok
+test It should embed "string" as-is., expects "?foo?" ==> ok
+test It should fail with too few arguments, expects #<<error>> ==> ok
+test It should fail with too many arguments, expects #<<error>> ==> ok
+test It should fail with invalid type, expects #<<error>> ==> ok
 <x->vim-script-notation>-------------------------------------------------------
 test It should convert #f into corresponding value., expects 0 ==> ok
 test It should convert #t into corresponding value., expects 1 ==> ok

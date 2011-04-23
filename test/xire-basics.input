@@ -303,6 +303,51 @@
 
 
 
+(test-section "x->address-notation")  ;{{{1
+
+(test* "It should convert a number to an absolute address."
+       "123"
+       (x->address-notation 123))
+
+(test* "It should convert |.| to the current line address."
+       "."
+       (x->address-notation '|.|))
+
+(test* "It should convert $ to the last line address."
+       "$"
+       (x->address-notation '$))
+
+(test* "It should convert % to the entire range address."
+       "%"
+       (x->address-notation '%))
+
+(test* "It should convert 'm to a corresponding mark address."
+       '("'" "m")
+       (x->address-notation ''m))
+
+(test* "It should convert #/regexp/ to a corresponding pattern address."
+       '("/" "\\<foo\\>" "/")
+       (x->address-notation #/\<foo\>/))
+
+(test* "It should embed \"string\" as-is."
+       "?foo?"
+       (x->address-notation "?foo?"))
+
+(test* "It should fail with too few arguments"
+       (test-error <error>)
+       (x->address-notation))
+
+(test* "It should fail with too many arguments"
+       (test-error <error>)
+       (x->address-notation 1 2))
+
+(test* "It should fail with invalid type"
+       (test-error <error>)
+       (x->address-notation x->address-notation))
+
+
+
+
 (test-section "x->vim-script-notation")  ;{{{1
 
 (test* "It should convert #f into corresponding value."

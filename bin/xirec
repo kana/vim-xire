@@ -421,6 +421,30 @@
                        #/->/ "_to_"
                        #/[-%]/ "_"))
 
+(define (x->address-notation x)
+  ; See also :help {address}
+  (match x
+    [(? number? number)  ; {number}
+     (number->string number)]
+    ['|.|  ; . -- FIXME: More intuitive notation.
+     "."]
+    ['$  ; $
+     "$"]
+    ['%  ; %
+     "%"]
+    [('quote (? symbol? mark))  ; '{mark}
+     `("'" ,(symbol->string mark))]
+    [(? regexp? pattern)  ; /{pattern}/
+     `("/" ,(regexp->string pattern) "/")]
+    ; FIXME: Support ?{pattern}[?]
+    ; FIXME: Support \/
+    ; FIXME: Support \?
+    ; FIXME: Support \&
+    [(? string? address)  ; Embed raw {address} with a string.
+     address]
+    [else
+      (errorf "Invalid range notation: ~s" x)]))
+
 
 
 
