@@ -108,6 +108,12 @@ test It should raise error if the number of operands is greater than 1., expects
 test It should be compiled properly., expects ("throw 1\n" "throw [1,2,3]\n") ==> ok
 test It should raise error if the number of operands is less than 1., expects #<<error>> ==> ok
 test It should raise error if the number of operands is greater than 1., expects #<<error>> ==> ok
+<(with-range ...)>-------------------------------------------------------------
+test It should be compiled properly with single range., expects "123 echo foo\n" ==> ok
+test It should be compiled properly with double range., expects "123,456 echo foo\n" ==> ok
+test It should fail with too few arguments, expects #<<error>> ==> ok
+test It should fail with too many arguments, expects #<<error>> ==> ok
+test It should fail with non-statement script, expects #<<error>> ==> ok
 <(abs ...)>--------------------------------------------------------------------
 test It should be compiled properly., expects "(abs(1))" ==> ok
 <(compile-++opt)>--------------------------------------------------------------

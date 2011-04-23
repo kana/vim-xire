@@ -644,6 +644,31 @@
 
 
 
+(test-section "(with-range ...)")  ;{{{2
+
+(test* "It should be compiled properly with single range."
+       (join "123 echo foo")
+       (compile-statement '(with-range 123 (echo foo))))
+
+(test* "It should be compiled properly with double range."
+       (join "123,456 echo foo")
+       (compile-statement '(with-range 123 456 (echo foo))))
+
+(test* "It should fail with too few arguments"
+       (test-error <error>)
+       (compile-statement '(with-range (echo foo))))
+
+(test* "It should fail with too many arguments"
+       (test-error <error>)
+       (compile-statement '(with-range 123 456 789 (echo foo))))
+
+(test* "It should fail with non-statement script"
+       (test-error <error>)
+       (compile-statement '(with-range 123 (setreg "g" content type))))
+
+
+
+
 ; Functions  ;{{{1
 (test-section "(abs ...)")  ;{{{2
 

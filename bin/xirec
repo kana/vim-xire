@@ -891,6 +891,18 @@
 
 ; FIXME: Equivalents for :try, :catch, :finally and :endtry.
 
+(define-xire-statement with-range context
+  [(_ single-line script)
+   `(,(x->address-notation single-line)
+     " "
+     ,(xire-compile script context))]
+  [(_ first-line last-line script)
+   `(,(x->address-notation first-line)
+     ","
+     ,(x->address-notation last-line)
+     " "
+     ,(xire-compile script context))])
+
 
 
 
