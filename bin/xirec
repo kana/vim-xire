@@ -1813,7 +1813,16 @@
 ;;; ====
 
 (define (main arguments)
-  (xire-translate (current-input-port) (current-output-port))
+  (define (with-friendly-error-report procedure)
+    (guard (exception
+             [else (errorf "~a:~a: ~a"
+                           (port-name (current-input-port))
+                           (port-current-line (current-input-port))
+                           (slot-ref exception 'message))])
+      (procedure)))
+  (with-friendly-error-report
+    (lambda ()
+      (xire-translate (current-input-port) (current-output-port))))
   0)
 
 
