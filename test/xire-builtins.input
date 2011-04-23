@@ -1051,6 +1051,35 @@
 
 
 
+(test-section "(call)")  ;{{{2
+
+(test* "It should be compiled properly (1)."
+       "call (getcwd())\n"
+       (compile-statement '(call (getcwd))))
+
+(test* "It should be compiled properly (2)."
+       "call (setreg(\"g\",content,type))\n"
+       (compile-statement '(call (setreg "g" content type))))
+
+(test* "It should fail with non-function-calling expression."
+       (test-error <error>)
+       (compile-statement '(call this-is-not-a-function-call)))
+
+(test* "It should fail with insufficient arguments."
+       (test-error <error>)
+       (compile-statement '(call)))
+
+(test* "It should fail if extra argument is given."
+       (test-error <error>)
+       (compile-statement '(call (getcwd) (getcwd))))
+
+(test* "It should fail if bang is given."
+       (test-error <error>)
+       (compile-statement '(call! (getcwd))))
+
+
+
+
 (test-section "(changes)")  ;{{{2
 
 (test* "It should be compiled properly."

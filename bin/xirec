@@ -1318,6 +1318,13 @@
 ;;; Commands - C
 ;;; ------------
 
+(define-xire-statement call context
+  [(_ (and (function-name . arguments) function-calling-expression))
+   `("call"
+     " "
+     ,@(xire-compile-expression function-calling-expression context)
+     "\n")])
+
 (define-xire-statement changes)
 (define-xire-statement checkpath :!)
 (define-xire-statement close :!)
