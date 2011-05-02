@@ -1,0 +1,150 @@
+xire -- Turn Vim script into a programmable programming language
+================================================================
+Kana Natsuno <kana@whileimautomaton.n3t>
+:toc:
+
+
+
+
+
+Introduction
+------------
+
+Xire is a tool to compile a domain-specific language into Vim script,
+and xire is also the name of the DSL itself.  The DSL is based on Scheme
+which is a dialect of Lisp.  Xire turns Vim script into a programmable
+programming language.
+
+One might wonder about reasons to use xire.  There are the following
+problems about Vim script:
+
+- Vim script is weak.  Because it is not designed as a programming
+  language at the first.  Vim script is just a series of Ex commands,
+  and its syntax is too arbitrary as a programming language.  Vim script
+  is nearly impossible to extend the language itself, because the ways
+  to abstract details are limited.
+- There are several interfaces to other languages.  For example, Vim
+  version 7.3 provides interfaces to Lua, Perl, Python, Ruby, Scheme and
+  Tcl.  But the foreign language interfaces are not portable and they
+  are not seamlessly integrated with Vim.
+
+And all of the above problems can be resolved with xire.
+
+
+
+
+Requirements
+~~~~~~~~~~~~
+
+- http://www.vim.org/[Vim] version 7.3 or later
+- http://practical-scheme.net/gauche/[Gauche] version 0.9 or later
+
+
+
+
+Links
+~~~~~
+
+- http://github.com/kana/vim-xire[Public source code repository]
+
+
+
+
+
+External Commands
+-----------------
+
+xirec
+~~~~~
+
+A compiler that compile a xire script into Vim script.  It reads a xire
+script from the standard input, then it writes the resulting Vim script
+to the standard output.
+
+.Typical Usage
+----
+$ xirec <foo.xire >foo.vim
+----
+
+
+
+
+
+Xire Script
+-----------
+
+Abstract
+~~~~~~~~
+
+Xire script is a Scheme-based DSL to write Vim script.  Xire script
+consists of a series of xire expressions.  Xire expressions are
+evaluated sequentially from first to last.
+
+Each xire expression is a list of S expressions.  The first value of the
+list is used to determine the type of the expression.  Each xire
+expression can be classified into one of the following categories:
+
+Directives::
+    Directives control the current compiling process.  For example,
+    a directive defines a new macro, while another directive Scheme
+    environment to compile the current script.
+
+Macros::
+    Macros are corresponding to pieces of Vim script.  There are two
+    types of statements.  One is a *statement macro* which is expanded
+    into a series of Ex commands, and the other is an *expression macro*
+    which is expanded into an expression of Vim script.  Macros can be
+    nested.  Such macros are recursively expanded.
+
+
+
+
+Directives
+~~~~~~~~~~
+
+FIXME: Write about details of directives.
+
+
+
+
+Macros
+~~~~~~
+
+FIXME: Write about details of macros.
+
+
+
+
+
+License
+-------
+
+So-called MIT/X license.
+
+Copyright (C) 2009-2011 Kana Natsuno <kana@whileimautomaton.n3t>
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+
+
+// vim: filetype=asciidoc
+// vim: textwidth=72 expandtab softtabstop=4 shiftwidth=4
