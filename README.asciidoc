@@ -99,6 +99,34 @@ Macros::
 
 
 
+Process of Macro Expansion
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Suppose that there is a following expression macro `foo`:
+
+----
+(define-xire-expr foo
+  [pattern1 body1 ...]
+  [pattern2 body2 ...]
+  ...)
+----
+
+The process to expand a use of an expression macro `(foo bar baz)` is
+roughly equivalent to the following code:
+
+----
+(use util.match)
+(match '(bar baz)
+  [pattern1 body1 ...]
+  [pattern2 body2 ...]
+  ...)
+----
+
+This process is also used to expand a use of statement macros.
+
+
+
+
 Directives
 ~~~~~~~~~~
 
