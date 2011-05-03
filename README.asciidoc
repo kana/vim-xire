@@ -102,10 +102,12 @@ Macros::
 Process of Macro Expansion
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+==== Low-Level Macros
+
 Suppose that there is a following expression macro `foo`:
 
 ----
-(define-xire-expr foo
+(define-xire-expr :low foo
   [pattern1 body1 ...]
   [pattern2 body2 ...]
   ...)
@@ -123,6 +125,32 @@ roughly equivalent to the following code:
 ----
 
 This process is also used to expand a use of statement macros.
+
+
+
+==== High-Level Macros
+
+Suppose that there is a following macro `foo`:
+
+----
+(define-xire-expr :high foo
+  rule1
+  rule2
+  ...)
+----
+
+This definition is roughly equivalent to the following:
+
+----
+(eval
+  `(define-xire-expr :low foo
+    ,(match-clause-from-rule 'rule1)
+    ,(match-clause-from-rule 'rule2)
+    ...)
+  (current-module))
+----
+
+See also <<__match_clause_from_rule,`match-clause-from-rule`>> for details.
 
 
 
@@ -266,9 +294,13 @@ be used for symbols in the intermediate format.
 Directives
 ~~~~~~~~~~
 
-==== `(define-xire-expr [context] name clause ...)`
+==== `(define-xire-expr [mode] [context] name clause ...)`
 
 `define-xire-expr` directive defines a new expression macro.
+
+`mode` (`:high` or `:low`)::
+    Specifies the mode which determines how the new macro is expanded.
+    If `mode` is omitted, `:high` is used.
 
 `context` (arbitrary symbol)::
     Specifies the name of a variable which is bound to the current
@@ -279,18 +311,25 @@ Directives
 `name` (arbitrary symbol)::
     Specifies the name of the new macro.
 
-`clause` (`[pattern body ...]` or `[pattern (=> identifier) body ...]`)::
-    Specifies an expansion rule for the new macro.  The format of
-    `clause` is the same as
+`clause` (`[pattern body ...]`, `[pattern (=> id) body ...]` or `rule`)::
+    Specifies an expansion rule for the new macro.
+    The first two formats of `clause` are available only for low-level
+    macros, and the formats are the same as
     http://practical-scheme.net/gauche/man/?l=en&p=match[`match`].
+    The third format is available only for high-level macros;
+    see also <<__translate_rule,`translate-rule`>> for details.
 
 See also <<_process_of_macro_expansion,Process of Macro Expansion>>.
 
 
 
-==== `(define-xire-stmt [context] name clause ...)`
+==== `(define-xire-stmt [mode] [context] name clause ...)`
 
 `define-xire-stmt` directive defines a new statement macro.
+
+`mode` (`:high` or `:low`)::
+    Specifies the mode which determines how the new macro is expanded.
+    If `mode` is omitted, `:high` is used.
 
 `context` (arbitrary symbol)::
     Specifies the name of a variable which is bound to the current
@@ -301,10 +340,13 @@ See also <<_process_of_macro_expansion,Process of Macro Expansion>>.
 `name` (arbitrary symbol)::
     Specifies the name of the new macro.
 
-`clause` (`[pattern body ...]` or `[pattern (=> identifier) body ...]`)::
-    Specifies an expansion rule for the new macro.  The format of
-    `clause` is the same as
+`clause` (`[pattern body ...]`, `[pattern (=> id) body ...]` or `rule`)::
+    Specifies an expansion rule for the new macro.
+    The first two formats of `clause` are available only for low-level
+    macros, and the formats are the same as
     http://practical-scheme.net/gauche/man/?l=en&p=match[`match`].
+    The third format is available only for high-level macros;
+    see also <<__translate_rule,`translate-rule`>> for details.
 
 See also <<_process_of_macro_expansion,Process of Macro Expansion>>.
 
