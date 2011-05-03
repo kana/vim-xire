@@ -310,14 +310,23 @@ See also <<_process_of_macro_expansion,Process of Macro Expansion>>.
 
 There are also the following shorthands for `define-xire-stmt`:
 
-`(define-xire-stmt name)`::
-    FIXME: Write details.
+`(define-xire-stmt <name>)`::
+    Roughly equivalent to the following:
 
-`(define-xire-stmt name :!)`::
-    FIXME: Write details.
+    (define-xire-stmt <name> "<name>")
 
-`(define-xire-stmt name ex-command-name)`::
-    FIXME: Write details.
+`(define-xire-stmt <name> :!)`::
+    Roughly equivalent to the following:
+
+    (define-xire-stmt <name> "<name>")
+    (define-xire-stmt <name> "<name>!")
+
+`(define-xire-stmt <name> <ex-command-name>)`::
+    Roughly equivalent to the following:
+
+    (define-xire-stmt <name>
+      [(_)
+       '(<ex-command-name>)])  ; <ex-command-name> must be a string.
 
 
 
