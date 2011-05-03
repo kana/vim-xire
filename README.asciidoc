@@ -127,10 +127,131 @@ This process is also used to expand a use of statement macros.
 
 
 
+Intermediate Format
+~~~~~~~~~~~~~~~~~~~
+
+Xire macros are finally expanded into corresponding code in Vim script.
+However, results of macro expansion are accumulated and resulting Vim
+script is not generated until the whole of a xire script is processed.
+
+Results of macro expansion must be the intermediate format of Vim
+script.  The details of the intermediate format are as follows:
+
+`<boolean>` objects::
+    Compiled into a corresponding boolean value in Vim script.
+
+`<number>` objects::
+    Compiled into a corresponding number value in Vim script.  Only
+    exact integers are valid.  It is an error to use inexact numbers and
+    non-integer numbers such as real numbers, though real numbers should
+    be supported later.  Note that numbers in Vim script are limited in
+    a range, and the range depends on how Vim executable is compiled.
+    So that xire does not check whether a given number is also valid as
+    Vim script or not.
+
+`<regexp>` objects::
+    Compiled into a corresponding string value in Vim script (because
+    there is no literal notation for regular expressions in Vim script).
+
+`<string>` objects::
+    Compiled into a corresponding string value in Vim script.  See also
+    <<_conventions_of_string_values, conventions of string values>>.
+
+`<symbol>` objects::
+    The names of symbols are normalized, then
+    <<_normalization_of_variable_names,normalized names>> are embedded
+    into resulting Vim script.
+
+`(macro-name . args)`::
+    `macro-name` is an arbitrary symbol and `args` is a list of
+    arbitrary values.  If a xire macro which name is equal to
+    `macro-name` is defined, the macro is expanded with `args`.
+    Otherwise, it is an error.
+
+`(x . xs)`::
+    `x` is an arbitrary value except symbols.  This form is to embed
+    arbitrary values into resulting Vim script.  Each value in this form
+    is embedded with
+    http://practical-scheme.net/gauche/man/?l=en&p=display[`display`],
+    from left to right.
+
+
+
+==== Conventions of String Values
+
+FIXME: Write details.
+
+
+
+==== Normalization of Variable Names
+
+FIXME: Write details.
+
+
+
+
 Directives
 ~~~~~~~~~~
 
-FIXME: Write about details of directives.
+==== `(define-xire-expr [context] name clause ...)`
+
+`define-xire-expr` directive defines a new expression macro.
+
+`context` (arbitrary symbol)::
+    Specifies the name of a variable which is bound to the current
+    context of a macro expansion.  This variable is available in
+    ++body++s of each `clause`.  It may be omitted if `context` is
+     not used in each `clause`.
+
+`name` (arbitrary symbol)::
+    Specifies the name of the new macro.
+
+`clause` (`[pattern body ...]` or `[pattern (=> identifier) body ...]`)::
+    Specifies an expansion rule for the new macro.  The format of
+    `clause` is the same as
+    http://practical-scheme.net/gauche/man/?l=en&p=match[`match`].
+
+See also <<_process_of_macro_expansion,Process of Macro Expansion>>.
+
+
+
+==== `(define-xire-stmt [context] name clause ...)`
+
+`define-xire-stmt` directive defines a new statement macro.
+
+`context` (arbitrary symbol)::
+    Specifies the name of a variable which is bound to the current
+    context of a macro expansion.  This variable is available in
+    ++body++s of each `clause`.  It may be omitted if `context` is
+     not used in each `clause`.
+
+`name` (arbitrary symbol)::
+    Specifies the name of the new macro.
+
+`clause` (`[pattern body ...]` or `[pattern (=> identifier) body ...]`)::
+    Specifies an expansion rule for the new macro.  The format of
+    `clause` is the same as
+    http://practical-scheme.net/gauche/man/?l=en&p=match[`match`].
+
+See also <<_process_of_macro_expansion,Process of Macro Expansion>>.
+
+There are also the following shorthands for `define-xire-stmt`:
+
+`(define-xire-stmt name)`::
+    FIXME: Write details.
+
+`(define-xire-stmt name :!)`::
+    FIXME: Write details.
+
+`(define-xire-stmt name ex-command-name)`::
+    FIXME: Write details.
+
+
+
+==== `(scheme scheme-expression ...)`
+
+`scheme` directive evaluates arbitrary ++scheme-expression++s as if
+`(begin scheme-expression ...)`.
 
 
 
