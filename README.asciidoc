@@ -179,7 +179,64 @@ script.  The details of the intermediate format are as follows:
 
 ==== Conventions of String Values
 
-FIXME: Write details.
+The syntax of string literals is different between Scheme and Vim
+script.  So that there are the following limitations on Scheme strings
+which are compiled into Vim script:
+
+
+===== Available Backslash-Escape Notations in Scheme Strings
+
+In Scheme strings, only the following backslash-escape notations may be
+used:
+
+- `\\`
+- `\"`
+- `\f`
+- `\n`
+- `\r`
+- `\t`
+- `\uNNNN`
+- `\xNN`
+- `\<whitespace>*<newline><whitespace>*`
+
+All but the last notation are also available in Vim script.  The last
+notation is not available in Vim script, but it is processed and simply
+discarded by ++read++er of Scheme.
+
+So that external representation of Scheme strings and ones of Vim script
+strings are the same if the above condition is met.  Therefore it's
+possible to write Scheme strings as if they are Vim script strings.
+
+Other notations (`\0` and `\UNNNNNNNN`) must not be used.  Because:
+
+- There is no equivalent for `\UNNNNNNNN` in Vim script.
+- Vim script cannot handle NUL character as is.  Though we can write
+  `"\0"` in Vim script, such strings are essentially wrong.  So that it
+  must not be used.
+
+
+===== Unavailable Backslash-Escape Notations in Vim script Strings
+
+The following backslash-escape notations in Vim script are not available
+in xire script:
+
+[options='header']
+|===================================================================
+|Label  |Notations              |Meaning
+|(o)    |`\.`, `\..`, `\...`	|Arbitrary byte, in octal digits
+|(x)    |`\x.`                  |Arbitrary byte, in single hex digit
+|(X)    |`\X.`, `\X..`          |Equivalent to `\x.` and `\x..`
+|(U)    |`\U....`               |Equivalent to `\u....`
+|(b)    |`\b`                   |Equivalent to `\<BS>`
+|(e)    |`\e`                   |Equivalent to `\<Esc>`
+|(k)    |`\<Key>`               |Special key sequence
+|===================================================================
+
+- (o), (x) and (X): Use `"\xNN"` instead.
+- (b) and (e): Use `"\xNN"` instead.
+- (U): Incompatible with `"\UNNNNNNNN"` notation in Gauche strings and
+  it is rarely used.
+- (k): Use +(<<_kbd,kbd>> "<Key> ...")+ form instead.
 
 
 
