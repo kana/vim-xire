@@ -185,7 +185,23 @@ FIXME: Write details.
 
 ==== Normalization of Variable Names
 
-FIXME: Write details.
+While various characters such as `$`, `!` and `%` can be used as
+variable names in Scheme, variable names in Vim script must match to
+`#/^[A-Za-z_][A-Za-z_0-9]*$/`.  So that it is generally an error to use
+such characters for symbols in the <<_intermediate_format,intermediate
+format>>.
+
+But, for convenience, several characters (more precisely, patterns) can
+be used for symbols in the intermediate format.
+
+[options='header']
+|==================================================================
+|Pattern        |Replacement    |Example Symbol |Replacement Result
+|`#/\?$/`       |`_p`           |`eq?`          |`eq_p`
+|`#/!$/`        |`_x`           |`set!`         |`set_x`
+|`#/->/`        |`_to_`         |`vector->list` |`vector_to_list`
+|`#/[-%]/`      |`_`            |`read-char`    |`read_char`
+|==================================================================
 
 
 
