@@ -380,6 +380,89 @@ There are also the following shorthands for `define-xire-stmt`:
 
 
 
+Helper API
+~~~~~~~~~~
+
+In xire script, the following API is available to define xire macros:
+
+
+
+[[__match_body_from_rule]]
+==== `(match-body-from-rule rule)`
+
+A function which translates `rule` into a body of clause for
+http://practical-scheme.net/gauche/man/?l=en&p=match[`match`].
+
+For example,
+
+----
+(match-body-from-rule '(if $cond:expr $then:stmt))
+----
+
+is roughly equivalent to the following:
+
+----
+`(let ([$cond (transform-value $cond:expr 'expr)]
+       [$then (transform-value $then:stmt 'stmt)])
+   (lines
+     ("if" $cond)
+     $then
+     ("endif")))
+----
+
+See also <<_high_level_macro_rules,high-level macro rules>>.
+
+
+
+[[__match_clause_from_rule]]
+==== `(match-clause-from-rule rule)`
+
+A function which translates `rule` into a clause for
+http://practical-scheme.net/gauche/man/?l=en&p=match[`match`].
+
+For example,
+
+----
+(match-clause-from-rule '(if $cond:expr $then:stmt))
+----
+
+is roughly equivalent to the following:
+
+----
+`(,(match-pattern-from-rule '(if $cond:expr $then:stmt))
+  ,(match-body-from-rule '(if $cond:expr $then:stmt)))
+----
+
+See also:
+
+* <<__match_body_from_rule,`match-body-from-rule`>>
+* <<__match_pattern_from_rule,`match-pattern-from-rule`>>
+
+
+
+[[__match_pattern_from_rule]]
+==== `(match-pattern-from-rule rule)`
+
+A function which translates `rule` into a pattern of clause for
+http://practical-scheme.net/gauche/man/?l=en&p=match[`match`].
+
+For example,
+
+----
+(match-pattern-from-rule '(if $cond:expr $then:stmt))
+----
+
+is roughly equivalent to the following:
+
+----
+`('if $cond:expr $then:stmt)
+----
+
+See also <<_high_level_macro_rules,high-level macro rules>>.
+
+
+
+
 Macros
 ~~~~~~
 
