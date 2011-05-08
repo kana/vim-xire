@@ -150,7 +150,83 @@ This definition is roughly equivalent to the following:
   (current-module))
 ----
 
-See also <<__match_clause_from_rule,`match-clause-from-rule`>> for details.
+
+
+==== High-Level Macro Rules
+
+Low-level macros are defined with patterns and list processing code,
+while high-level macros are defined with *rules*.  Each rule is
+translated into a code (more precisely, a clause for
+http://practical-scheme.net/gauche/man/?l=en&p=match[`match`]) to
+generate <<_intermediate_format,intermediate format>>.
+
+
+===== Interpretation of Rules
+
+A use of high-level macro (the form) is matched against each rule,
+from first one to last one.
+
+If a matching rule is found, the form is expanded by the rule,
+then this form returns the expanded form.
+
+Otherwise, it is an error.
+
+
+===== Format of Rules
+
+The details of `rule` are as follows:
+
+* `rule` is a list of S expressions.
+** Examples: `(break)`, `(return $expr)`, `(if $cond:expr $then:stmt)`
+* In `rule`, a symbol which name starts with `$` is called a *slot*.
+* Slots are symbols.  The format of slot symbols is `$<name>:<type>`,
+  where `<name>` is the name of a slot and `<type>` is the type of
+  a resulting value.
+** Examples: `$cond:expr`, `$then:stmt`
+* Slot symbols may be written like `$<type>`.  This is a shorthand for
+  `$<type>:<type>`.
+** Examples: `$expr`, `$stmt`
+
+
+===== Rules as Patterns
+
+A use of high-level macro is matched against rules as patterns.
+Details of matching process are as follows:
+
+* Non-slot values in a rule match the same objects in a sense of `equal?`.
+** Example: Rule `(break)` matches only `(break)`.
+* Slot values in a rule are treated as pattern variables.
+  They match arbitrary objects.
+** Example: Rule `(return $expr)` matches `(return 1)`, `(return (list))`, etc.
+* As a special case, the last value in a rule may be `...` (the symbol
+  spelled with three periods).  The symbol `...` matches as if it is the
+  value just before the symbol `...`.
+** Example: Rule `(echo $expr ...)` matches `(echo 1)`, `(echo 1 2)`, etc.
+
+
+===== Rules as Transformer
+
+If a use of high-level macro (the form) matches a rule,
+the form is transformed into a new list.
+
+* Values in the form which match non-slot values in a rule
+  are copied into the new list as is.
+* Values in the form which match slot values in a rule
+  are <<__transform_value,transformed into some values based on slot types>>,
+  then the transformed values are inserted into the new list
+  instead of values in the form.
+
+For example, if a use of macro `(return (+ 1 1))` matches a rule
+`(return $result:expr)`, transforming process of this form is roughly
+equivalent to the following:
+
+----
+(use util.match)
+(match '(return (+ 1 1))
+  [('return $result:expr)
+   (let ([$result (transform-value $result:expr 'expr)])
+     `(return ,$result))])
+----
 
 
 
