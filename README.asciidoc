@@ -234,12 +234,14 @@ equivalent to the following:
 Intermediate Format
 ~~~~~~~~~~~~~~~~~~~
 
-Xire macros are finally expanded into corresponding code in Vim script.
-However, results of macro expansion are accumulated and resulting Vim
-script is not generated until the whole of a xire script is processed.
+Xire script is finally compiled into corresponding code in Vim script.
+However, there is a huge gap between Xire script and Vim script.  So
+that xire script is compiled into code in *the intermediate format* of
+Vim script, then resulting code in the intermediate format is finally
+compiled into Vim script.
 
-Results of macro expansion must be the intermediate format of Vim
-script.  The details of the intermediate format are as follows:
+The intermediate format is written in S expression.  The details of the
+intermediate format are as follows:
 
 `<boolean>` objects::
     Compiled into a corresponding boolean value in Vim script.
