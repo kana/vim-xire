@@ -158,7 +158,7 @@ Low-level macros are defined with patterns and list processing code,
 while high-level macros are defined with *rules*.  Each rule is
 translated into a code (more precisely, a clause for
 http://practical-scheme.net/gauche/man/?l=en&p=match[`match`]) to
-generate <<_intermediate_format,intermediate format>>.
+generate <<ivs,IVS>>.
 
 
 ===== Interpretation of Rules
@@ -231,17 +231,18 @@ equivalent to the following:
 
 
 
-Intermediate Format
-~~~~~~~~~~~~~~~~~~~
+[[ivs]]
+IVS - An Intermediate Format of Vim script
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Xire script is finally compiled into corresponding code in Vim script.
 However, there is a huge gap between Xire script and Vim script.  So
-that xire script is compiled into code in *the intermediate format* of
+that xire script is compiled into code in *an intermediate format* of
 Vim script, then resulting code in the intermediate format is finally
 compiled into Vim script.
 
-The intermediate format is written in S expression.  The details of the
-intermediate format are as follows:
+The intermediate format is called *IVS*.  IVS is written in
+S expression.  The details of IVS are as follows:
 
 `<boolean>` objects::
     Compiled into a corresponding boolean value in Vim script.
@@ -351,11 +352,10 @@ in xire script:
 While various characters such as `$`, `!` and `%` can be used as
 variable names in Scheme, variable names in Vim script must match to
 `#/^[A-Za-z_][A-Za-z_0-9]*$/`.  So that it is generally an error to use
-such characters for symbols in the <<_intermediate_format,intermediate
-format>>.
+such characters for symbols in <<ivs,IVS>>.
 
 But, for convenience, several characters (more precisely, patterns) can
-be used for symbols in the intermediate format.
+be used for symbols in IVS.
 
 [options='header']
 |==================================================================
