@@ -134,8 +134,8 @@ Suppose that there is a following macro `foo`:
 
 ----
 (define-xire-expr :high foo
-  rule1
-  rule2
+  [pattern1 rule1]
+  [pattern2 rule2]
   ...)
 ----
 
@@ -144,41 +144,69 @@ This definition is roughly equivalent to the following:
 ----
 (eval
   `(define-xire-expr :low foo
-    ,(match-clause-from-rule 'rule1)
-    ,(match-clause-from-rule 'rule2)
+    [,(generate-match-pattern 'pattern1)
+     ,(generate-match-body 'rule1)]
+    [,(generate-match-pattern 'pattern2)
+     ,(generate-match-body 'rule2)]
     ...)
   (current-module))
 ----
 
 
 
-==== High-Level Macro Rules
+==== High-Level Macro Clauses
 
-Low-level macros are defined with patterns and list processing code,
-while high-level macros are defined with *rules*.  Each rule is
-translated into a code (more precisely, a clause for
-http://practical-scheme.net/gauche/man/?l=en&p=match[`match`]) to
-generate <<ivs,IVS>>.
+Low-level macros are defined with patterns and list processing code.
+High-level macros are defined with *clauses*.  Each clause is like
+a http://practical-scheme.net/gauche/man/?l=en&p=match[`match`] clause;
+it consists of a pattern and a transformation rule, but it is designed
+to generate <<ivs,IVS>> easily.
 
 
-===== Interpretation of Rules
+===== Interpretation
 
-A use of high-level macro (the form) is matched against each rule,
-from first one to last one.
+A use of high-level macro (the form) is matched against each pattern of
+clause, from first one to last one.
 
-If a matching rule is found, the form is expanded by the rule,
-then this form returns the expanded form.
+If a matching clause is found, the form is expanded by the
+transformation rule of the clause, then this form returns the expanded
+form.
 
 Otherwise, it is an error.
 
 
-===== Format of Rules
+===== Clause
 
-The details of `rule` are as follows:
+The details of a `clause` are as follows:
 
-* `rule` is a list of S expressions.
+* `clause` is a list with two elements.
+* The first element of `clause` is a `pattern`.
+* The second element of `clause` is a transformation `rule`.
+
+Examples:
+
+----
+[(when $cond:expr $then:stmt ...)
+ `(=ex= (if ,$cond)
+        ,@$then
+        endif)]
+
+[(if $cond:expr $then:stmt $else:stmt)
+ `(=ex= (if ,$cond)
+        ,$then
+        else
+        ,$else
+        endif)]
+----
+
+
+===== Patterns
+
+The details of a `pattern` are as follows:
+
+* `pattern` is a list of S expressions.
 ** Examples: `(break)`, `(return $expr)`, `(if $cond:expr $then:stmt)`
-* In `rule`, a symbol which name starts with `$` is called a *slot*.
+* In `pattern`, a symbol which name starts with `$` is called a *slot*.
 * Slots are symbols.  The format of slot symbols is `$<name>:<type>`,
   where `<name>` is the name of a slot and `<type>` is the type of
   a resulting value.
@@ -187,45 +215,56 @@ The details of `rule` are as follows:
   `$<type>:<type>`.
 ** Examples: `$expr`, `$stmt`
 
+The details of ++pattern++-matching process are as follows:
 
-===== Rules as Patterns
-
-A use of high-level macro is matched against rules as patterns.
-Details of matching process are as follows:
-
-* Non-slot values in a rule match the same objects in a sense of `equal?`.
-** Example: Rule `(break)` matches only `(break)`.
-* Slot values in a rule are treated as pattern variables.
+* Non-slot values in a pattern match the same objects in a sense of `equal?`.
+** Example: Pattern `(break)` matches only `(break)`.
+* Slot values in a pattern are treated as pattern variables.
   They match arbitrary objects.
-** Example: Rule `(return $expr)` matches `(return 1)`, `(return (list))`, etc.
-* As a special case, the last value in a rule may be `...` (the symbol
+** Example: Pattern `(return $expr)`
+   matches `(return 1)`, `(return (list))`, etc.
+* As a special case, the last value in a pattern may be `...` (the symbol
   spelled with three periods).  The symbol `...` matches as if it is the
   value just before the symbol `...`.
-** Example: Rule `(echo $expr ...)` matches `(echo 1)`, `(echo 1 2)`, etc.
+** Example: Pattern `(echo $expr ...)` matches `(echo 1)`, `(echo 1 2)`, etc.
 
 
-===== Rules as Transformer
+===== Transformation Rules
 
-If a use of high-level macro (the form) matches a rule,
-the form is transformed into a new list.
+If a use of high-level macro (the form) matches the pattern of a clause,
+the form is transformed into a new list.  This transformation process is
+based on the transformation `rule` of the matching clause.
 
-* Values in the form which match non-slot values in a rule
-  are copied into the new list as is.
-* Values in the form which match slot values in a rule
-  are <<__transform_value,transformed into some values based on slot types>>,
-  then the transformed values are inserted into the new list
-  instead of values in the form.
+Transformation ++rule++s are like ++quasiquote++d lists,
+but there are the following differences:
 
-For example, if a use of macro `(return (+ 1 1))` matches a rule
-`(return $result:expr)`, transforming process of this form is roughly
-equivalent to the following:
+* Values in the form which match slot values in the pattern of a clause are
+  <<__transform_value,transformed into some values based on slot types>>,
+  then the transformed values are bound to *slot symbols*.
+* Slot symbols are spelled with `$<name>`, where `<name>` is the name of
+  a slot which is appeared in the pattern.
+
+For example, suppose that there is the following use of a macro:
+
+----
+(return (+ 1 1))
+----
+
+And suppose that the use of macro matches the following clause:
+
+----
+[(return $result:expr)
+ `(=ex= (return ,$result))]
+----
+
+Transforming process of the form is roughly equivalent to the following:
 
 ----
 (use util.match)
 (match '(return (+ 1 1))
   [('return $result:expr)
    (let ([$result (transform-value $result:expr 'expr)])
-     `(return ,$result))])
+     `(=ex= (return ,$result)))])
 ----
 
 
@@ -465,75 +504,47 @@ In xire script, the following API is available to define xire macros:
 
 
 
-[[__match_body_from_rule]]
-==== `(match-body-from-rule rule)`
+[[__generate_match_body]]
+==== `(generate-match-body rule)`
 
-A function which translates `rule` into a body of clause for
-http://practical-scheme.net/gauche/man/?l=en&p=match[`match`].
+A function which generates a body of clause for
+http://practical-scheme.net/gauche/man/?l=en&p=match[`match`]
+from a transformation `rule` of clause for high-level xire macro.
 
 For example,
 
 ----
-(match-body-from-rule '(if $cond:expr $then:stmt))
+(generate-match-body '`(echo ,@$value))
 ----
 
 is roughly equivalent to the following:
 
 ----
-`(let ([$cond (transform-value $cond:expr 'expr)]
-       [$then (transform-value $then:stmt 'stmt)])
-   (lines
-     ("if" $cond)
-     $then
-     ("endif")))
+(let ([$value (transform-value $value:expr 'expr)])
+  `(=ex= (echo ,@$value)))
 ----
 
 See also <<_high_level_macro_rules,high-level macro rules>>.
 
 
 
-[[__match_clause_from_rule]]
-==== `(match-clause-from-rule rule)`
+[[__generate_match_pattern]]
+==== `(generate-match-pattern pattern)`
 
-A function which translates `rule` into a clause for
-http://practical-scheme.net/gauche/man/?l=en&p=match[`match`].
+A function which generates a pattern of clause for
+http://practical-scheme.net/gauche/man/?l=en&p=match[`match`]
+from a `pattern` of clause for high-level xire macros.
 
 For example,
 
 ----
-(match-clause-from-rule '(if $cond:expr $then:stmt))
+(generate-match-pattern '(if $cond:expr $then:stmt $else:stmt))
 ----
 
 is roughly equivalent to the following:
 
 ----
-`(,(match-pattern-from-rule '(if $cond:expr $then:stmt))
-  ,(match-body-from-rule '(if $cond:expr $then:stmt)))
-----
-
-See also:
-
-* <<__match_body_from_rule,`match-body-from-rule`>>
-* <<__match_pattern_from_rule,`match-pattern-from-rule`>>
-
-
-
-[[__match_pattern_from_rule]]
-==== `(match-pattern-from-rule rule)`
-
-A function which translates `rule` into a pattern of clause for
-http://practical-scheme.net/gauche/man/?l=en&p=match[`match`].
-
-For example,
-
-----
-(match-pattern-from-rule '(if $cond:expr $then:stmt))
-----
-
-is roughly equivalent to the following:
-
-----
-`('if $cond:expr $then:stmt)
+'('if $cond:expr $then:stmt $else:stmt)
 ----
 
 See also <<_high_level_macro_rules,high-level macro rules>>.
