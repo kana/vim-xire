@@ -504,6 +504,37 @@ In xire script, the following API is available to define xire macros:
 
 
 
+[[___ex_]]
+==== `(=ex= cmd-ivs ...)`
+
+A xire macro to generate complete <<ivs,IVS>> of Ex commands.  `cmd-ivs`
+is IVS of an Ex command.  Basically, each `cmd-ivs` is copied into new
+list, but there are the following differences:
+
+* An empty list is inserted into the first element of new list.
+* `"\n"` is inserted after each `cmd-ivs`.
+* If a `cmd-ivs` is a list, result of `(intersperse " " cmd-ivs)` is
+  inserted into new list instead of `cmd-ivs`.
+
+For example, the following use of `=ex=`
+
+----
+(=ex= (if (foo == bar))
+      (echo 1)
+      endif)
+----
+
+is equivalent to the following data:
+
+----
+(()
+ (if " " (foo == bar)) "\n"
+ (echo " " 1) "\n"
+ endif "\n")
+----
+
+
+
 [[__generate_match_body]]
 ==== `(generate-match-body rule)`
 
