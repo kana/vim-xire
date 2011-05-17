@@ -1,0 +1,637 @@
+xire -- Turn Vim script into a programmable programming language
+================================================================
+Kana Natsuno <kana@whileimautomaton.n3t>
+:toc:
+
+
+
+
+
+Introduction
+------------
+
+Xire is a tool to compile a domain-specific language into Vim script,
+and xire is also the name of the DSL itself.  The DSL is based on Scheme
+which is a dialect of Lisp.  Xire turns Vim script into a programmable
+programming language.
+
+One might wonder about reasons to use xire.  There are the following
+problems about Vim script:
+
+- Vim script is weak.  Because it is not designed as a programming
+  language at the first.  Vim script is just a series of Ex commands,
+  and its syntax is too arbitrary as a programming language.  Vim script
+  is nearly impossible to extend the language itself, because the ways
+  to abstract details are limited.
+- There are several interfaces to other languages.  For example, Vim
+  version 7.3 provides interfaces to Lua, Perl, Python, Ruby, Scheme and
+  Tcl.  But the foreign language interfaces are not portable and they
+  are not seamlessly integrated with Vim.
+
+And all of the above problems can be resolved with xire.
+
+
+
+
+Requirements
+~~~~~~~~~~~~
+
+- http://www.vim.org/[Vim] version 7.3 or later
+- http://practical-scheme.net/gauche/[Gauche] version 0.9 or later
+
+
+
+
+Links
+~~~~~
+
+- http://github.com/kana/vim-xire[Public source code repository]
+
+
+
+
+
+External Commands
+-----------------
+
+xirec
+~~~~~
+
+A compiler that compile a xire script into Vim script.  It reads a xire
+script from the standard input, then it writes the resulting Vim script
+to the standard output.
+
+.Typical Usage
+----
+$ xirec <foo.xire >foo.vim
+----
+
+
+
+
+
+Xire Script
+-----------
+
+Abstract
+~~~~~~~~
+
+Xire script is a Scheme-based DSL to write Vim script.  Xire script
+consists of a series of xire expressions.  Xire expressions are
+evaluated sequentially from first to last.
+
+Each xire expression is a list of S expressions.  The first value of the
+list is used to determine the type of the expression.  Each xire
+expression can be classified into one of the following categories:
+
+Directives::
+    Directives control the current compiling process.  For example,
+    a directive defines a new macro, while another directive alters
+    Scheme environment for the current compiling process.
+
+Macros::
+    Macros are corresponding to pieces of Vim script.  There are two
+    types of statements.  One is a *statement macro* which is expanded
+    into a series of Ex commands, and the other is an *expression macro*
+    which is expanded into an expression of Vim script.  Macros can be
+    nested.  Such macros are recursively expanded.
+
+
+
+
+Process of Macro Expansion
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+==== Low-Level Macros
+
+Suppose that there is a following expression macro `foo`:
+
+----
+(define-xire-expr :low foo
+  [pattern1 body1 ...]
+  [pattern2 body2 ...]
+  ...)
+----
+
+The process to expand a use of an expression macro `(foo bar baz)` is
+roughly equivalent to the following code:
+
+----
+(use util.match)
+(match '(bar baz)
+  [pattern1 body1 ...]
+  [pattern2 body2 ...]
+  ...)
+----
+
+This process is also used to expand a use of statement macros.
+
+
+
+==== High-Level Macros
+
+Suppose that there is a following macro `foo`:
+
+----
+(define-xire-expr :high foo
+  [pattern1 rule1]
+  [pattern2 rule2]
+  ...)
+----
+
+This definition is roughly equivalent to the following:
+
+----
+(eval
+  `(define-xire-expr :low foo
+    [,(generate-match-pattern 'pattern1)
+     ,(generate-match-body 'pattern1 'rule1)]
+    [,(generate-match-pattern 'pattern2)
+     ,(generate-match-body 'pattern2 'rule2)]
+    ...)
+  (current-module))
+----
+
+
+
+==== High-Level Macro Clauses
+
+Low-level macros are defined with patterns and list processing code.
+High-level macros are defined with *clauses*.  Each clause is like
+a http://practical-scheme.net/gauche/man/?l=en&p=match[`match`] clause;
+it consists of a pattern and a transformation rule, but it is designed
+to generate <<ivs,IVS>> easily.
+
+
+===== Interpretation
+
+A use of high-level macro (the form) is matched against each pattern of
+clause, from first one to last one.
+
+If a matching clause is found, the form is expanded by the
+transformation rule of the clause, then this form returns the expanded
+form.
+
+Otherwise, it is an error.
+
+
+===== Clause
+
+The details of a `clause` are as follows:
+
+* `clause` is a list with two elements.
+* The first element of `clause` is a `pattern`.
+* The second element of `clause` is a transformation `rule`.
+
+Examples:
+
+----
+[(when $cond:expr $then:stmt ...)
+ (=ex= `(if ,$cond)
+       $then
+       'endif)]
+
+[(if $cond:expr $then:stmt $else:stmt)
+ (=ex= `(if ,$cond)
+       $then
+       'else
+       $else
+       'endif)]
+----
+
+
+===== Patterns
+
+The details of a `pattern` are as follows:
+
+* `pattern` is a list of S expressions.
+** Examples: `(break)`, `(return $expr)`, `(if $cond:expr $then:stmt)`
+* In `pattern`, a symbol which name starts with `$` is called a *slot*.
+* Slots are symbols.  The format of slot symbols is `$<name>:<type>`,
+  where `<name>` is the name of a slot and `<type>` is the type of
+  a resulting value.
+** Examples: `$cond:expr`, `$then:stmt`
+* Slot symbols may be written like `$<type>`.  This is a shorthand for
+  `$<type>:<type>`.
+** Examples: `$expr`, `$stmt`
+
+The details of ++pattern++-matching process are as follows:
+
+* Non-slot values in a pattern match the same objects in a sense of `equal?`.
+** Example: Pattern `(break)` matches only `(break)`.
+* Slot values in a pattern are treated as pattern variables.
+  They match arbitrary objects.
+** Example: Pattern `(return $expr)`
+   matches `(return 1)`, `(return (list))`, etc.
+* As a special case, the last value in a pattern may be `...` (the symbol
+  spelled with three periods).  The symbol `...` matches as if it is the
+  value just before the symbol `...`.
+** Example: Pattern `(echo $expr ...)` matches `(echo 1)`, `(echo 1 2)`, etc.
+
+
+===== Transformation Rules
+
+If a use of high-level macro (the form) matches the pattern of a clause,
+the form is transformed into a new list.  This transformation process is
+based on the transformation `rule` of the matching clause.
+
+Transformation ++rule++s are like ++quasiquote++d lists,
+but there are the following differences:
+
+* Values in the form which match slot values in the pattern of a clause are
+  <<__transform_value,transformed into some values based on slot types>>,
+  then the transformed values are bound to *slot symbols*.
+* Slot symbols are spelled with `$<name>`, where `<name>` is the name of
+  a slot which is appeared in the pattern.
+
+For example, suppose that there is the following use of a macro:
+
+----
+(return (+ 1 1))
+----
+
+And suppose that the use of macro matches the following clause:
+
+----
+[(return $result:expr)
+ (=ex= `(return ,$result))]
+----
+
+Transforming process of the form is roughly equivalent to the following:
+
+----
+(use util.match)
+(match '(return (+ 1 1))
+  [('return $result:expr)
+   (let ([$result (transform-value $result:expr #f 'expr ctx)])
+     (=ex= `(return ,$result)))])
+----
+
+
+
+
+[[ivs]]
+IVS - An Intermediate Format of Vim script
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Xire script is finally compiled into corresponding code in Vim script.
+However, there is a huge gap between Xire script and Vim script.  So
+that xire script is compiled into code in *an intermediate format* of
+Vim script, then resulting code in the intermediate format is finally
+compiled into Vim script.
+
+The intermediate format is called *IVS*.  IVS is written in
+S expression.  The details of IVS are as follows:
+
+`<boolean>` objects::
+    Compiled into a corresponding boolean value in Vim script.
+
+`<number>` objects::
+    Compiled into a corresponding number value in Vim script.  Only
+    exact integers are valid.  It is an error to use inexact numbers and
+    non-integer numbers such as real numbers, though real numbers should
+    be supported later.  Note that numbers in Vim script are limited in
+    a range, and the range depends on how Vim executable is compiled.
+    So that xire does not check whether a given number is also valid as
+    Vim script or not.
+
+`<regexp>` objects::
+    Compiled into a corresponding string value in Vim script (because
+    there is no literal notation for regular expressions in Vim script).
+
+`<string>` objects::
+    Compiled into a corresponding string value in Vim script.  See also
+    <<_conventions_of_string_values, conventions of string values>>.
+
+`<symbol>` objects::
+    The names of symbols are normalized, then
+    <<_normalization_of_variable_names,normalized names>> are embedded
+    into resulting Vim script.
+
+`(macro-name . args)`::
+    `macro-name` is an arbitrary symbol and `args` is a list of
+    arbitrary values.  If a xire macro which name is equal to
+    `macro-name` is defined, the macro is expanded with `args`.
+    Otherwise, it is an error.
+
+`(x . xs)`::
+    `x` is an arbitrary value except symbols.  This form is to embed
+    arbitrary values into resulting Vim script.  Each value in this form
+    is embedded with
+    http://practical-scheme.net/gauche/man/?l=en&p=display[`display`],
+    from left to right.
+
+
+
+==== Conventions of String Values
+
+The syntax of string literals is different between Scheme and Vim
+script.  So that there are the following limitations on Scheme strings
+which are compiled into Vim script:
+
+
+===== Available Backslash-Escape Notations in Scheme Strings
+
+In Scheme strings, only the following backslash-escape notations may be
+used:
+
+- `\\`
+- `\"`
+- `\f`
+- `\n`
+- `\r`
+- `\t`
+- `\uNNNN`
+- `\xNN`
+- `\<whitespace>*<newline><whitespace>*`
+
+All but the last notation are also available in Vim script.  The last
+notation is not available in Vim script, but it is processed and simply
+discarded by ++read++er of Scheme.
+
+So that external representation of Scheme strings and ones of Vim script
+strings are the same if the above condition is met.  Therefore it's
+possible to write Scheme strings as if they are Vim script strings.
+
+Other notations (`\0` and `\UNNNNNNNN`) must not be used.  Because:
+
+- There is no equivalent for `\UNNNNNNNN` in Vim script.
+- Vim script cannot handle NUL character as is.  Though we can write
+  `"\0"` in Vim script, such strings are essentially wrong.  So that it
+  must not be used.
+
+
+===== Unavailable Backslash-Escape Notations in Vim script Strings
+
+The following backslash-escape notations in Vim script are not available
+in xire script:
+
+[options='header']
+|===================================================================
+|Label  |Notations              |Meaning
+|(o)    |`\.`, `\..`, `\...`	|Arbitrary byte, in octal digits
+|(x)    |`\x.`                  |Arbitrary byte, in single hex digit
+|(X)    |`\X.`, `\X..`          |Equivalent to `\x.` and `\x..`
+|(U)    |`\U....`               |Equivalent to `\u....`
+|(b)    |`\b`                   |Equivalent to `\<BS>`
+|(e)    |`\e`                   |Equivalent to `\<Esc>`
+|(k)    |`\<Key>`               |Special key sequence
+|===================================================================
+
+- (o), (x) and (X): Use `"\xNN"` instead.
+- (b) and (e): Use `"\xNN"` instead.
+- (U): Incompatible with `"\UNNNNNNNN"` notation in Gauche strings and
+  it is rarely used.
+- (k): Use +(<<_kbd,kbd>> "<Key> ...")+ form instead.
+
+
+
+==== Normalization of Variable Names
+
+While various characters such as `$`, `!` and `%` can be used as
+variable names in Scheme, variable names in Vim script must match to
+`#/^[A-Za-z_][A-Za-z_0-9]*$/`.  So that it is generally an error to use
+such characters for symbols in <<ivs,IVS>>.
+
+But, for convenience, several characters (more precisely, patterns) can
+be used for symbols in IVS.
+
+[options='header']
+|==================================================================
+|Pattern        |Replacement    |Example Symbol |Replacement Result
+|`#/\?$/`       |`_p`           |`eq?`          |`eq_p`
+|`#/!$/`        |`_x`           |`set!`         |`set_x`
+|`#/->/`        |`_to_`         |`vector->list` |`vector_to_list`
+|`#/[-%]/`      |`_`            |`read-char`    |`read_char`
+|==================================================================
+
+
+
+
+Directives
+~~~~~~~~~~
+
+==== `(define-xire-expr [mode] name [context] clause ...)`
+
+`define-xire-expr` directive defines a new expression macro.
+
+`mode` (`:high` or `:low`)::
+    Specifies the mode which determines how the new macro is expanded.
+    If `mode` is omitted, `:high` is used.
+
+`context` (arbitrary symbol)::
+    Specifies the name of a variable which is bound to the current
+    context of a macro expansion.  This variable is available in
+    ++body++s of each `clause`.  It may be omitted if `context` is
+     not used in each `clause`.
+
+`name` (arbitrary symbol)::
+    Specifies the name of the new macro.
+
+`clause` (`[pattern body ...]`, `[pattern (=> id) body ...]` or `rule`)::
+    Specifies an expansion rule for the new macro.
+    The first two formats of `clause` are available only for low-level
+    macros, and the formats are the same as
+    http://practical-scheme.net/gauche/man/?l=en&p=match[`match`].
+    The third format is available only for high-level macros;
+    see also <<__translate_rule,`translate-rule`>> for details.
+
+See also <<_process_of_macro_expansion,Process of Macro Expansion>>.
+
+
+
+==== `(define-xire-stmt [mode] name [context] clause ...)`
+
+`define-xire-stmt` directive defines a new statement macro.
+
+`mode` (`:high` or `:low`)::
+    Specifies the mode which determines how the new macro is expanded.
+    If `mode` is omitted, `:high` is used.
+
+`context` (arbitrary symbol)::
+    Specifies the name of a variable which is bound to the current
+    context of a macro expansion.  This variable is available in
+    ++body++s of each `clause`.  It may be omitted if `context` is
+     not used in each `clause`.
+
+`name` (arbitrary symbol)::
+    Specifies the name of the new macro.
+
+`clause` (`[pattern body ...]`, `[pattern (=> id) body ...]` or `rule`)::
+    Specifies an expansion rule for the new macro.
+    The first two formats of `clause` are available only for low-level
+    macros, and the formats are the same as
+    http://practical-scheme.net/gauche/man/?l=en&p=match[`match`].
+    The third format is available only for high-level macros;
+    see also <<__translate_rule,`translate-rule`>> for details.
+
+See also <<_process_of_macro_expansion,Process of Macro Expansion>>.
+
+There are also the following shorthands for `define-xire-stmt`:
+
+`(define-xire-stmt <name>)`::
+    Roughly equivalent to the following:
+
+    (define-xire-stmt <name> "<name>")
+
+`(define-xire-stmt <name> :!)`::
+    Roughly equivalent to the following:
+
+    (define-xire-stmt <name> "<name>")
+    (define-xire-stmt <name> "<name>!")
+
+`(define-xire-stmt <name> <ex-command-name>)`::
+    Roughly equivalent to the following:
+
+    (define-xire-stmt <name>
+      [(_)
+       '(<ex-command-name>)])  ; <ex-command-name> must be a string.
+
+
+
+==== `(scheme scheme-expression ...)`
+
+`scheme` directive evaluates arbitrary ++scheme-expression++s as if
+`(begin scheme-expression ...)`.
+
+
+
+
+Helper API
+~~~~~~~~~~
+
+In xire script, the following API is available to define xire macros:
+
+
+
+[[___ex_]]
+==== `(=ex= ex-cmd-ivs ...)`
+
+A function to generate complete <<ivs,IVS>> of Ex commands.
+`ex-cmd-ivs` is IVS of an Ex command.  Basically, each `ex-cmd-ivs` is
+copied into new list, but there are the following differences:
+
+* An empty list is inserted into the first element of new list,
+  to ensure that generated IVS is embedded into resulting Vim script
+  without unnecessary conversion.
+* `"\n"` is inserted after each `ex-cmd-ivs`.
+* If a `ex-cmd-ivs` is a list, result of `(intersperse " " ex-cmd-ivs)`
+  is inserted into new list instead of `ex-cmd-ivs`.
+* If a `ex-cmd-ivs` is a result of `=ex=`,
+  the above list manipulation is not applied,
+  so that it is copied into the result as is.
+
+For example, the following use of `=ex=`
+
+----
+(=ex= '(if (foo == bar))
+      '(echo 1)
+      'endif)
+----
+
+is equivalent to the following data:
+
+----
+(()
+ (if " " (foo == bar)) "\n"
+ (echo " " 1) "\n"
+ endif "\n")
+----
+
+
+
+[[__generate_match_body]]
+==== `(generate-match-body pattern rule)`
+
+A function which generates a body of clause for
+http://practical-scheme.net/gauche/man/?l=en&p=match[`match`]
+from `pattern` and `rule` of clause for high-level xire macro.
+
+For example,
+
+----
+(generate-match-body '(if $cond:expr $then:stmt)
+                     '((=ex= `(if ,$cond)
+                             $then
+                             'endif)))
+----
+
+is roughly equivalent to the following:
+
+----
+'(let ([$then (transform-value $then:stmt #f 'stmt ctx)]
+       [$cond (transform-value $cond:expr #f 'expr ctx)])
+   (=ex= `(if ,$cond)
+         $then
+         'endif))
+----
+
+See also <<_high_level_macro_rules,high-level macro rules>>.
+
+
+
+[[__generate_match_pattern]]
+==== `(generate-match-pattern pattern)`
+
+A function which generates a pattern of clause for
+http://practical-scheme.net/gauche/man/?l=en&p=match[`match`]
+from a `pattern` of clause for high-level xire macros.
+
+For example,
+
+----
+(generate-match-pattern '(if $cond:expr $then:stmt $else:stmt))
+----
+
+is roughly equivalent to the following:
+
+----
+'('if $cond:expr $then:stmt $else:stmt)
+----
+
+See also <<_high_level_macro_rules,high-level macro rules>>.
+
+
+
+
+Macros
+~~~~~~
+
+FIXME: Write about details of macros.
+
+
+
+
+
+License
+-------
+
+So-called MIT/X license.
+
+Copyright (C) 2009-2011 Kana Natsuno <kana@whileimautomaton.n3t>
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+
+
+// vim: filetype=asciidoc
+// vim: textwidth=72 expandtab softtabstop=4 shiftwidth=4
