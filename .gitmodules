@@ -1,0 +1,3 @@
+[submodule "gauche-test-gasmine"]
+	path = gauche-test-gasmine
+	url = ../gauche-test-gasmine
