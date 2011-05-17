@@ -1,18 +1,19 @@
-;;;
-;;; gauche_vim_xire
-;;;
-
 (define-module vim.xire
-  (export test-gauche_vim_xire ;; dummy
-          )
-  )
+  (export
+    ; Public API
+
+    ; Not public, but exported to test.
+    ))
 (select-module vim.xire)
 
-;;
-;; Put your Scheme definitions here
-;;
+; (use ...)
 
-;; Epilogue
+
+
+
+; Code ...
+
+
+
+
 (provide "vim/xire")
-
-
