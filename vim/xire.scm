@@ -8,9 +8,6 @@
   )
 (select-module vim.xire)
 
-;; Loads extension
-(dynamic-load "gauche_vim_xire")
-
 ;;
 ;; Put your Scheme definitions here
 ;;
