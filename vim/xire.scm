@@ -4,6 +4,11 @@
     =ex=
     scheme->ivs
 
+    ; Semi-public API for advanced usage.
+    <xire-env>
+    copy-env
+    xire-env
+
     ; Not public, but exported to test.
     convert-identifier-conventions
     convert-regexp-conventions
@@ -11,8 +16,35 @@
     ))
 (select-module vim.xire)
 
+(use gauche.parameter)
 (use srfi-1)
 (use util.list)
+
+
+
+
+;;; Environment
+;;; ===========
+
+;; Represent an environment for xire compilation.
+(define-class <xire-env> ()
+  ([expr-macros  ; contain xire macro bindings for expression context.
+     :init-keyword :expr-macros
+     :init-form (make-hash-table 'eq?)]
+   [stmt-macros  ; contain xire macro bindings for statement context.
+     :init-keyword :stmt-macros
+     :init-form (make-hash-table 'eq?)]))
+
+;; Represent the current environment for xire compilation.
+(define xire-env
+  (make-parameter (make <xire-env>)))
+
+;; Copy the current xire environment.
+(define (copy-env :optional (env (xire-env)))
+  (make <xire-env>
+        :expr-macros (hash-table-copy (ref env 'expr-macros))
+        :stmt-macros (hash-table-copy (ref env 'stmt-macros))
+        ))
 
 
 
