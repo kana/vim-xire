@@ -5,8 +5,18 @@
     scheme->ivs
 
     ; Semi-public API for advanced usage.
+    <xire-ctx>
     <xire-env>
+    copy-ctx
     copy-env
+    ensure-expr-ctx
+    ensure-stmt-ctx
+    expr-ctx?
+    make-expr-ctx
+    make-stmt-ctx
+    make-toplevel-ctx
+    stmt-ctx?
+    toplevel-ctx?
     xire-env
 
     ; Not public, but exported to test.
@@ -45,6 +55,65 @@
         :expr-macros (hash-table-copy (ref env 'expr-macros))
         :stmt-macros (hash-table-copy (ref env 'stmt-macros))
         ))
+
+
+
+
+;;; Context
+;;; =======
+
+;; Represent a context to compile a xire script.
+;; The differences between <xire-ctx> and <xire-env> are that:
+;;
+;; - <xire-env> holds global information such as xire macro bindings.
+;; - While <xire-ctx> holds local information, for example, whether a xire
+;;   script being compiled is a top-level statement or not.
+(define-class <xire-ctx> ()
+  ([type  ; The type of a form being compiled -- statement, expression, etc.
+     :init-keyword :type
+     :init-value 'stmt]
+   [toplevelp
+     :init-keyword :toplevelp
+     :init-value #t]
+   ))
+
+(define (copy-ctx ctx)
+  (apply make
+         <xire-ctx>
+         (concatenate
+           (map
+             (lambda (slot-name)
+               `(:type ,(ref ctx slot-name)))
+             (map slot-definition-name (class-direct-slots <xire-ctx>))
+             ))
+         ))
+
+(define (make-toplevel-ctx)
+  (make <xire-ctx>))
+(define (make-stmt-ctx ctx)
+  (define new-ctx (copy-ctx ctx))
+  (set! (ref new-ctx 'type) 'stmt)
+  (set! (ref new-ctx 'toplevelp) #f)
+  new-ctx)
+(define (make-expr-ctx ctx)
+  (define new-ctx (copy-ctx ctx))
+  (set! (ref new-ctx 'type) 'expr)
+  (set! (ref new-ctx 'toplevelp) #f)
+  new-ctx)
+
+(define (toplevel-ctx? ctx)
+  (ref ctx 'toplevelp))
+(define (stmt-ctx? ctx)
+  (eq? (ref ctx 'type) 'stmt))
+(define (expr-ctx? ctx)
+  (eq? (ref ctx 'type) 'expr))
+
+(define (ensure-stmt-ctx form ctx)
+  (unless (stmt-ctx? ctx)
+    (errorf "Invalid form in a statement context: ~s" form)))
+(define (ensure-expr-ctx form ctx)
+  (unless (expr-ctx? ctx)
+    (errorf "Invalid form in an expression context: ~s" form)))
 
 
 
