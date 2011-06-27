@@ -23,6 +23,9 @@
     convert-identifier-conventions
     convert-regexp-conventions
     convert-string-conventions
+    ctx-type->xire-env-slot-name
+    xire-lookup-macro
+    xire-register-macro!
     ))
 (select-module vim.xire)
 
@@ -114,6 +117,54 @@
 (define (ensure-expr-ctx form ctx)
   (unless (expr-ctx? ctx)
     (errorf "Invalid form in an expression context: ~s" form)))
+
+
+
+
+;;; Xire macros
+;;; ===========
+;;;
+;;; Conventions
+;;; -----------
+;;;
+;;; For procedures in this section,
+;;;
+;;; - Argument called NAME is a symbol.
+;;; - Argument called EXPANDER is a procedure which takes two arguments,
+;;;   the form to expand and the context to compile the form.
+
+(define (ctx-type->xire-env-slot-name ctx-type)
+  (cond
+    [(eq? ctx-type 'expr)
+     'expr-macros]
+    [(eq? ctx-type 'stmt)
+     'stmt-macros]
+    [else
+      (errorf "Invalid context type: ~s" ctx-type)]))
+
+;; Look up a xire macro with the NAME from ENV.
+;; The macro must be available in a given CTX.
+(define (xire-lookup-macro name ctx :optional (env (xire-env)))
+  (hash-table-get (ref env (ctx-type->xire-env-slot-name (ref ctx 'type)))
+                  name
+                  #f))
+
+;; Register a xire macro EXPANDER with the NAME into ENV.
+;; The macro will be available in a given context corresponding to CTX-TYPE.
+(define (xire-register-macro! name expander ctx-type
+                              :optional (env (xire-env)))
+  (if (not (or (eq? ctx-type 'expr)
+               (eq? ctx-type 'stmt)))
+    (errorf "Invalid ctx-type: ~s" ctx-type))
+  (hash-table-put! (ref env (ctx-type->xire-env-slot-name ctx-type))
+                   name
+                   expander))
+
+;; FIXME: define-xire-macro
+;; FIXME: define-xire-expr (:low)
+;; FIXME: define-xire-expr (:high)
+;; FIXME: define-xire-stmt (:low)
+;; FIXME: define-xire-stmt (:high)
 
 
 
