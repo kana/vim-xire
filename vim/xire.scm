@@ -3,6 +3,7 @@
     ; Public API
     =ex=
     scheme->ivs
+    xire-translate
 
     ; Semi-public API for advanced usage.
     <xire-ctx>
@@ -17,6 +18,9 @@
     make-toplevel-ctx
     stmt-ctx?
     toplevel-ctx?
+    xire-compile
+    xire-compile-expr
+    xire-compile-forms
     xire-env
 
     ; Not public, but exported to test.
@@ -31,7 +35,9 @@
 
 (use gauche.parameter)
 (use srfi-1)
+(use text.tree)
 (use util.list)
+(use util.match)
 
 
 
@@ -165,6 +171,83 @@
 ;; FIXME: define-xire-expr (:high)
 ;; FIXME: define-xire-stmt (:low)
 ;; FIXME: define-xire-stmt (:high)
+
+
+
+
+;;; Compiler
+;;; ========
+
+;; Translate xire script into Vim script.  Xire script is read from INPUT-PORT
+;; and resulting Vim script is written into OUTPUT-PORT.
+(define (xire-translate input-port output-port
+                        :key (env (copy-env))
+                             (scheme-env (make-module #f)))
+  (define compiled-vim-script-tree (list))
+  (define (finish)
+    (write-tree (reverse compiled-vim-script-tree) output-port))
+  (define ctx (make-toplevel-ctx))
+
+  (eval '(extend user) scheme-env)
+  (parameterize ([xire-env env])
+    (let loop ()
+      (match (read input-port)
+        [(? eof-object?)
+         (finish)]
+        [(and ((or 'define-xire-expr
+                   'define-xire-macro
+                   'define-xire-stmt)
+               . _)
+              form)
+         (eval form scheme-env)
+         (loop)]
+        [('scheme . scheme-exprs)
+         (eval `(begin ,@scheme-exprs) scheme-env)
+         (loop)]
+        [(and (name . _) form)
+         (push! compiled-vim-script-tree (xire-compile form ctx))
+         (loop)]))))
+
+;; Compile a xire script FORM then return a resulting Vim script in IVS.
+(define (xire-compile form ctx)
+  (define (report-syntax-error)
+    (errorf "Invalid xire form: ~s" form))
+  (match form
+    [((? symbol? name) . args)
+     (cond
+       [(xire-lookup-macro name ctx)
+        => (lambda (expander)
+             (xire-compile (expander form ctx) ctx))]
+       [else
+         ; Treat "(foo ...)" form in an expression context as a function call,
+         ; where foo is not known as a xire macro.  This convention is to
+         ; simplify the compiler implementation.
+         (if (expr-ctx? ctx)
+           `("("
+             ,(convert-identifier-conventions (symbol->string name))
+             "("
+             ,@(intersperse "," (xire-compile-forms args ctx))
+             ")"
+             ")")
+           (report-syntax-error))])]
+    [(_ . _)  ; FORM is already compiled.
+     form]
+    [_
+      (ensure-expr-ctx form ctx)
+      (scheme->ivs form)]))
+
+;; Compile a xire script EXPR then return a resulting Vim script in IVS.
+;; This is an abbreviated form of xire-compile for typical use.
+(define (xire-compile-expr expr ctx)
+  (xire-compile expr
+                (if (expr-ctx? ctx)
+                  ctx
+                  (make-expr-ctx ctx))))
+
+;; Compile a list of xire script FORMS then return a resulting Vim script in
+;; IVS.  This is an abbreviated form of xire-compile for typical use.
+(define (xire-compile-forms forms ctx)
+  (map (cut xire-compile <> ctx) forms))
 
 
 
