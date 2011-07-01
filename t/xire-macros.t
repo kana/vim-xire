@@ -105,6 +105,34 @@
     )
   )
 
+(describe "define-xire-stmt :low"
+  (define stmt-ctx (make-stmt-ctx (make-toplevel-ctx)))
+  (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))
+  (define (compile form ctx)
+    (with-output-to-string
+      (lambda ()
+        (write-tree (xire-compile form ctx)))))
+  (it "should define new statement macro in the current environment"
+    (parameterize ([xire-env (make <xire-env>)])
+      (expect (xire-lookup-macro 'foo stmt-ctx (xire-env)) eq? #f)
+      (expect (xire-lookup-macro 'foo expr-ctx (xire-env)) eq? #f)
+      (define-xire-stmt :low foo
+        [(_ 1)
+         '(foo 2)]
+        [(_ x)
+         `("" ,x ,x)])
+      (expect (xire-lookup-macro 'foo stmt-ctx (xire-env)) procedure?)
+      (expect (xire-lookup-macro 'foo expr-ctx (xire-env)) eq? #f)
+      (expect (compile '(foo 1) stmt-ctx) equal? "22")
+      (expect (compile '(foo 2) stmt-ctx) equal? "22")
+      (expect (compile '(foo 3) stmt-ctx) equal? "33")
+      (expect (compile '(foo 1) expr-ctx) equal? "(foo(1))")
+      (expect (compile '(foo 2) expr-ctx) equal? "(foo(2))")
+      (expect (compile '(foo 3) expr-ctx) equal? "(foo(3))")
+      )
+    )
+  )
+
 
 
 

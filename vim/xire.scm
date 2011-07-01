@@ -3,6 +3,7 @@
     ; Public API
     =ex=
     define-xire-expr
+    define-xire-stmt
     scheme->ivs
     xire-translate
 
@@ -197,7 +198,32 @@
      (define-xire-expr :low "internal" name ctx [pat . body] ...)]))
 
 ;; FIXME: define-xire-expr (:high)
-;; FIXME: define-xire-stmt (:low)
+
+;; Define new xire statement macro in the current environment.
+;; This is a wrapper for define-xire-macro.
+(define-syntax define-xire-stmt
+  (syntax-rules ()
+    ; The most low-level form.
+    [(_ :low "internal" name ctx [pat . body] ...)
+     (define-xire-macro stmt (name form ctx)
+       (ensure-stmt-ctx form ctx)
+       (match form
+         [pat . body]
+         ...))]
+    ; Basic form.
+    [(_ :low name [pat1 . body1] [patN . bodyN] ...)
+     (define-xire-stmt :low name ctx
+       [pat1 . body1]
+       [patN . bodyN]
+       ...)]
+    ; Basic form with the name of context.
+    [(_ :low name ctx [pat1 . body1] [patN . bodyN] ...)
+     (define-xire-stmt :low "internal" name ctx
+       [pat1 . body1]
+       [patN . bodyN]
+       ...)]
+    ))
+
 ;; FIXME: define-xire-stmt (:high)
 
 
