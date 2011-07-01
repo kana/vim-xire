@@ -133,6 +133,50 @@
     )
   )
 
+(describe "define-xire-stmt shorthand"
+  (define stmt-ctx (make-stmt-ctx (make-toplevel-ctx)))
+  (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))
+  (define (compile form ctx)
+    (with-output-to-string
+      (lambda ()
+        (write-tree (xire-compile form ctx)))))
+  (it "should define a statement macro for simple cocmmand"
+    (parameterize ([xire-env (make <xire-env>)])
+      (expect (xire-lookup-macro 'break stmt-ctx (xire-env)) eq? #f)
+      (expect (xire-lookup-macro 'break expr-ctx (xire-env)) eq? #f)
+      (define-xire-stmt break)
+      (expect (xire-lookup-macro 'break stmt-ctx (xire-env)) procedure?)
+      (expect (xire-lookup-macro 'break expr-ctx (xire-env)) eq? #f)
+      (expect (compile '(break) stmt-ctx) equal? "break\n")
+      )
+    )
+  (it "should define a statement macro for simple cocmmand with different name"
+    (parameterize ([xire-env (make <xire-env>)])
+      (expect (xire-lookup-macro 'halt stmt-ctx (xire-env)) eq? #f)
+      (expect (xire-lookup-macro 'halt expr-ctx (xire-env)) eq? #f)
+      (define-xire-stmt halt "break")
+      (expect (xire-lookup-macro 'halt stmt-ctx (xire-env)) procedure?)
+      (expect (xire-lookup-macro 'halt expr-ctx (xire-env)) eq? #f)
+      (expect (compile '(halt) stmt-ctx) equal? "break\n")
+      )
+    )
+  (it "should define a statement macro for simple cocmmand with '!'"
+    (parameterize ([xire-env (make <xire-env>)])
+      (expect (xire-lookup-macro 'break stmt-ctx (xire-env)) eq? #f)
+      (expect (xire-lookup-macro 'break! stmt-ctx (xire-env)) eq? #f)
+      (expect (xire-lookup-macro 'break expr-ctx (xire-env)) eq? #f)
+      (expect (xire-lookup-macro 'break! expr-ctx (xire-env)) eq? #f)
+      (define-xire-stmt break :!)
+      (expect (xire-lookup-macro 'break stmt-ctx (xire-env)) procedure?)
+      (expect (xire-lookup-macro 'break! stmt-ctx (xire-env)) procedure?)
+      (expect (xire-lookup-macro 'break expr-ctx (xire-env)) eq? #f)
+      (expect (xire-lookup-macro 'break! expr-ctx (xire-env)) eq? #f)
+      (expect (compile '(break) stmt-ctx) equal? "break\n")
+      (expect (compile '(break!) stmt-ctx) equal? "break!\n")
+      )
+    )
+  )
+
 
 
 

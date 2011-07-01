@@ -222,6 +222,22 @@
        [pat1 . body1]
        [patN . bodyN]
        ...)]
+    ; Shorthand for simple command like :quit and :quit!.
+    [(_ name :!)
+     (let1 name! (string->symbol #`",'|name|!")
+       (define-xire-stmt name)
+       (eval `(define-xire-stmt ,name!)  ; FIXME: Refine.
+             (current-module)))]
+    ; Shorthand for simple command like :break with different macro name.
+    [(_ name cmd-name)
+     (define-xire-stmt :low name
+       [(_)
+        (=ex= 'cmd-name)])]
+    ; Shorthand for simple command like :break.
+    [(_ name)
+     (define-xire-stmt :low name
+       [(_)
+        (=ex= 'name)])]
     ))
 
 ;; FIXME: define-xire-stmt (:high)
