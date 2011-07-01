@@ -10,6 +10,7 @@
     <xire-env>
     copy-ctx
     copy-env
+    define-xire-macro
     ensure-expr-ctx
     ensure-stmt-ctx
     expr-ctx?
@@ -166,7 +167,16 @@
                    name
                    expander))
 
-;; FIXME: define-xire-macro
+;; Define new xire macro in the current environment.
+;; This is just a syntax sugar for xire-register-macro!.
+(define-syntax define-xire-macro
+  (syntax-rules ()
+    [(_ ctx-type (name form ctx) . body)
+     (xire-register-macro! 'name
+                           (lambda (form ctx) . body)
+                           'ctx-type
+                           (xire-env))]))
+
 ;; FIXME: define-xire-expr (:low)
 ;; FIXME: define-xire-expr (:high)
 ;; FIXME: define-xire-stmt (:low)

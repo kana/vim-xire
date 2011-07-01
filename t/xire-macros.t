@@ -3,6 +3,7 @@
 (add-load-path ".")
 (add-load-path "./gauche-test-gasmine")
 
+(use gauche.parameter)
 (use test.gasmine)
 (use vim.xire)
 
@@ -53,6 +54,25 @@
   (it "should return #f if the macro is not available"
     (expect (xire-lookup-macro 'bar stmt-ctx env) eq? #f)
     (expect (xire-lookup-macro 'bar expr-ctx env) eq? #f)
+    )
+  )
+
+(describe "define-xire-macro"
+  (define stmt-ctx (make-stmt-ctx (make-toplevel-ctx)))
+  (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))
+  (it "should define new macro for given context in the current environment"
+    (parameterize ([xire-env (make <xire-env>)])
+      (expect (xire-lookup-macro 'foo stmt-ctx (xire-env)) eq? #f)
+      (expect (xire-lookup-macro 'foo expr-ctx (xire-env)) eq? #f)
+      (define-xire-macro stmt (foo form ctx)
+        "stmt1"
+        "stmt2")
+      (define-xire-macro expr (foo form ctx)
+        "expr1"
+        "expr2")
+      (expect (xire-lookup-macro 'foo stmt-ctx (xire-env)) procedure?)
+      (expect (xire-lookup-macro 'foo expr-ctx (xire-env)) procedure?)
+      )
     )
   )
 
