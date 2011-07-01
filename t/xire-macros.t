@@ -5,6 +5,7 @@
 
 (use gauche.parameter)
 (use test.gasmine)
+(use text.tree)
 (use vim.xire)
 
 
@@ -72,6 +73,34 @@
         "expr2")
       (expect (xire-lookup-macro 'foo stmt-ctx (xire-env)) procedure?)
       (expect (xire-lookup-macro 'foo expr-ctx (xire-env)) procedure?)
+      )
+    )
+  )
+
+(describe "define-xire-expr :low"
+  (define stmt-ctx (make-stmt-ctx (make-toplevel-ctx)))
+  (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))
+  (define (compile form ctx)
+    (with-output-to-string
+      (lambda ()
+        (write-tree (xire-compile form ctx)))))
+  (it "should define new expression macro in the current environment"
+    (parameterize ([xire-env (make <xire-env>)])
+      (expect (xire-lookup-macro 'foo stmt-ctx (xire-env)) eq? #f)
+      (expect (xire-lookup-macro 'foo expr-ctx (xire-env)) eq? #f)
+      (define-xire-expr :low foo
+        [(_ 1)
+         '(foo 2)]
+        [(_ x)
+         `("" ,x ,x)])
+      (expect (xire-lookup-macro 'foo stmt-ctx (xire-env)) eq? #f)
+      (expect (xire-lookup-macro 'foo expr-ctx (xire-env)) procedure?)
+      (expect (compile '(foo 1) stmt-ctx) raise?)
+      (expect (compile '(foo 2) stmt-ctx) raise?)
+      (expect (compile '(foo 3) stmt-ctx) raise?)
+      (expect (compile '(foo 1) expr-ctx) equal? "22")
+      (expect (compile '(foo 2) expr-ctx) equal? "22")
+      (expect (compile '(foo 3) expr-ctx) equal? "33")
       )
     )
   )

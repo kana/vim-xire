@@ -2,6 +2,7 @@
   (export
     ; Public API
     =ex=
+    define-xire-expr
     scheme->ivs
     xire-translate
 
@@ -177,7 +178,24 @@
                            'ctx-type
                            (xire-env))]))
 
-;; FIXME: define-xire-expr (:low)
+;; Define new xire expression macro in the current environment.
+;; This is a wrapper for define-xire-macro.
+(define-syntax define-xire-expr
+  (syntax-rules ()
+    ; The most low-level form.
+    [(_ :low "internal" name ctx [pat . body] ...)
+     (define-xire-macro expr (name form ctx)
+       (ensure-expr-ctx form ctx)
+       (match form
+         [pat . body]
+         ...))]
+    ; Basic form.
+    [(_ :low name [pat . body] ...)
+     (define-xire-expr :low name ctx [pat . body] ...)]
+    ; Basic form with the name of context.
+    [(_ :low name ctx [pat . body] ...)
+     (define-xire-expr :low "internal" name ctx [pat . body] ...)]))
+
 ;; FIXME: define-xire-expr (:high)
 ;; FIXME: define-xire-stmt (:low)
 ;; FIXME: define-xire-stmt (:high)
