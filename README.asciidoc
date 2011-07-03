@@ -220,6 +220,10 @@ The details of ++pattern++-matching process are as follows:
   They match arbitrary objects.
 ** Example: Pattern `(return $expr)`
    matches `(return 1)`, `(return (list))`, etc.
+* The symbol `_` in a pattern is also treated as a pattern variable.
+  It matches arbitrary object, but it is not a slot.
+  So that matched object can not be referred in transformation rules.
+** Example: Pattern `(rem _)` matches `(rem 1)`, `(rem (2 3))`, etc.
 * As a special case, the last value in a pattern may be `...` (the symbol
   spelled with three periods).  The symbol `...` matches as if it is the
   value just before the symbol `...`.
