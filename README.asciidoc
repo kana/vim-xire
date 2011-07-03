@@ -211,9 +211,6 @@ The details of a `pattern` are as follows:
   where `<name>` is the name of a slot and `<type>` is the type of
   a resulting value.
 ** Examples: `$cond:expr`, `$then:stmt`
-* Slot symbols may be written like `$<type>`.  This is a shorthand for
-  `$<type>:<type>`.
-** Examples: `$expr`, `$stmt`
 
 The details of ++pattern++-matching process are as follows:
 
