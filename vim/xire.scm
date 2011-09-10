@@ -5,6 +5,7 @@
     define-xire-expr
     define-xire-stmt
     scheme->ivs
+    transform-value
     xire-translate
 
     ; Semi-public API for advanced usage.
@@ -464,6 +465,22 @@
       (errorf "Invalid Scheme object for Vim script: ~s" x)]
     )
   )
+
+(define (transform-value form-or-forms manyp type upper-ctx)
+  (define (transform-form form)
+    (cond
+      [(eq? type 'stmt)
+       (xire-compile form
+                     (if (stmt-ctx? upper-ctx)
+                       upper-ctx
+                       (make-stmt-ctx upper-ctx)))]
+      [(eq? type 'expr)
+       (xire-compile-expr form upper-ctx)]
+      [else
+        (errorf "Invalid type for transform-value: ~s" type)]))
+  (if manyp
+    (map transform-form form-or-forms)
+    (transform-form form-or-forms)))
 
 
 

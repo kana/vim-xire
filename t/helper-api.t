@@ -3,6 +3,7 @@
 (add-load-path ".")
 (add-load-path "./gauche-test-gasmine")
 
+(use gauche.parameter)
 (use test.gasmine)
 (use vim.xire)
 
@@ -103,6 +104,30 @@
     (expect (scheme->ivs '()) raise?)
     (expect (scheme->ivs '(x y z)) raise?)
     (expect (scheme->ivs (lambda () '())) raise?)
+    )
+  )
+
+(describe "transform-value"
+  (define stmt-ctx (make-stmt-ctx (make-toplevel-ctx)))
+  (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))
+  (it "should convert given form into equivalent one in Vim script"
+    (parameterize ([xire-env (make <xire-env>)])
+      (define-xire-stmt halt "break")
+      (define-xire-stmt quit "quit")
+      (expect (transform-value '(halt) #f 'stmt stmt-ctx)
+              equal? (=ex= "break"))
+      (expect (transform-value '(halt) #f 'expr expr-ctx)
+              equal? (xire-compile '(halt) expr-ctx))
+      (expect (transform-value '((halt) (quit)) #t 'stmt stmt-ctx)
+              equal? (list (=ex= "break") (=ex= "quit")))
+      (expect (transform-value '((halt) (quit)) #t 'expr expr-ctx)
+              equal? (list (xire-compile '(halt) expr-ctx)
+                           (xire-compile '(quit) expr-ctx)))
+      (expect (transform-value '(halt) #f 'stmt expr-ctx)
+              equal? (=ex= "break"))
+      (expect (transform-value '(halt) #f 'expr stmt-ctx)
+              equal? (xire-compile '(halt) expr-ctx))
+      )
     )
   )
 
