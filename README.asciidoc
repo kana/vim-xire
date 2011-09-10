@@ -603,19 +603,19 @@ Vim script object in <<ivs,IVS>>.
 
 
 [[__transform_value]]
-==== `(transform-value form manyp type upper-context)`
+==== `(transform-value form-or-forms manyp type upper-context)`
 
-A function which compiles given `form` in xire script into Vim script,
+A function which compiles given `form-or-forms` in xire script into Vim script,
 according to other arguments:
 
-`form`::
+`form-or-forms`::
     A form or a list of forms written in xire script.
 
 `manyp`::
-    A boolean value which specifies the format of `form`.
-    If this value is `#f`, `form` is treated as a form, and this
-    function returns a resulting Vim script in IVS.
-    Otherwise, `form` is treated as a list of forms,
+    A boolean value which specifies the format of `form-or-forms`.
+    If this value is `#f`, `form-or-forms` is treated as a form,
+    and this function returns a resulting Vim script in IVS.
+    Otherwise, `form-or-forms` is treated as a list of forms,
     and this function returns a list of resulting Vim script in IVS.
 
 `type`::
