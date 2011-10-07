@@ -4,6 +4,7 @@
     =ex=
     define-xire-expr
     define-xire-stmt
+    generate-match-body
     generate-match-pattern
     scheme->ivs
     transform-value
@@ -429,6 +430,39 @@
           (insert-space
             ex-cmd-ivss))))
   )
+
+(define (generate-match-body pattern rule)
+  (define (shift xs)
+    ; (if $cond:expr $then:stmt)
+    ; ==> ([$then:stmt . ()] [$cond:expr . $then:stmt] [if . $cond:expr])
+    (define (go xs pairs)
+      (if (null? (cdr xs))
+        (cons (cons (car xs) '()) pairs)
+        (go (cdr xs) (cons (cons (car xs) (cadr xs)) pairs))))
+    (go xs '()))
+  (define (parse-pattern pattern)
+    (define (slot? x)
+      (and (symbol? x)
+           (#/^\$/ (symbol->string x))))
+    (define (convert slot following)
+      (let ([slot-name (string->symbol
+                         (regexp-replace* (symbol->string slot)
+                                          #/^(\$[^:]+):.*$/
+                                          "\\1"))]
+            [value-name slot]
+            [manyp (eq? following '...)]
+            [type (string->symbol
+                    (regexp-replace* (symbol->string slot)
+                                     #/^\$[^:]+:(.*)$/
+                                     "\\1"))])
+        (list slot-name value-name manyp type)))
+    (map (lambda (pair) (convert (car pair) (cdr pair)))
+         (filter (compose slot? car) (shift pattern))))
+  (define (generate-let-binding slot-info)
+    (match-let1 (slot-name value-name manyp type) slot-info
+      `[,slot-name (transform-value ,value-name ,manyp ',type ctx)]))
+  `(let (,@(map generate-let-binding (parse-pattern pattern)))
+     ,@rule))
 
 (define (generate-match-pattern xs)
   (define (escape x)

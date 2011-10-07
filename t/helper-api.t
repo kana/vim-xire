@@ -74,6 +74,42 @@
     )
   )
 
+(describe "generate-match-body"
+  (it "should generate body with 0 slots"
+    (expect (generate-match-body '(syntax clear)
+                                 '(`(=ex= (syntax clear))
+                                   `(=ex= (echo "..."))))
+            equal?
+            '(let ()
+               `(=ex= (syntax clear))
+               `(=ex= (echo "..."))))
+    )
+  (it "should generate body with 1 or more slots"
+    (expect (generate-match-body '(if $cond:expr $then:stmt)
+                                 '(`(=ex= (if ,$cond)
+                                          ,$then
+                                          endif)))
+            equal?
+            '(let ([$then (transform-value $then:stmt #f 'stmt ctx)]
+                   [$cond (transform-value $cond:expr #f 'expr ctx)])
+               `(=ex= (if ,$cond)
+                      ,$then
+                      endif)))
+    )
+  (it "should generate body with 1 or more ellipses"
+    (expect (generate-match-body '(when $cond:expr $then:stmt ...)
+                                 '(`(=ex= (if ,$cond)
+                                          ,@$then
+                                          endif)))
+            equal?
+            '(let ([$then (transform-value $then:stmt #t 'stmt ctx)]
+                   [$cond (transform-value $cond:expr #f 'expr ctx)])
+               `(=ex= (if ,$cond)
+                      ,@$then
+                      endif)))
+    )
+  )
+
 (describe "generate-match-pattern"
   (it "should escape normal symbols"
     (expect (generate-match-pattern '(syntax clear))
