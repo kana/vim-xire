@@ -4,6 +4,7 @@
     =ex=
     define-xire-expr
     define-xire-stmt
+    generate-match-pattern
     scheme->ivs
     transform-value
     xire-translate
@@ -428,6 +429,15 @@
           (insert-space
             ex-cmd-ivss))))
   )
+
+(define (generate-match-pattern xs)
+  (define (escape x)
+    (if (and (symbol? x)
+             (not (eq? x '...))
+             (not (#/^\$/ (symbol->string x))))
+      `',x
+      x))
+  (map escape xs))
 
 (define (scheme->ivs x)
   ; Vim script numbers are 32-bit signed integers.  (cf. :help Number)

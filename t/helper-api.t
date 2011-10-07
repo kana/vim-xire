@@ -74,6 +74,27 @@
     )
   )
 
+(describe "generate-match-pattern"
+  (it "should escape normal symbols"
+    (expect (generate-match-pattern '(syntax clear))
+            equal?
+            '('syntax 'clear))
+    )
+  (it "should leave slot symbols as is"
+    (expect (generate-match-pattern '(if $cond:expr $then:stmt))
+            equal?
+            '('if $cond:expr $then:stmt))
+    (expect (generate-match-pattern '(when $cond:expr $then:stmt ...))
+            equal?
+            '('when $cond:expr $then:stmt ...))
+    )
+  (it "should leave non-symbol values as is"
+    (expect (generate-match-pattern '("just" #\a #(test)))
+            equal?
+            '("just" #\a #(test)))
+    )
+  )
+
 (describe "scheme->ivs"
   (it "should convert given Scheme boolean into equivalent one in Vim script"
     (expect (scheme->ivs #f) equal? 0)
