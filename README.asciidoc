@@ -441,9 +441,12 @@ See also <<_process_of_macro_expansion,Process of Macro Expansion>>.
 
 
 
-==== `(define-xire-stmt [mode] name [context] clause ...)`
+==== `(define-xire-stmt name [mode] [context] clause ...)`
 
 `define-xire-stmt` directive defines a new statement macro.
+
+`name` (arbitrary symbol)::
+    Specifies the name of the new macro.
 
 `mode` (`:high` or `:low`)::
     Specifies the mode which determines how the new macro is expanded.
@@ -454,9 +457,6 @@ See also <<_process_of_macro_expansion,Process of Macro Expansion>>.
     context of a macro expansion.  This variable is available in
     ++body++s of each `clause`.  It may be omitted if `context` is
      not used in each `clause`.
-
-`name` (arbitrary symbol)::
-    Specifies the name of the new macro.
 
 `clause` (`[pattern body ...]`, `[pattern (=> id) body ...]` or `rule`)::
     Specifies an expansion rule for the new macro.

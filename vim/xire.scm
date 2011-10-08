@@ -207,21 +207,21 @@
 (define-syntax define-xire-stmt
   (syntax-rules ()
     ; The most low-level form.
-    [(_ :low "internal" name ctx [pat . body] ...)
+    [(_ "internal" name :low ctx [pat . body] ...)
      (define-xire-macro stmt (name form ctx)
        (ensure-stmt-ctx form ctx)
        (match form
          [pat . body]
          ...))]
     ; Basic form.
-    [(_ :low name [pat1 . body1] [patN . bodyN] ...)
-     (define-xire-stmt :low name ctx
+    [(_ name :low [pat1 . body1] [patN . bodyN] ...)
+     (define-xire-stmt name :low ctx
        [pat1 . body1]
        [patN . bodyN]
        ...)]
     ; Basic form with the name of context.
-    [(_ :low name ctx [pat1 . body1] [patN . bodyN] ...)
-     (define-xire-stmt :low "internal" name ctx
+    [(_ name :low ctx [pat1 . body1] [patN . bodyN] ...)
+     (define-xire-stmt "internal" name :low ctx
        [pat1 . body1]
        [patN . bodyN]
        ...)]
@@ -233,12 +233,12 @@
              (current-module)))]
     ; Shorthand for simple command like :break with different macro name.
     [(_ name cmd-name)
-     (define-xire-stmt :low name
+     (define-xire-stmt name :low
        [(_)
         (=ex= 'cmd-name)])]
     ; Shorthand for simple command like :break.
     [(_ name)
-     (define-xire-stmt :low name
+     (define-xire-stmt name :low
        [(_)
         (=ex= 'name)])]
     ))
