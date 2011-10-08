@@ -11,6 +11,14 @@
 
 
 
+(define (compile form ctx)
+  (with-output-to-string
+    (lambda ()
+      (write-tree (xire-compile form ctx)))))
+
+
+
+
 (describe "ctx-type->xire-env-slot-name"
   (it "shouold return proper values for valid arguments"
     (expect (ctx-type->xire-env-slot-name 'stmt) eq? 'stmt-macros)
@@ -135,10 +143,6 @@
 (describe "define-xire-expr :low"
   (define stmt-ctx (make-stmt-ctx (make-toplevel-ctx)))
   (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))
-  (define (compile form ctx)
-    (with-output-to-string
-      (lambda ()
-        (write-tree (xire-compile form ctx)))))
   (it "should define new expression macro in the current environment"
     (parameterize ([xire-env (make <xire-env>)])
       (expect (xire-lookup-macro 'foo stmt-ctx (xire-env)) eq? #f)
@@ -163,10 +167,6 @@
 (describe "define-xire-stmt :low"
   (define stmt-ctx (make-stmt-ctx (make-toplevel-ctx)))
   (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))
-  (define (compile form ctx)
-    (with-output-to-string
-      (lambda ()
-        (write-tree (xire-compile form ctx)))))
   (it "should define new statement macro in the current environment"
     (parameterize ([xire-env (make <xire-env>)])
       (expect (xire-lookup-macro 'foo stmt-ctx (xire-env)) eq? #f)
@@ -191,10 +191,6 @@
 (describe "define-xire-stmt shorthand"
   (define stmt-ctx (make-stmt-ctx (make-toplevel-ctx)))
   (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))
-  (define (compile form ctx)
-    (with-output-to-string
-      (lambda ()
-        (write-tree (xire-compile form ctx)))))
   (it "should define a statement macro for simple cocmmand"
     (parameterize ([xire-env (make <xire-env>)])
       (expect (xire-lookup-macro 'break stmt-ctx (xire-env)) eq? #f)
