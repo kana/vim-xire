@@ -183,6 +183,9 @@
                            'ctx-type
                            (xire-env))]))
 
+(define-macro (define-high-level-xire-macro . args)
+  (apply generate-expanded-form-of-high-level-macro (unwrap-syntax args)))
+
 (define (generate-expanded-form-of-high-level-macro name ctx-type . clauses)
   (define (generate-match-clause clause)
     (match-let1 (pat . body) clause
