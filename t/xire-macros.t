@@ -209,6 +209,49 @@
     )
   )
 
+(describe "define-xire-stmt :high"
+  (define stmt-ctx (make-stmt-ctx (make-toplevel-ctx)))
+  (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))
+  (define (lines . strings)
+    (string-join strings "\n" 'suffix))
+  (it "should define new statement macro in the current environment"
+    (parameterize ([xire-env (make <xire-env>)])
+      (expect (xire-lookup-macro 'if stmt-ctx (xire-env)) eq? #f)
+      (expect (xire-lookup-macro 'if expr-ctx (xire-env)) eq? #f)
+      (define-xire-stmt break)
+      (define-xire-stmt return)
+      (define-xire-stmt if
+        [(if $cond:expr $then:stmt)
+         (=ex= `(if ,$cond)
+               $then
+               'endif)]
+        [(if $cond:expr $then:stmt $else:stmt)
+         (=ex= `(if ,$cond)
+               $then
+               'else
+               $else
+               'endif)])
+      (expect (xire-lookup-macro 'if stmt-ctx (xire-env)) procedure?)
+      (expect (xire-lookup-macro 'if expr-ctx (xire-env)) eq? #f)
+      (expect (compile '(break) stmt-ctx) equal? "break\n")
+      (expect (compile '(return) stmt-ctx) equal? "return\n")
+      (expect (compile '(if 3) expr-ctx) equal? "(if(3))")
+      (expect (compile '(if co-nd (break)) stmt-ctx)
+              equal?
+              (lines "if co_nd"
+                     "break"
+                     "endif"))
+      (expect (compile '(if co-nd (break) (return)) stmt-ctx)
+              equal?
+              (lines "if co_nd"
+                     "break"
+                     "else"
+                     "return"
+                     "endif"))
+      )
+    )
+  )
+
 (describe "define-xire-stmt shorthand"
   (define stmt-ctx (make-stmt-ctx (make-toplevel-ctx)))
   (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))

@@ -236,6 +236,12 @@
     ; Normal form of low-level macro.
     [(_ name :low . args)
      (%define-xire-stmt-low name . args)]
+    ; High-level macro.
+    [(_ name [pat1 . rule1] [patN . ruleN] ...)
+     (define-high-level-xire-macro name stmt
+       [pat1 . rule1]
+       [patN . ruleN]
+       ...)]
     ; Shorthand for simple command like :quit and :quit!.
     [(_ name :!)
      (let1 name! (string->symbol #`",'|name|!")
@@ -276,8 +282,6 @@
        [patN . bodyN]
        ...)]
     ))
-
-;; FIXME: define-xire-stmt (:high)
 
 
 
