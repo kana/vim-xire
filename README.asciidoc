@@ -490,10 +490,10 @@ There are also the following shorthands for `define-xire-stmt`:
 
 
 
-==== `(scheme scheme-expression ...)`
+==== `(scheme scheme-expr ...)`
 
-`scheme` directive evaluates arbitrary ++scheme-expression++s as if
-`(begin scheme-expression ...)`.
+`scheme` directive evaluates arbitrary ++scheme-expr++s as if
+`(begin scheme-expr ...)`.
 
 
 
