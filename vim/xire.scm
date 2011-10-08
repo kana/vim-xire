@@ -187,18 +187,18 @@
 (define-syntax define-xire-expr
   (syntax-rules ()
     ; The most low-level form.
-    [(_ :low "internal" name ctx [pat . body] ...)
+    [(_ "internal" name :low ctx [pat . body] ...)
      (define-xire-macro expr (name form ctx)
        (ensure-expr-ctx form ctx)
        (match form
          [pat . body]
          ...))]
     ; Basic form.
-    [(_ :low name [pat . body] ...)
-     (define-xire-expr :low name ctx [pat . body] ...)]
+    [(_ name :low [pat . body] ...)
+     (define-xire-expr name :low ctx [pat . body] ...)]
     ; Basic form with the name of context.
-    [(_ :low name ctx [pat . body] ...)
-     (define-xire-expr :low "internal" name ctx [pat . body] ...)]))
+    [(_ name :low ctx [pat . body] ...)
+     (define-xire-expr "internal" name :low ctx [pat . body] ...)]))
 
 ;; FIXME: define-xire-expr (:high)
 

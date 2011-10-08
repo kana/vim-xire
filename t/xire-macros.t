@@ -88,7 +88,7 @@
     (parameterize ([xire-env (make <xire-env>)])
       (expect (xire-lookup-macro 'foo stmt-ctx (xire-env)) eq? #f)
       (expect (xire-lookup-macro 'foo expr-ctx (xire-env)) eq? #f)
-      (define-xire-expr :low foo
+      (define-xire-expr foo :low
         [(_ 1)
          '(foo 2)]
         [(_ x)

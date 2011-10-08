@@ -107,7 +107,7 @@ Process of Macro Expansion
 Suppose that there is a following expression macro `foo`:
 
 ----
-(define-xire-expr :low foo
+(define-xire-expr foo :low
   [pattern1 body1 ...]
   [pattern2 body2 ...]
   ...)
@@ -133,7 +133,7 @@ This process is also used to expand a use of statement macros.
 Suppose that there is a following macro `foo`:
 
 ----
-(define-xire-expr :high foo
+(define-xire-expr foo :high
   [pattern1 rule1]
   [pattern2 rule2]
   ...)
@@ -143,7 +143,7 @@ This definition is roughly equivalent to the following:
 
 ----
 (eval
-  `(define-xire-expr :low foo
+  `(define-xire-expr foo :low
     [,(generate-match-pattern 'pattern1)
      ,(generate-match-body 'pattern1 'rule1)]
     [,(generate-match-pattern 'pattern2)
@@ -412,9 +412,12 @@ be used for symbols in IVS.
 Directives
 ~~~~~~~~~~
 
-==== `(define-xire-expr [mode] name [context] clause ...)`
+==== `(define-xire-expr name [mode] [context] clause ...)`
 
 `define-xire-expr` directive defines a new expression macro.
+
+`name` (arbitrary symbol)::
+    Specifies the name of the new macro.
 
 `mode` (`:high` or `:low`)::
     Specifies the mode which determines how the new macro is expanded.
@@ -425,9 +428,6 @@ Directives
     context of a macro expansion.  This variable is available in
     ++body++s of each `clause`.  It may be omitted if `context` is
      not used in each `clause`.
-
-`name` (arbitrary symbol)::
-    Specifies the name of the new macro.
 
 `clause` (`[pattern body ...]`, `[pattern (=> id) body ...]` or `rule`)::
     Specifies an expansion rule for the new macro.
