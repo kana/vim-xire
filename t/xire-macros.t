@@ -6,6 +6,7 @@
 (use gauche.parameter)
 (use test.gasmine)
 (use text.tree)
+(use util.match)
 (use vim.xire)
 
 
@@ -160,6 +161,26 @@
       (expect (compile '(foo 1) expr-ctx) equal? "22")
       (expect (compile '(foo 2) expr-ctx) equal? "22")
       (expect (compile '(foo 3) expr-ctx) equal? "33")
+      )
+    )
+  )
+
+(describe "define-xire-expr :high"
+  (define stmt-ctx (make-stmt-ctx (make-toplevel-ctx)))
+  (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))
+  (it "should define new expression macro in the current environment"
+    (parameterize ([xire-env (make <xire-env>)])
+      (expect (xire-lookup-macro if stmt-ctx (xire-env)) eq? #f)
+      (expect (xire-lookup-macro 'if expr-ctx (xire-env)) eq? #f)
+      (define-xire-expr if
+        [(if $cond:expr $then:expr $else:expr)
+         `(,$cond "?" ,$then ":" ,$else)])
+      (expect (xire-lookup-macro 'if stmt-ctx (xire-env)) eq? #f)
+      (expect (xire-lookup-macro 'if expr-ctx (xire-env)) procedure?)
+      (expect (compile '(if co-nd th-en el-se) stmt-ctx) raise?)
+      (expect (compile '(if co-nd th-en el-se) expr-ctx)
+              equal?
+              "co_nd?th_en:el_se")
       )
     )
   )

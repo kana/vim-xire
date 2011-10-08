@@ -208,6 +208,8 @@
   (syntax-rules ()
     [(_ name :low . args)
      (%define-xire-expr-low name . args)]
+    [(_ name . args)
+     (define-high-level-xire-macro name expr . args)]
     ))
 
 (define-syntax %define-xire-expr-low
@@ -226,8 +228,6 @@
     [(_ name ctx [pat . body] ...)
      (%define-xire-expr-low "internal" name ctx [pat . body] ...)]
     ))
-
-;; FIXME: define-xire-expr (:high)
 
 ;; Define new xire statement macro in the current environment.
 ;; This is a wrapper for define-xire-macro.
