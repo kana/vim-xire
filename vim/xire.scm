@@ -233,25 +233,9 @@
 ;; This is a wrapper for define-xire-macro.
 (define-syntax define-xire-stmt
   (syntax-rules ()
-    ; The most low-level form.
-    [(_ "internal" name :low ctx [pat . body] ...)
-     (define-xire-macro stmt (name form ctx)
-       (ensure-stmt-ctx form ctx)
-       (match form
-         [pat . body]
-         ...))]
-    ; Basic form.
-    [(_ name :low [pat1 . body1] [patN . bodyN] ...)
-     (define-xire-stmt name :low ctx
-       [pat1 . body1]
-       [patN . bodyN]
-       ...)]
-    ; Basic form with the name of context.
-    [(_ name :low ctx [pat1 . body1] [patN . bodyN] ...)
-     (define-xire-stmt "internal" name :low ctx
-       [pat1 . body1]
-       [patN . bodyN]
-       ...)]
+    ; Normal form of low-level macro.
+    [(_ name :low . args)
+     (%define-xire-stmt-low name . args)]
     ; Shorthand for simple command like :quit and :quit!.
     [(_ name :!)
      (let1 name! (string->symbol #`",'|name|!")
@@ -268,6 +252,29 @@
      (define-xire-stmt name :low
        [(_)
         (=ex= 'name)])]
+    ))
+
+(define-syntax %define-xire-stmt-low
+  (syntax-rules ()
+    ; The most low-level form.
+    [(_ "internal" name ctx [pat . body] ...)
+     (define-xire-macro stmt (name form ctx)
+       (ensure-stmt-ctx form ctx)
+       (match form
+         [pat . body]
+         ...))]
+    ; Basic form.
+    [(_ name [pat1 . body1] [patN . bodyN] ...)
+     (%define-xire-stmt-low name ctx
+       [pat1 . body1]
+       [patN . bodyN]
+       ...)]
+    ; Basic form with the name of context.
+    [(_ name ctx [pat1 . body1] [patN . bodyN] ...)
+     (%define-xire-stmt-low "internal" name ctx
+       [pat1 . body1]
+       [patN . bodyN]
+       ...)]
     ))
 
 ;; FIXME: define-xire-stmt (:high)
