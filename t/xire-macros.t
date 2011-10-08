@@ -77,6 +77,61 @@
     )
   )
 
+(describe "generate-expanded-form-of-high-level-macro"
+  (it "shouold generate proper form from proper input"
+    (expect
+      (generate-expanded-form-of-high-level-macro
+        'if
+        'stmt
+        '[(if $cond:expr $then:stmt)
+          `(=ex= '(if ,$cond)
+                 ',$then
+                 'endif)]
+        '[(if $cond:expr $then:stmt $else:stmt)
+          `(=ex= '(if ,$cond)
+                 ',$then
+                 'else
+                 ',$else
+                 'endif)])
+      equal?
+      '(define-xire-macro stmt (if form ctx)
+         (ensure-stmt-ctx form ctx)
+         (match form
+           [('if $cond:expr $then:stmt)
+            (let ([$then (transform-value $then:stmt #f 'stmt ctx)]
+                  [$cond (transform-value $cond:expr #f 'expr ctx)])
+              `(=ex= '(if ,$cond)
+                     ',$then
+                     'endif))]
+           [('if $cond:expr $then:stmt $else:stmt)
+            (let ([$else (transform-value $else:stmt #f 'stmt ctx)]
+                  [$then (transform-value $then:stmt #f 'stmt ctx)]
+                  [$cond (transform-value $cond:expr #f 'expr ctx)])
+              `(=ex= '(if ,$cond)
+                     ',$then
+                     'else
+                     ',$else
+                     'endif))])))
+    )
+  (it "shouold raise error for invalid context type"
+    (expect
+      (generate-expanded-form-of-high-level-macro
+        'if
+        'stmttttt
+        '[(if $cond:expr $then:stmt)
+          `(=ex= '(if ,$cond)
+                 ',$then
+                 'endif)]
+        '[(if $cond:expr $then:stmt $else:stmt)
+          `(=ex= '(if ,$cond)
+                 ',$then
+                 'else
+                 ',$else
+                 'endif)])
+      raise?)
+    )
+  )
+
 (describe "define-xire-expr :low"
   (define stmt-ctx (make-stmt-ctx (make-toplevel-ctx)))
   (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))

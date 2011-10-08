@@ -34,6 +34,7 @@
     convert-regexp-conventions
     convert-string-conventions
     ctx-type->xire-env-slot-name
+    generate-expanded-form-of-high-level-macro
     xire-lookup-macro
     xire-register-macro!
     ))
@@ -181,6 +182,22 @@
                            (lambda (form ctx) . body)
                            'ctx-type
                            (xire-env))]))
+
+(define (generate-expanded-form-of-high-level-macro name ctx-type . clauses)
+  (define (generate-match-clause clause)
+    (match-let1 (pat . body) clause
+      `[,(generate-match-pat pat)
+        ,(generate-match-body pat body)]))
+  `(define-xire-macro ,ctx-type (,name form ctx)
+     ,(cond
+        [(eq? ctx-type 'stmt)
+         '(ensure-stmt-ctx form ctx)]
+        [(eq? ctx-type 'expr)
+         '(ensure-expr-ctx form ctx)]
+        [else
+         (errorf "Invalid context type: ~s" ctx-type)])
+     (match form
+       ,@(map generate-match-clause clauses))))
 
 ;; Define new xire expression macro in the current environment.
 ;; This is a wrapper for define-xire-macro.
