@@ -603,7 +603,7 @@ Vim script object in <<ivs,IVS>>.
 
 
 [[__transform_value]]
-==== `(transform-value form-or-forms manyp type upper-context)`
+==== `(transform-value form-or-forms manyp type upper-ctx)`
 
 A function which compiles given `form-or-forms` in xire script into Vim script,
 according to other arguments:
@@ -624,7 +624,7 @@ according to other arguments:
     If this value is `stmt`, `form` is compiled as a statement.
     Otherwise, it is an error.
 
-`upper-context`::
+`upper-ctx`::
     An object which specifies the context of the original caller of
     `form`.
 
