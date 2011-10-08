@@ -72,6 +72,16 @@
               (echo " " 1 " " 2) "\n"
               endif "\n"))
     )
+  (it "should leave already processed elements as is"
+    (expect (=ex= '(if (foo == bar))
+                  (=ex= '(echo 1 2))
+                  'endif)
+            equal?
+            `(()
+              (if " " (foo == bar)) "\n"
+              ,@(=ex= '(echo 1 2))
+              endif "\n"))
+    )
   )
 
 (describe "generate-match-body"

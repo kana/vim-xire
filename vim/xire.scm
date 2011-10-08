@@ -441,21 +441,22 @@
   (format "~s" scheme-string))
 
 (define (=ex= . ex-cmd-ivss)
-  (define (insert-newline xs)
-    (map (lambda (x)
-           `(,x "\n"))
-         xs))
-  (define (insert-space xs)
-    (map (lambda (x)
-           (if (list? x)
-             (intersperse " " x)
-             x))
-         xs))
+  (define (insert-newline x)
+    `(,x "\n"))
+  (define (insert-space x)
+    (if (list? x)
+      (intersperse " " x)
+      x))
+  (define (already-processed? x)
+    (and (list? x)
+         (null? (car x))))
   `(()
     ,@(concatenate
-        (insert-newline
-          (insert-space
-            ex-cmd-ivss))))
+        (map (lambda (x)
+               (if (already-processed? x)
+                 x
+                 (insert-newline (insert-space x))))
+             ex-cmd-ivss)))
   )
 
 (define (generate-match-body pat rule)
