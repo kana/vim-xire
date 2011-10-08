@@ -464,14 +464,14 @@
   `(let (,@(map generate-let-binding (parse-pat pat)))
      ,@rule))
 
-(define (generate-match-pat xs)
+(define (generate-match-pat pat)
   (define (escape x)
     (if (and (symbol? x)
              (not (eq? x '...))
              (not (#/^\$/ (symbol->string x))))
       `',x
       x))
-  (map escape xs))
+  (map escape pat))
 
 (define (scheme->ivs x)
   ; Vim script numbers are 32-bit signed integers.  (cf. :help Number)

@@ -144,9 +144,9 @@ This definition is roughly equivalent to the following:
 ----
 (eval
   `(define-xire-expr foo :low
-    [,(generate-match-pat 'pattern1)
+    [,(generate-match-pat 'pat1)
      ,(generate-match-body 'pat1 'rule1)]
-    [,(generate-match-pat 'pattern2)
+    [,(generate-match-pat 'pat2)
      ,(generate-match-body 'pat2 'rule2)]
     ...)
   (current-module))
@@ -572,11 +572,11 @@ See also <<_high_level_macro_rules,high-level macro rules>>.
 
 
 [[__generate_match_pat]]
-==== `(generate-match-pat pattern)`
+==== `(generate-match-pat pat)`
 
 A function which generates a pattern of clause for
 http://practical-scheme.net/gauche/man/?l=en&p=match[`match`]
-from a `pattern` of clause for high-level xire macros.
+from a `pat` of clause for high-level xire macros.
 
 For example,
 
