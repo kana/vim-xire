@@ -5,7 +5,7 @@
     define-xire-expr
     define-xire-stmt
     generate-match-body
-    generate-match-pattern
+    generate-match-pat
     scheme->ivs
     transform-value
     xire-translate
@@ -464,7 +464,7 @@
   `(let (,@(map generate-let-binding (parse-pat pat)))
      ,@rule))
 
-(define (generate-match-pattern xs)
+(define (generate-match-pat xs)
   (define (escape x)
     (if (and (symbol? x)
              (not (eq? x '...))

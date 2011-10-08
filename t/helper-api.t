@@ -110,22 +110,22 @@
     )
   )
 
-(describe "generate-match-pattern"
+(describe "generate-match-pat"
   (it "should escape normal symbols"
-    (expect (generate-match-pattern '(syntax clear))
+    (expect (generate-match-pat '(syntax clear))
             equal?
             '('syntax 'clear))
     )
   (it "should leave slot symbols as is"
-    (expect (generate-match-pattern '(if $cond:expr $then:stmt))
+    (expect (generate-match-pat '(if $cond:expr $then:stmt))
             equal?
             '('if $cond:expr $then:stmt))
-    (expect (generate-match-pattern '(when $cond:expr $then:stmt ...))
+    (expect (generate-match-pat '(when $cond:expr $then:stmt ...))
             equal?
             '('when $cond:expr $then:stmt ...))
     )
   (it "should leave non-symbol values as is"
-    (expect (generate-match-pattern '("just" #\a #(test)))
+    (expect (generate-match-pat '("just" #\a #(test)))
             equal?
             '("just" #\a #(test)))
     )
