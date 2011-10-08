@@ -145,9 +145,9 @@ This definition is roughly equivalent to the following:
 (eval
   `(define-xire-expr foo :low
     [,(generate-match-pattern 'pattern1)
-     ,(generate-match-body 'pattern1 'rule1)]
+     ,(generate-match-body 'pat1 'rule1)]
     [,(generate-match-pattern 'pattern2)
-     ,(generate-match-body 'pattern2 'rule2)]
+     ,(generate-match-body 'pat2 'rule2)]
     ...)
   (current-module))
 ----
@@ -542,11 +542,11 @@ is equivalent to the following data:
 
 
 [[__generate_match_body]]
-==== `(generate-match-body pattern rule)`
+==== `(generate-match-body pat rule)`
 
 A function which generates a body of clause for
 http://practical-scheme.net/gauche/man/?l=en&p=match[`match`]
-from `pattern` and `rule` of clause for high-level xire macro.
+from `pat` and `rule` of clause for high-level xire macro.
 
 For example,
 

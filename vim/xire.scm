@@ -431,7 +431,7 @@
             ex-cmd-ivss))))
   )
 
-(define (generate-match-body pattern rule)
+(define (generate-match-body pat rule)
   (define (shift xs)
     ; (if $cond:expr $then:stmt)
     ; ==> ([$then:stmt . ()] [$cond:expr . $then:stmt] [if . $cond:expr])
@@ -440,7 +440,7 @@
         (cons (cons (car xs) '()) pairs)
         (go (cdr xs) (cons (cons (car xs) (cadr xs)) pairs))))
     (go xs '()))
-  (define (parse-pattern pattern)
+  (define (parse-pat pat)
     (define (slot? x)
       (and (symbol? x)
            (#/^\$/ (symbol->string x))))
@@ -457,11 +457,11 @@
                                      "\\1"))])
         (list slot-name value-name manyp type)))
     (map (lambda (pair) (convert (car pair) (cdr pair)))
-         (filter (compose slot? car) (shift pattern))))
+         (filter (compose slot? car) (shift pat))))
   (define (generate-let-binding slot-info)
     (match-let1 (slot-name value-name manyp type) slot-info
       `[,slot-name (transform-value ,value-name ,manyp ',type ctx)]))
-  `(let (,@(map generate-let-binding (parse-pattern pattern)))
+  `(let (,@(map generate-let-binding (parse-pat pat)))
      ,@rule))
 
 (define (generate-match-pattern xs)
