@@ -473,32 +473,33 @@
   )
 
 (define (generate-match-body pat rule)
-  (define (shift xs)
-    ; (if $cond:expr $then:stmt)
-    ; ==> ([$then:stmt . ()] [$cond:expr . $then:stmt] [if . $cond:expr])
-    (define (go xs pairs)
-      (if (null? (cdr xs))
-        (cons (cons (car xs) '()) pairs)
-        (go (cdr xs) (cons (cons (car xs) (cadr xs)) pairs))))
-    (go xs '()))
   (define (parse-pat pat)
-    (define (slot? x)
-      (and (symbol? x)
-           (#/^\$/ (symbol->string x))))
-    (define (convert slot following)
-      (let ([slot-name (string->symbol
-                         (regexp-replace* (symbol->string slot)
-                                          #/^(\$[^:]+):.*$/
-                                          "\\1"))]
-            [value-name slot]
-            [manyp (eq? following '...)]
-            [type (string->symbol
-                    (regexp-replace* (symbol->string slot)
-                                     #/^\$[^:]+:(.*)$/
-                                     "\\1"))])
-        (list slot-name value-name manyp type)))
-    (map (lambda (pair) (convert (car pair) (cdr pair)))
-         (filter (compose slot? car) (shift pat))))
+    (define (ellipsis? symbol)
+      (eq? symbol '...))
+    (define (car-followed-by-ellipsis? pat)
+      (and (pair? (cdr pat))
+           (ellipsis? (cadr pat))))
+    (define (try-pat->slot pat)
+      (and (symbol? pat)
+           (#/^\$([^:]+):([^:]+)/ (symbol->string pat))))
+    (define (go pat manyp slot-data)
+      (cond
+        [(null? pat)
+         slot-data]
+        [(pair? pat)
+         (go (car pat)
+             (car-followed-by-ellipsis? pat)
+             (go (cdr pat) manyp slot-data))]
+        [(try-pat->slot pat) =>
+         (lambda (m)
+           (cons (list (string->symbol #`"$,(m 1)")
+                       pat
+                       manyp
+                       (string->symbol (m 2)))
+                 slot-data))]
+        [else
+         slot-data]))
+    (go pat #f '()))
   (define (generate-let-binding slot-info)
     (match-let1 (slot-name value-name manyp type) slot-info
       `[,slot-name (transform-value ,value-name ,manyp ',type ctx)]))

@@ -100,8 +100,8 @@
                                           ,$then
                                           endif)))
             equal?
-            '(let ([$then (transform-value $then:stmt #f 'stmt ctx)]
-                   [$cond (transform-value $cond:expr #f 'expr ctx)])
+            '(let ([$cond (transform-value $cond:expr #f 'expr ctx)]
+                   [$then (transform-value $then:stmt #f 'stmt ctx)])
                `(=ex= (if ,$cond)
                       ,$then
                       endif)))
@@ -112,8 +112,8 @@
                                           ,@$then
                                           endif)))
             equal?
-            '(let ([$then (transform-value $then:stmt #t 'stmt ctx)]
-                   [$cond (transform-value $cond:expr #f 'expr ctx)])
+            '(let ([$cond (transform-value $cond:expr #f 'expr ctx)]
+                   [$then (transform-value $then:stmt #t 'stmt ctx)])
                `(=ex= (if ,$cond)
                       ,@$then
                       endif)))

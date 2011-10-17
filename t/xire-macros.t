@@ -107,15 +107,15 @@
          (ensure-stmt-ctx form ctx)
          (match form
            [('if $cond:expr $then:stmt)
-            (let ([$then (transform-value $then:stmt #f 'stmt ctx)]
-                  [$cond (transform-value $cond:expr #f 'expr ctx)])
+            (let ([$cond (transform-value $cond:expr #f 'expr ctx)]
+                  [$then (transform-value $then:stmt #f 'stmt ctx)])
               `(=ex= '(if ,$cond)
                      ',$then
                      'endif))]
            [('if $cond:expr $then:stmt $else:stmt)
-            (let ([$else (transform-value $else:stmt #f 'stmt ctx)]
+            (let ([$cond (transform-value $cond:expr #f 'expr ctx)]
                   [$then (transform-value $then:stmt #f 'stmt ctx)]
-                  [$cond (transform-value $cond:expr #f 'expr ctx)])
+                  [$else (transform-value $else:stmt #f 'stmt ctx)])
               `(=ex= '(if ,$cond)
                      ',$then
                      'else
