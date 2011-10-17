@@ -46,7 +46,12 @@
     (expect (xire-lookup-macro 'directive-macro expr-ctx env) eq? #f)
     )
   (it "should handle directive: define-xire-stmt"
-    ; FIXME
+    (expect
+      (translate "(define-xire-stmt stmt-macro [(stmt-macro) #f])")
+      equal?
+      "")
+    (expect (xire-lookup-macro 'stmt-macro stmt-ctx env) not eq? #f)
+    (expect (xire-lookup-macro 'stmt-macro expr-ctx env) eq? #f)
     )
   (it "should handle directive: define-xire-expr"
     ; FIXME
