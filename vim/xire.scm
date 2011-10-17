@@ -293,7 +293,9 @@
 ;; and resulting Vim script is written into OUTPUT-PORT.
 (define (xire-translate input-port output-port
                         :key (env (copy-env))
-                             (scheme-env (make-module #f)))
+                             (scheme-env (let1 m (make-module #f)
+                                           (eval '(use vim.xire) m)
+                                           m)))
   (define compiled-vim-script-tree (list))
   (define (finish)
     (write-tree (reverse compiled-vim-script-tree) output-port))
