@@ -15,6 +15,9 @@
 
 (describe "xire-translate"
   (define env (make <xire-env>))
+  (define toplevel-ctx (make-toplevel-ctx))
+  (define stmt-ctx (make-stmt-ctx toplevel-ctx))
+  (define expr-ctx (make-expr-ctx toplevel-ctx))
   (define (translate s)
     (call-with-string-io s
       (cut xire-translate <> <> :env env)))
@@ -35,7 +38,12 @@
     (expect (translate "(no-such-macro)") raise?)
     )
   (it "should handle directive: define-xire-macro"
-    ; FIXME
+    (expect
+      (translate "(define-xire-macro stmt (directive-macro f c) 0)")
+      equal?
+      "")
+    (expect (xire-lookup-macro 'directive-macro stmt-ctx env) not eq? #f)
+    (expect (xire-lookup-macro 'directive-macro expr-ctx env) eq? #f)
     )
   (it "should handle directive: define-xire-stmt"
     ; FIXME
