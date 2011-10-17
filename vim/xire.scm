@@ -571,4 +571,4 @@
 
 
 
-(provide "vim/xire")
+;;; __END__
