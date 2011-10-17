@@ -31,6 +31,7 @@ PACKAGE   = gauche-vim-xire
 
 ARCHFILES =
 SCMFILES  = $(srcdir)/vim/xire.scm \
+            $(srcdir)/vim/xire/builtin.scm \
             $(srcdir)/vim/xire/compiler.scm
 HEADERS   = 
 
