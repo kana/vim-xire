@@ -118,6 +118,14 @@
                       ,@$then
                       endif)))
     )
+  (it "should generate body with let-like pattern"
+    (expect (generate-match-body '(my-let ($var:expr $value:stmt) ...)
+                                 '(`(,$var ,$value)))
+            equal?
+            '(let ([$var (transform-value $var:expr #t 'expr ctx)]
+                   [$value (transform-value $value:stmt #t 'stmt ctx)])
+               `(,$var ,$value)))
+    )
   )
 
 (describe "generate-match-pat"

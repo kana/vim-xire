@@ -488,7 +488,7 @@
          slot-data]
         [(pair? pat)
          (go (car pat)
-             (car-followed-by-ellipsis? pat)
+             (or manyp (car-followed-by-ellipsis? pat))
              (go (cdr pat) manyp slot-data))]
         [(try-pat->slot pat) =>
          (lambda (m)
