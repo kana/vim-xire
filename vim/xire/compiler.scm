@@ -37,6 +37,9 @@
     generate-expanded-form-of-high-level-macro
     xire-lookup-macro
     xire-register-macro!
+
+    ; Not public, but exported to avoid some problems.
+    match  ; See [MATCHQ].
     ))
 (select-module vim.xire.compiler)
 
@@ -514,6 +517,16 @@
       `',x
       x))
   (map escape pat))
+
+;; Code which defines high-level xire macro has to bind MATCH to the macro
+;; defined in util.match, because the syntax to define high-level xire macro
+;; is implemented with DEFINE-MACRO (built-in) and MATCH (util.match).  This
+;; restriction is a bit annoying for development.
+;;
+;; [MATCHQ] NB: To avoid writing extra (use util.match) in user code,
+;; MATCH (vim.xire.compiler) is bound to the same macro as MATCH (util.match),
+;; and MATCH (vim.xire.compiler) is exported.
+(define match match)
 
 (define (scheme->ivs x)
   ; Vim script numbers are 32-bit signed integers.  (cf. :help Number)
