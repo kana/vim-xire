@@ -1,0 +1,8 @@
+#!/usr/bin/env gosh
+
+(use vim.xire)
+
+(xire-translate (standard-input-port)
+                (standard-output-port))
+
+; vim: filetype=scheme
