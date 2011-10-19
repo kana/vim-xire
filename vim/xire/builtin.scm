@@ -8,6 +8,11 @@
 
 
 
+(define-xire-stmt begin
+  [(begin $body:stmt ...)
+   (apply =ex= $body)]
+  )
+
 (define-xire-stmt echo
   [(echo $value:expr ...)
    (=ex= `(echo ,@$value))]
