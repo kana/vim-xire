@@ -3,6 +3,7 @@
     ))
 (select-module vim.xire.builtin)
 
+(use srfi-1)
 (use vim.xire.compiler)
 
 
@@ -11,6 +12,32 @@
 (define-xire-stmt begin
   [(begin $body:stmt ...)
    (apply =ex= $body)]
+  )
+
+(define-xire-stmt cond
+  [(cond [$cond:expr $then:stmt] ...)
+   (let go ([cond:exprs $cond:expr]
+            [conds $cond]
+            [thens $then]
+            [result '()])
+     (cond
+       [(null? cond:exprs)
+        (if (null? result)
+          (=ex=)
+          (apply =ex= (reverse (cons 'endif result))))]
+       [else
+         (go (cdr cond:exprs)
+             (cdr conds)
+             (cdr thens)
+             (cons (car thens)
+                   (cons (list (if (null? result)
+                                 'if
+                                 'elseif)
+                               (if (and (null? (cdr cond:exprs))
+                                        (eq? (car cond:exprs) 'else))
+                                 1
+                                 (car conds)))
+                         result)))]))]
   )
 
 (define-xire-stmt echo

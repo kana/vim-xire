@@ -1,0 +1,21 @@
+(cond
+  [#t (echo "then-1")]
+  [#f (echo "then-2")]
+  [else (echo "then-3")])
+
+(cond
+  [#f (echo "then-1")]
+  [#t (echo "then-2")]
+  [else (echo "then-3")])
+
+(cond
+  [#f (echo "then-1")]
+  [#f (echo "then-2")]
+  [else (echo "then-3")])
+
+(cond
+  [#f (echo "then-1")]
+  [#t (echo "then-2")])
+
+(cond
+  [else (echo "then-1")])
