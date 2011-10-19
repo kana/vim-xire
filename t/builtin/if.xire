@@ -1,0 +1,13 @@
+(if #f
+  (echo "1-then"))
+
+(if #t
+  (echo "2-then"))
+
+(if #f
+  (echo "3-then")
+  (echo "3-else"))
+
+(if #t
+  (echo "4-then")
+  (echo "4-else"))

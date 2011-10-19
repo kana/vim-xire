@@ -18,6 +18,19 @@
    (=ex= `(echo ,@$value))]
   )
 
+(define-xire-stmt if
+  [(if $cond:expr $then:stmt)
+   (=ex= `(if ,$cond)
+         $then
+         'endif)]
+  [(if $cond:expr $then:stmt $else:stmt)
+   (=ex= `(if ,$cond)
+         $then
+         'else
+         $else
+         'endif)]
+  )
+
 (define-xire-stmt set!
   [(set! $var:expr $value:expr)
    (=ex= `(let ,$var = ,$value))]
