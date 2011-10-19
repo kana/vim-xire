@@ -1,0 +1,9 @@
+(when #f
+  (echo "1-then-1")
+  (echo "1-then-2")
+  (echo "1-then-3"))
+
+(when #t
+  (echo "2-then-1")
+  (echo "2-then-2")
+  (echo "2-then-3"))

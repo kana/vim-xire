@@ -36,6 +36,13 @@
    (=ex= `(let ,$var = ,$value))]
   )
 
+(define-xire-stmt when
+  [(when $cond:expr $then:stmt ...)
+   `(if ,$cond
+      (begin
+        ,@$then))]
+  )
+
 
 
 
