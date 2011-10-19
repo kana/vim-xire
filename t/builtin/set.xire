@@ -1,0 +1,2 @@
+(set! foo 123)
+(echo foo)
