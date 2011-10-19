@@ -8,4 +8,12 @@
 
 
 
+(define-xire-stmt echo
+  [(echo $value:expr ...)
+   (=ex= `(echo ,@$value))]
+  )
+
+
+
+
 ;;; __END__
