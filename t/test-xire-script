@@ -1,0 +1,89 @@
+#!/bin/bash
+
+function xirec
+{
+  gosh -b -e '
+    (begin
+      (add-load-path ".")
+      (use vim.xire)
+      (xire-translate (standard-input-port)
+                      (standard-output-port)))
+  '
+}
+
+function _vimc
+{
+  vim -u NONE -i NONE -N -V1 -e -s -c "source $1" -c 'qall!' 2>&1
+}
+
+function vimc
+{
+  _vimc "$1" >"$2"
+  local result="$?"
+  echo >>"$2"  # Because output from Vim doesn't end with newline character.
+
+  if [ "$result" != '0' ]
+  then
+    cat "$2" >&2
+  fi
+
+  return "$result"
+}
+
+function run_test
+{
+  test_count=$((test_count + 1))
+
+  local f="$1"  # 't/builtin/echo.xire'
+  local dir="${f%/*}/"; [ "$dir" = "$f/" ] && dir=""  # 't/builtin/' or ''
+  local _base="${f##*/}"  # 'echo.xire'
+  local base="${_base%.*}"  # 'echo'
+  local script_diff="$dir,$base.diff"
+  local script_error="$dir,$base.error"
+  local script_vim="$dir$base.vim"
+  local script_vim_output="$dir,$base.vim.output"
+  local script_xire="$dir$base.xire"
+  local script_xire_output="$dir,$base.xire.output"
+  local script_xire_vim="$dir,$base.xire.vim"
+
+  rm -f \
+    "$script_diff" \
+    "$script_error" \
+    "$script_vim_output" \
+    "$script_xire_output" \
+    "$script_xire_vim"
+
+  {
+    xirec <"$script_xire" >"$script_xire_vim" &&
+    vimc "$script_vim" "$script_vim_output" &&
+    vimc "$script_xire_vim" "$script_xire_output" &&
+    diff -u "$script_vim_output" "$script_xire_output" >"$script_diff"
+  } 2>"$script_error"
+  local result="$?"
+
+  if [ "$result" = '0' ]
+  then
+    echo "ok $test_count - $dir$base"
+  else
+    echo "not ok $test_count - $dir$base"
+    {
+      cat "$script_error";
+      [ -f "$script_diff" ] && cat "$script_diff"
+    } | sed -e 's/^/#	/'
+  fi
+}
+
+function main
+{
+  local test_count=0
+
+  echo "1..$#"
+  for xire_script_path in "$@"
+  do
+    run_test "$xire_script_path"
+  done
+}
+
+main "$@"
+
+# __END__
