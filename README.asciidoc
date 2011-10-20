@@ -281,14 +281,47 @@ that xire script is compiled into code in *an intermediate format* of
 Vim script, then resulting code in the intermediate format is finally
 compiled into Vim script.
 
-The intermediate format is called *IVS*.  IVS is written in
-S expression.  The details of IVS are as follows:
+The intermediate format is called *IVS*.
+IVS is written in S expression, and IVS is a list of *nodes*.
+The details of IVS are as follows:
+
+
+
+==== Node
+
+A node expresses a logical part of Vim script.
+The following functions are available to create a node:
+
+`(S node-or-atom ...)`::
+    Creates a node to express a statement in Vim script.
+    For example, `(S 'help 42)` creates a node which corresponds to
+    `:help 42` in Vim script.
+
+`(E node-or-atom ...)`::
+    Creates a node to express an expression in Vim script.
+    For example, `(E Answer (Q "(") (E 42) (Q ")"))` creates a node which
+    corresponds to `Answer(42)` in Vim script.
+
+`(Q atom ...)`::
+    Creates a node to express tokens in Vim script.
+    Unlike other functions,
+    `Q` is to embed ++atom++s into resulting Vim script.
+    Therefore ++atom++s are not converted
+    and they are ++display++ed into resulting Vim script.
+
+
+
+==== Atom
+
+An atom is roughly corresponding to a "token" in Vim script.
+For example, numbers, strings, variable names and so on.
+Available atoms are as follows:
 
 `<boolean>` objects::
-    Compiled into a corresponding boolean value in Vim script.
+    Correspond to boolean values in Vim script.
 
 `<number>` objects::
-    Compiled into a corresponding number value in Vim script.  Only
+    Correspond to number values in Vim script.  Only
     exact integers are valid.  It is an error to use inexact numbers and
     non-integer numbers such as real numbers, though real numbers should
     be supported later.  Note that numbers in Vim script are limited in
@@ -297,30 +330,19 @@ S expression.  The details of IVS are as follows:
     Vim script or not.
 
 `<regexp>` objects::
-    Compiled into a corresponding string value in Vim script (because
+    Correspond to equivalent string values in Vim script (because
     there is no literal notation for regular expressions in Vim script).
 
 `<string>` objects::
-    Compiled into a corresponding string value in Vim script.  See also
+    Correspond to string values in Vim script.  See also
     <<_conventions_of_string_values, conventions of string values>>.
 
 `<symbol>` objects::
-    The names of symbols are normalized, then
-    <<_normalization_of_variable_names,normalized names>> are embedded
-    into resulting Vim script.
-
-`(macro-name . args)`::
-    `macro-name` is an arbitrary symbol and `args` is a list of
-    arbitrary values.  If a xire macro which name is equal to
-    `macro-name` is defined, the macro is expanded with `args`.
-    Otherwise, it is an error.
-
-`(x . xs)`::
-    `x` is an arbitrary value except symbols.  This form is to embed
-    arbitrary values into resulting Vim script.  Each value in this form
-    is embedded with
-    http://practical-scheme.net/gauche/man/?l=en&p=display[`display`],
-    from left to right.
+    Correspond to Ex command names (such as `:map`), variable names
+    (such as `v:servername`), and other keywords in Vim script.  When
+    Vim script is generated from IVS, the names of symbols are
+    normalized, then <<_normalization_of_variable_names,normalized
+    names>> are embedded into resulting Vim script.
 
 
 
