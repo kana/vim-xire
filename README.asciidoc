@@ -594,11 +594,11 @@ See also <<_high_level_macro_rules,high-level macro rules>>.
 
 
 
-[[__scheme_to_ivs]]
-==== `(scheme->ivs x)`
+[[__scheme_object_to_vim_script_notation]]
+==== `(scheme-object->vim-script-notation x)`
 
 A function which converts a given Scheme object into the corresponding
-Vim script object in <<ivs,IVS>>.
+Vim script notation.  See also <<ivs,IVS>>.
 
 
 

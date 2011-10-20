@@ -6,7 +6,7 @@
     define-xire-stmt
     generate-match-body
     generate-match-pat
-    scheme->ivs
+    scheme-object->vim-script-notation
     transform-value
     xire-translate
 
@@ -350,7 +350,7 @@
      form]
     [_
       (ensure-expr-ctx form ctx)
-      (scheme->ivs form)]))
+      (scheme-object->vim-script-notation form)]))
 
 ;; Compile a xire script EXPR then return a resulting Vim script in IVS.
 ;; This is an abbreviated form of xire-compile for typical use.
@@ -528,7 +528,7 @@
 ;; and MATCH (vim.xire.compiler) is exported.
 (define match match)
 
-(define (scheme->ivs x)
+(define (scheme-object->vim-script-notation x)
   ; Vim script numbers are 32-bit signed integers.  (cf. :help Number)
   (define MINIMAL-NUMBER (ash -1 31))
   (define MAXIMUM-NUMBER (- (ash 1 31) 1))

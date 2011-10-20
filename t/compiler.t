@@ -122,7 +122,7 @@
   (it "should compile a Scheme object in expression context"
     (expect (compile #f expr-ctx) equal? "0")
     (expect (compile #f stmt-ctx) raise?)
-    ; See also: scheme->ivs
+    ; See also: scheme-object->vim-script-notation
     )
   )
 

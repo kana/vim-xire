@@ -149,36 +149,36 @@
     )
   )
 
-(describe "scheme->ivs"
+(describe "scheme-object->vim-script-notation"
   (it "should convert given Scheme boolean into equivalent one in Vim script"
-    (expect (scheme->ivs #f) equal? 0)
-    (expect (scheme->ivs #t) equal? 1)
+    (expect (scheme-object->vim-script-notation #f) equal? 0)
+    (expect (scheme-object->vim-script-notation #t) equal? 1)
     )
   (it "should convert given Scheme number into equivalent one in Vim script"
-    (expect (scheme->ivs 0) equal? 0)
-    (expect (scheme->ivs 123) equal? 123)
-    (expect (scheme->ivs -123) equal? -123)
-    (expect (scheme->ivs (- (ash 1 31) 1)) equal? (- (ash 1 31) 1))
-    (expect (scheme->ivs (ash -1 31)) equal? (ash -1 31))
-    (expect (scheme->ivs (ash 1 31)) raise?)
-    (expect (scheme->ivs (ash -1 32)) raise?)
-    (expect (scheme->ivs 0.123) raise?)
-    (expect (scheme->ivs #i123) raise?)
-    (expect (scheme->ivs 1+2i) raise?)
+    (expect (scheme-object->vim-script-notation 0) equal? 0)
+    (expect (scheme-object->vim-script-notation 123) equal? 123)
+    (expect (scheme-object->vim-script-notation -123) equal? -123)
+    (expect (scheme-object->vim-script-notation (- (ash 1 31) 1)) equal? (- (ash 1 31) 1))
+    (expect (scheme-object->vim-script-notation (ash -1 31)) equal? (ash -1 31))
+    (expect (scheme-object->vim-script-notation (ash 1 31)) raise?)
+    (expect (scheme-object->vim-script-notation (ash -1 32)) raise?)
+    (expect (scheme-object->vim-script-notation 0.123) raise?)
+    (expect (scheme-object->vim-script-notation #i123) raise?)
+    (expect (scheme-object->vim-script-notation 1+2i) raise?)
     )
   (it "should convert given Scheme regexp into equivalent one in Vim script"
-    (expect (scheme->ivs #/\(foo\|bar\)/) equal? "'\\(foo\\|bar\\)'")
+    (expect (scheme-object->vim-script-notation #/\(foo\|bar\)/) equal? "'\\(foo\\|bar\\)'")
     )
   (it "should convert given Scheme string into equivalent one in Vim script"
-    (expect (scheme->ivs "f\"oo") equal? "\"f\\\"oo\"")
+    (expect (scheme-object->vim-script-notation "f\"oo") equal? "\"f\\\"oo\"")
     )
   (it "should convert given Scheme symbol into equivalent one in Vim script"
-    (expect (scheme->ivs 'foo!) equal? "foo_x")
+    (expect (scheme-object->vim-script-notation 'foo!) equal? "foo_x")
     )
   (it "should fail for other Scheme objects"
-    (expect (scheme->ivs '()) raise?)
-    (expect (scheme->ivs '(x y z)) raise?)
-    (expect (scheme->ivs (lambda () '())) raise?)
+    (expect (scheme-object->vim-script-notation '()) raise?)
+    (expect (scheme-object->vim-script-notation '(x y z)) raise?)
+    (expect (scheme-object->vim-script-notation (lambda () '())) raise?)
     )
   )
 
