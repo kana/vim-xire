@@ -2,6 +2,7 @@
   (extend
     vim.xire.builtin
     vim.xire.compiler
+    vim.xire.ivs
     )
   )
 (select-module vim.xire)
