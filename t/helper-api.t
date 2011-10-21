@@ -42,36 +42,36 @@
 (describe "generate-match-body"
   (it "should generate body with 0 slots"
     (expect (generate-match-body '(syntax clear)
-                                 '(`(=ex= (syntax clear))
-                                   `(=ex= (echo "..."))))
+                                 '((IVS (S 'syntax 'clear))
+                                   (IVS (S 'echo "..."))))
             equal?
             '(let ()
-               `(=ex= (syntax clear))
-               `(=ex= (echo "..."))))
+               (IVS (S 'syntax 'clear))
+               (IVS (S 'echo "..."))))
     )
   (it "should generate body with 1 or more slots"
     (expect (generate-match-body '(if $cond:expr $then:stmt)
-                                 '(`(=ex= (if ,$cond)
-                                          ,$then
-                                          endif)))
+                                 '((IVS (S 'if $cond)
+                                        $then
+                                        (S 'endif))))
             equal?
             '(let ([$cond (transform-value $cond:expr #f 'expr ctx)]
                    [$then (transform-value $then:stmt #f 'stmt ctx)])
-               `(=ex= (if ,$cond)
-                      ,$then
-                      endif)))
+               (IVS (S 'if $cond)
+                    $then
+                    (S 'endif))))
     )
   (it "should generate body with 1 or more ellipses"
     (expect (generate-match-body '(when $cond:expr $then:stmt ...)
-                                 '(`(=ex= (if ,$cond)
-                                          ,@$then
-                                          endif)))
+                                 '((IVS (S 'if $cond)
+                                        (apply IVS $then)
+                                        (S 'endif))))
             equal?
             '(let ([$cond (transform-value $cond:expr #f 'expr ctx)]
                    [$then (transform-value $then:stmt #t 'stmt ctx)])
-               `(=ex= (if ,$cond)
-                      ,@$then
-                      endif)))
+               (IVS (S 'if $cond)
+                    (apply IVS $then)
+                    (S 'endif))))
     )
   (it "should generate body with let-like pattern"
     (expect (generate-match-body '(my-let ($var:expr $value:stmt) ...)
@@ -109,21 +109,22 @@
   (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))
   (it "should convert given form into equivalent one in Vim script"
     (parameterize ([xire-env (make <xire-env>)])
-      (define-xire-stmt halt "break")
-      (define-xire-stmt quit "quit")
+      (define-xire-stmt halt break)
+      (define-xire-stmt quit quit)
       (expect (transform-value '(halt) #f 'stmt stmt-ctx)
-              equal? (=ex= "break"))
+              equal? (xire-compile '(halt) stmt-ctx))
       (expect (transform-value '(halt) #f 'expr expr-ctx)
               equal? (xire-compile '(halt) expr-ctx))
       (expect (transform-value '((halt) (quit)) #t 'stmt stmt-ctx)
-              equal? (list (=ex= "break") (=ex= "quit")))
+              equal? (list (xire-compile '(halt) stmt-ctx)
+                           (xire-compile '(quit) stmt-ctx)))
       (expect (transform-value '((halt) (quit)) #t 'expr expr-ctx)
               equal? (list (xire-compile '(halt) expr-ctx)
                            (xire-compile '(quit) expr-ctx)))
       (expect (transform-value '(halt) #f 'stmt expr-ctx)
-              equal? (=ex= "break"))
+              equal? (xire-compile '(halt) (make-stmt-ctx expr-ctx)))
       (expect (transform-value '(halt) #f 'expr stmt-ctx)
-              equal? (xire-compile '(halt) expr-ctx))
+              equal? (xire-compile '(halt) (make-expr-ctx stmt-ctx)))
       )
     )
   )

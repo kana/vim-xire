@@ -187,16 +187,16 @@ Examples:
 
 ----
 [(when $cond:expr $then:stmt ...)
- (=ex= `(if ,$cond)
-       $then
-       'endif)]
+ (IVS (S 'if $cond)
+      $then
+      (S 'endif))]
 
 [(if $cond:expr $then:stmt $else:stmt)
- (=ex= `(if ,$cond)
-       $then
-       'else
-       $else
-       'endif)]
+ (IVS (S 'if $cond)
+      $then
+      (S 'else)
+      $else
+      (S 'endif))]
 ----
 
 
@@ -255,7 +255,7 @@ And suppose that the use of macro matches the following clause:
 
 ----
 [(return $result:expr)
- (=ex= `(return ,$result))]
+ (IVS (S 'return $result))]
 ----
 
 Transforming process of the form is roughly equivalent to the following:
@@ -265,7 +265,7 @@ Transforming process of the form is roughly equivalent to the following:
 (match '(return (+ 1 1))
   [('return $result:expr)
    (let ([$result (transform-value $result:expr #f 'expr ctx)])
-     (=ex= `(return ,$result)))])
+     (IVS (S 'return $result)))])
 ----
 
 
@@ -574,9 +574,9 @@ For example,
 
 ----
 (generate-match-body '(if $cond:expr $then:stmt)
-                     '((=ex= `(if ,$cond)
-                             $then
-                             'endif)))
+                     '((IVS (S 'if $cond)
+                            $then
+                            (S 'endif))))
 ----
 
 is roughly equivalent to the following:
@@ -584,9 +584,9 @@ is roughly equivalent to the following:
 ----
 '(let ([$then (transform-value $then:stmt #f 'stmt ctx)]
        [$cond (transform-value $cond:expr #f 'expr ctx)])
-   (=ex= `(if ,$cond)
-         $then
-         'endif))
+   (IVS (S 'if $cond)
+        $then
+        (S 'endif)))
 ----
 
 See also <<_high_level_macro_rules,high-level macro rules>>.

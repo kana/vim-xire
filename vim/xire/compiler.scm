@@ -252,12 +252,12 @@
     [(_ name cmd-name)
      (define-xire-stmt name :low
        [(_)
-        (=ex= 'cmd-name)])]
+        (IVS (S (Q 'cmd-name)))])]
     ; Shorthand for simple command like :break.
     [(_ name)
      (define-xire-stmt name :low
        [(_)
-        (=ex= 'name)])]
+        (IVS (S (Q 'name)))])]
     ))
 
 (define-syntax %define-xire-stmt-low
@@ -336,12 +336,13 @@
          ; where foo is not known as a xire macro.  This convention is to
          ; simplify the compiler implementation.
          (if (expr-ctx? ctx)
-           `("("
-             ,(convert-identifier-conventions (symbol->string name))
-             "("
-             ,@(intersperse "," (xire-compile-forms args ctx))
-             ")"
-             ")")
+           (IVS (E (Q "(")
+                   name
+                   (Q "(")
+                   (apply E (intersperse (Q ",")
+                                         (xire-compile-forms args ctx)))
+                   (Q ")")
+                   (Q ")")))
            (report-syntax-error))])]
     [(_ . _)  ; FORM is already compiled.
      form]
@@ -349,7 +350,7 @@
      form]
     [_
       (ensure-expr-ctx form ctx)
-      (scheme-object->vim-script-notation form)]))
+      (IVS (E form))]))
 
 ;; Compile a xire script EXPR then return a resulting Vim script in IVS.
 ;; This is an abbreviated form of xire-compile for typical use.

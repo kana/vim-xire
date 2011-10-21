@@ -5,13 +5,14 @@
 
 (use srfi-1)
 (use vim.xire.compiler)
+(use vim.xire.ivs)
 
 
 
 
 (define-xire-stmt begin
   [(begin $body:stmt ...)
-   (apply =ex= $body)]
+   (apply IVS $body)]
   )
 
 (define-xire-stmt cond
@@ -23,44 +24,44 @@
      (cond
        [(null? cond:exprs)
         (if (null? result)
-          (=ex=)
-          (apply =ex= (reverse (cons 'endif result))))]
+          (IVS)
+          (apply IVS (reverse (cons (S 'endif) result))))]
        [else
          (go (cdr cond:exprs)
              (cdr conds)
              (cdr thens)
              (cons (car thens)
-                   (cons (list (if (null? result)
-                                 'if
-                                 'elseif)
-                               (if (and (null? (cdr cond:exprs))
-                                        (eq? (car cond:exprs) 'else))
-                                 1
-                                 (car conds)))
+                   (cons (S (if (null? result)
+                              'if
+                              'elseif)
+                            (if (and (null? (cdr cond:exprs))
+                                  (eq? (car cond:exprs) 'else))
+                              (E #t)
+                              (car conds)))
                          result)))]))]
   )
 
 (define-xire-stmt echo
   [(echo $value:expr ...)
-   (=ex= `(echo ,@$value))]
+   (IVS (apply S 'echo $value))]
   )
 
 (define-xire-stmt if
   [(if $cond:expr $then:stmt)
-   (=ex= `(if ,$cond)
-         $then
-         'endif)]
+   (IVS (S 'if $cond)
+        $then
+        (S 'endif))]
   [(if $cond:expr $then:stmt $else:stmt)
-   (=ex= `(if ,$cond)
-         $then
-         'else
-         $else
-         'endif)]
+   (IVS (S 'if $cond)
+        $then
+        (S 'else)
+        $else
+        (S 'endif))]
   )
 
 (define-xire-stmt set!
   [(set! $var:expr $value:expr)
-   (=ex= `(let ,$var = ,$value))]
+   (IVS (S 'let $var (Q '=) $value))]
   )
 
 (define-xire-stmt when

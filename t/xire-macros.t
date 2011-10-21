@@ -93,15 +93,15 @@
         'if
         'stmt
         '[(if $cond:expr $then:stmt)
-          `(=ex= '(if ,$cond)
-                 ',$then
-                 'endif)]
+          (IVS (S 'if $cond)
+               $then
+               (S 'endif))]
         '[(if $cond:expr $then:stmt $else:stmt)
-          `(=ex= '(if ,$cond)
-                 ',$then
-                 'else
-                 ',$else
-                 'endif)])
+          (IVS (S 'if $cond)
+               $then
+               (S 'else)
+               $else
+               (S 'endif))])
       equal?
       '(define-xire-macro stmt (if form ctx)
          (ensure-stmt-ctx form ctx)
@@ -109,18 +109,18 @@
            [('if $cond:expr $then:stmt)
             (let ([$cond (transform-value $cond:expr #f 'expr ctx)]
                   [$then (transform-value $then:stmt #f 'stmt ctx)])
-              `(=ex= '(if ,$cond)
-                     ',$then
-                     'endif))]
+              (IVS (S 'if $cond)
+                   $then
+                   (S 'endif)))]
            [('if $cond:expr $then:stmt $else:stmt)
             (let ([$cond (transform-value $cond:expr #f 'expr ctx)]
                   [$then (transform-value $then:stmt #f 'stmt ctx)]
                   [$else (transform-value $else:stmt #f 'stmt ctx)])
-              `(=ex= '(if ,$cond)
-                     ',$then
-                     'else
-                     ',$else
-                     'endif))])))
+              (IVS (S 'if $cond)
+                   $then
+                   (S 'else)
+                   $else
+                   (S 'endif)))])))
     )
   (it "shouold raise error for invalid context type"
     (expect
@@ -128,15 +128,15 @@
         'if
         'stmttttt
         '[(if $cond:expr $then:stmt)
-          `(=ex= '(if ,$cond)
-                 ',$then
-                 'endif)]
+          (IVS (S 'if $cond)
+               $then
+               (S 'endif))]
         '[(if $cond:expr $then:stmt $else:stmt)
-          `(=ex= '(if ,$cond)
-                 ',$then
-                 'else
-                 ',$else
-                 'endif)])
+          (IVS (S 'if $cond)
+               $then
+               (S 'else)
+               $else
+               (S 'endif))])
       raise?)
     )
   )
@@ -152,7 +152,7 @@
         [(_ 1)
          '(foo 2)]
         [(_ x)
-         `("" ,x ,x)])
+         (IVS (Q x x))])
       (expect (xire-lookup-macro 'foo stmt-ctx (xire-env)) eq? #f)
       (expect (xire-lookup-macro 'foo expr-ctx (xire-env)) procedure?)
       (expect (compile '(foo 1) stmt-ctx) raise?)
@@ -174,7 +174,7 @@
       (expect (xire-lookup-macro 'if expr-ctx (xire-env)) eq? #f)
       (define-xire-expr if
         [(if $cond:expr $then:expr $else:expr)
-         `(,$cond "?" ,$then ":" ,$else)])
+         (IVS $cond (Q "?") $then (Q ":") $else)])
       (expect (xire-lookup-macro 'if stmt-ctx (xire-env)) eq? #f)
       (expect (xire-lookup-macro 'if expr-ctx (xire-env)) procedure?)
       (expect (compile '(if co-nd th-en el-se) stmt-ctx) raise?)
@@ -196,7 +196,7 @@
         [(_ 1)
          '(foo 2)]
         [(_ x)
-         `("" ,x ,x)])
+         (IVS (Q x x))])
       (expect (xire-lookup-macro 'foo stmt-ctx (xire-env)) procedure?)
       (expect (xire-lookup-macro 'foo expr-ctx (xire-env)) eq? #f)
       (expect (compile '(foo 1) stmt-ctx) equal? "22")
@@ -222,15 +222,15 @@
       (define-xire-stmt return)
       (define-xire-stmt if
         [(if $cond:expr $then:stmt)
-         (=ex= `(if ,$cond)
-               $then
-               'endif)]
+         (IVS (S 'if $cond)
+              $then
+              (S 'endif))]
         [(if $cond:expr $then:stmt $else:stmt)
-         (=ex= `(if ,$cond)
-               $then
-               'else
-               $else
-               'endif)])
+         (IVS (S 'if $cond)
+              $then
+              (S 'else)
+              $else
+              (S 'endif))])
       (expect (xire-lookup-macro 'if stmt-ctx (xire-env)) procedure?)
       (expect (xire-lookup-macro 'if expr-ctx (xire-env)) eq? #f)
       (expect (compile '(break) stmt-ctx) equal? "break\n")
@@ -269,7 +269,7 @@
     (parameterize ([xire-env (make <xire-env>)])
       (expect (xire-lookup-macro 'halt stmt-ctx (xire-env)) eq? #f)
       (expect (xire-lookup-macro 'halt expr-ctx (xire-env)) eq? #f)
-      (define-xire-stmt halt "break")
+      (define-xire-stmt halt break)
       (expect (xire-lookup-macro 'halt stmt-ctx (xire-env)) procedure?)
       (expect (xire-lookup-macro 'halt expr-ctx (xire-env)) eq? #f)
       (expect (compile '(halt) stmt-ctx) equal? "break\n")

@@ -24,7 +24,9 @@
   (xire-register-macro!
     'macro
     (lambda (form ctx)
-      `("<" ,(intersperse " " form) ">"))
+      (IVS (Q "<")
+           (apply Q (intersperse " " form))
+           (Q ">")))
     'stmt
     env)
   (it "should output nothing if given script is empty"
@@ -78,9 +80,7 @@
     (expect (translate "(macro use test)") equal? "<macro use test>")
     )
   (it "should handle a compiled form"
-    (expect (translate "(1 2 3)") equal? "123")
-    (expect (translate "(() #\\a #\\b #\\c)") equal? "abc")
-    (expect (translate "(\"s\" (\"tr\") (\"in\") ((\"g\")))") equal? "string")
+    SKIP "There is no readable external representation of compiled forms."
     )
   )
 
@@ -101,7 +101,7 @@
         [(m xs)
          `(,m ,xs ())]
         [(m () ys)
-         `("<" ,(intersperse " " ys) ">")]
+         (IVS (apply Q `("<" ,@(intersperse " " ys) ">")))]
         [(m (x . xs) ys)
          `(,m ,xs ,(cons x ys))]))
     'stmt
@@ -117,7 +117,8 @@
     (expect (compile '(MyFunc 1 2 3) expr-ctx) equal? "(MyFunc(1,2,3))")
     )
   (it "should return form as is if it is already compiled"
-    (expect (compile '("MyFunc" 1 2 3) expr-ctx) equal? "MyFunc123")
+    (define compiled-form (IVS (Q 1 2 3)))
+    (expect (xire-compile compiled-form expr-ctx) eq? compiled-form)
     )
   (it "should compile a Scheme object in expression context"
     (expect (compile #f expr-ctx) equal? "0")
@@ -157,7 +158,7 @@
   (xire-register-macro!
     'macro
     (lambda (form ctx)
-      `("<" ,(intersperse " " form) ">"))
+      (IVS (apply Q `("<" ,@(intersperse " " form) ">"))))
     'stmt
     env)
   (it "should compile list of forms in expression context"
