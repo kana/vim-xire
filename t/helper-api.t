@@ -10,35 +10,6 @@
 
 
 
-(describe "=ex="
-  (it "should insert an empty list into the first element of new list"
-    (expect (=ex= 1 2 3) equal? '(() 1 "\n" 2 "\n" 3 "\n"))
-    )
-  (it "should insert newline after each element"
-    (expect (=ex= 1 2 3) equal? '(() 1 "\n" 2 "\n" 3 "\n"))
-    )
-  (it "should insert spaces between values in list elements"
-    (expect (=ex= '(if (foo == bar))
-                  '(echo 1 2)
-                  'endif)
-            equal?
-            '(()
-              (if " " (foo == bar)) "\n"
-              (echo " " 1 " " 2) "\n"
-              endif "\n"))
-    )
-  (it "should leave already processed elements as is"
-    (expect (=ex= '(if (foo == bar))
-                  (=ex= '(echo 1 2))
-                  'endif)
-            equal?
-            `(()
-              (if " " (foo == bar)) "\n"
-              ,@(=ex= '(echo 1 2))
-              endif "\n"))
-    )
-  )
-
 (describe "generate-match-body"
   (it "should generate body with 0 slots"
     (expect (generate-match-body '(syntax clear)

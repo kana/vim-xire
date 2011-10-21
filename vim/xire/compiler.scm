@@ -1,7 +1,6 @@
 (define-module vim.xire.compiler
   (export
     ; Public API
-    =ex=
     define-xire-expr
     define-xire-stmt
     generate-match-body
@@ -370,25 +369,6 @@
 
 ;;; Helper API
 ;;; ==========
-
-(define (=ex= . ex-cmd-ivss)
-  (define (insert-newline x)
-    `(,x "\n"))
-  (define (insert-space x)
-    (if (list? x)
-      (intersperse " " x)
-      x))
-  (define (already-processed? x)
-    (and (list? x)
-         (null? (car x))))
-  `(()
-    ,@(concatenate
-        (map (lambda (x)
-               (if (already-processed? x)
-                 x
-                 (insert-newline (insert-space x))))
-             ex-cmd-ivss)))
-  )
 
 (define (generate-match-body pat rule)
   (define (parse-pat pat)
