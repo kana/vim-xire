@@ -345,6 +345,8 @@
            (report-syntax-error))])]
     [(_ . _)  ; FORM is already compiled.
      form]
+    [(? (cut is-a? <> <ivs>) form)  ; FORM is already compiled.
+     form]
     [_
       (ensure-expr-ctx form ctx)
       (scheme-object->vim-script-notation form)]))
