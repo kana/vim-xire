@@ -109,6 +109,20 @@
               equal? (xire-compile '(halt) (make-expr-ctx stmt-ctx)))
       )
     )
+  (it "should transform give value into equivalent 'form'"
+    (define form-a '(a "a" (a)))
+    (define form-b '(b "b" (b)))
+    (expect (transform-value form-a #f 'form stmt-ctx)
+            eq? form-a)
+    (expect (transform-value form-a #f 'form expr-ctx)
+            eq? form-a)
+    (expect (transform-value (list form-a form-b) #t 'form stmt-ctx)
+            equal? (list form-a form-b))
+    (expect (car (transform-value (list form-a form-b) #t 'form stmt-ctx))
+            eq? form-a)
+    (expect (cadr (transform-value (list form-a form-b) #t 'form stmt-ctx))
+            eq? form-b)
+    )
   )
 
 

@@ -612,6 +612,8 @@ according to other arguments:
         Given `form` is compiled as an expression.
     `stmt`;;
         Given `form` is compiled as a statement.
+    `form`;;
+        Given `form` is not compiled; it is returned as is.
     Otherwise;;
         It is an error.
 

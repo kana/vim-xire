@@ -434,6 +434,8 @@
                        (make-stmt-ctx upper-ctx)))]
       [(eq? type 'expr)
        (xire-compile-expr form upper-ctx)]
+      [(eq? type 'form)
+       form]
       [else
         (errorf "Invalid type for transform-value: ~s" type)]))
   (if manyp
