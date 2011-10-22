@@ -606,10 +606,14 @@ according to other arguments:
     and this function returns a list of resulting Vim script in IVS.
 
 `type`::
-    A symbol which specifies the type of `form`.
-    If this value is `expr`, `form` is compiled as an expression.
-    If this value is `stmt`, `form` is compiled as a statement.
-    Otherwise, it is an error.
+    A symbol which specifies the type of `form`.  If this value is:
+
+    `expr`;;
+        Given `form` is compiled as an expression.
+    `stmt`;;
+        Given `form` is compiled as a statement.
+    Otherwise;;
+        It is an error.
 
 `upper-ctx`::
     An object which specifies the context of the original caller of
