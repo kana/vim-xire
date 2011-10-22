@@ -205,7 +205,7 @@ Examples:
 The details of a `pattern` are as follows:
 
 * `pattern` is a list of S expressions.
-** Examples: `(break)`, `(return $expr)`, `(if $cond:expr $then:stmt)`
+** Examples: `(break)`, `(return $value:expr)`, `(if $cond:expr $then:stmt)`
 * In `pattern`, a symbol which name starts with `$` is called a *slot*.
 * Slots are symbols.  The format of slot symbols is `$<name>:<type>`,
   where `<name>` is the name of a slot and `<type>` is the type of
@@ -218,7 +218,7 @@ The details of ++pattern++-matching process are as follows:
 ** Example: Pattern `(break)` matches only `(break)`.
 * Slot values in a pattern are treated as pattern variables.
   They match arbitrary objects.
-** Example: Pattern `(return $expr)`
+** Example: Pattern `(return $value:expr)`
    matches `(return 1)`, `(return (list))`, etc.
 * The symbol `_` in a pattern is also treated as a pattern variable.
   It matches arbitrary object, but it is not a slot.
@@ -227,7 +227,8 @@ The details of ++pattern++-matching process are as follows:
 * As a special case, the last value in a pattern may be `...` (the symbol
   spelled with three periods).  The symbol `...` matches as if it is the
   value just before the symbol `...`.
-** Example: Pattern `(echo $expr ...)` matches `(echo 1)`, `(echo 1 2)`, etc.
+** Example: Pattern `(echo $value:expr ...)`
+   matches `(echo 1)`, `(echo 1 2)`, etc.
 
 
 ===== Transformation Rules
