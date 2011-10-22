@@ -51,20 +51,20 @@
 ;;; Environment
 ;;; ===========
 
-;; Represent an environment for xire compilation.
+;; Represent an environment for Xire compilation.
 (define-class <xire-env> ()
-  ([expr-macros  ; contain xire macro bindings for expression context.
+  ([expr-macros  ; contain Xire macro bindings for expression context.
      :init-keyword :expr-macros
      :init-form (make-hash-table 'eq?)]
-   [stmt-macros  ; contain xire macro bindings for statement context.
+   [stmt-macros  ; contain Xire macro bindings for statement context.
      :init-keyword :stmt-macros
      :init-form (make-hash-table 'eq?)]))
 
-;; Represent the current environment for xire compilation.
+;; Represent the current environment for Xire compilation.
 (define xire-env
   (make-parameter (make <xire-env>)))
 
-;; Copy the current xire environment.
+;; Copy the current Xire environment.
 (define (copy-env :optional (env (xire-env)))
   (make <xire-env>
         :expr-macros (hash-table-copy (ref env 'expr-macros))
@@ -77,11 +77,11 @@
 ;;; Context
 ;;; =======
 
-;; Represent a context to compile a xire script.
+;; Represent a context to compile a Xire script.
 ;; The differences between <xire-ctx> and <xire-env> are that:
 ;;
-;; - <xire-env> holds global information such as xire macro bindings.
-;; - While <xire-ctx> holds local information, for example, whether a xire
+;; - <xire-env> holds global information such as Xire macro bindings.
+;; - While <xire-ctx> holds local information, for example, whether a Xire
 ;;   script being compiled is a top-level statement or not.
 (define-class <xire-ctx> ()
   ([type  ; The type of a form being compiled -- statement, expression, etc.
@@ -154,14 +154,14 @@
     [else
       (errorf "Invalid context type: ~s" ctx-type)]))
 
-;; Look up a xire macro with the NAME from ENV.
+;; Look up a Xire macro with the NAME from ENV.
 ;; The macro must be available in a given CTX.
 (define (xire-lookup-macro name ctx :optional (env (xire-env)))
   (hash-table-get (ref env (ctx-type->xire-env-slot-name (ref ctx 'type)))
                   name
                   #f))
 
-;; Register a xire macro EXPANDER with the NAME into ENV.
+;; Register a Xire macro EXPANDER with the NAME into ENV.
 ;; The macro will be available in a given context corresponding to CTX-TYPE.
 (define (xire-register-macro! name expander ctx-type
                               :optional (env (xire-env)))
@@ -172,7 +172,7 @@
                    name
                    expander))
 
-;; Define new xire macro in the current environment.
+;; Define new Xire macro in the current environment.
 ;; This is just a syntax sugar for xire-register-macro!.
 (define-syntax define-xire-macro
   (syntax-rules ()
@@ -201,7 +201,7 @@
      (match form
        ,@(map generate-match-clause clauses))))
 
-;; Define new xire expression macro in the current environment.
+;; Define new Xire expression macro in the current environment.
 ;; This is a wrapper for define-xire-macro.
 (define-syntax define-xire-expr
   (syntax-rules ()
@@ -228,7 +228,7 @@
      (%define-xire-expr-low "internal" name ctx [pat . body] ...)]
     ))
 
-;; Define new xire statement macro in the current environment.
+;; Define new Xire statement macro in the current environment.
 ;; This is a wrapper for define-xire-macro.
 (define-syntax define-xire-stmt
   (syntax-rules ()
@@ -288,7 +288,7 @@
 ;;; Compiler
 ;;; ========
 
-;; Translate xire script into Vim script.  Xire script is read from INPUT-PORT
+;; Translate Xire script into Vim script.  Xire script is read from INPUT-PORT
 ;; and resulting Vim script is written into OUTPUT-PORT.
 (define (xire-translate input-port output-port
                         :key (env (copy-env))
@@ -320,10 +320,10 @@
          (push! compiled-vim-script-tree (xire-compile form ctx))
          (loop)]))))
 
-;; Compile a xire script FORM then return a resulting Vim script in IVS.
+;; Compile a Xire script FORM then return a resulting Vim script in IVS.
 (define (xire-compile form ctx)
   (define (report-syntax-error)
-    (errorf "Invalid xire form: ~s" form))
+    (errorf "Invalid Xire form: ~s" form))
   (match form
     [((? symbol? name) . args)
      (cond
@@ -332,7 +332,7 @@
              (xire-compile (expander form ctx) ctx))]
        [else
          ; Treat "(foo ...)" form in an expression context as a function call,
-         ; where foo is not known as a xire macro.  This convention is to
+         ; where foo is not known as a Xire macro.  This convention is to
          ; simplify the compiler implementation.
          (if (expr-ctx? ctx)
            (IVS (E (Q "(")
@@ -351,7 +351,7 @@
       (ensure-expr-ctx form ctx)
       (IVS (E form))]))
 
-;; Compile a xire script EXPR then return a resulting Vim script in IVS.
+;; Compile a Xire script EXPR then return a resulting Vim script in IVS.
 ;; This is an abbreviated form of xire-compile for typical use.
 (define (xire-compile-expr expr ctx)
   (xire-compile expr
@@ -359,7 +359,7 @@
                   ctx
                   (make-expr-ctx ctx))))
 
-;; Compile a list of xire script FORMS then return a resulting Vim script in
+;; Compile a list of Xire script FORMS then return a resulting Vim script in
 ;; IVS.  This is an abbreviated form of xire-compile for typical use.
 (define (xire-compile-forms forms ctx)
   (map (cut xire-compile <> ctx) forms))
@@ -413,8 +413,8 @@
       x))
   (map escape pat))
 
-;; Code which defines high-level xire macro has to bind MATCH to the macro
-;; defined in util.match, because the syntax to define high-level xire macro
+;; Code which defines high-level Xire macro has to bind MATCH to the macro
+;; defined in util.match, because the syntax to define high-level Xire macro
 ;; is implemented with DEFINE-MACRO (built-in) and MATCH (util.match).  This
 ;; restriction is a bit annoying for development.
 ;;

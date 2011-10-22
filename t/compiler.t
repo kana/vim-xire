@@ -74,7 +74,7 @@
       (expect x equal? 1)
       )
     )
-  (it "should handle use of xire macro"
+  (it "should handle use of Xire macro"
     (expect (translate "(macro)") equal? "<macro>")
     (expect (translate "(macro use)") equal? "<macro use>")
     (expect (translate "(macro use test)") equal? "<macro use test>")
@@ -106,7 +106,7 @@
          `(,m ,xs ,(cons x ys))]))
     'stmt
     env)
-  (it "should compile xire macros recursively"
+  (it "should compile Xire macros recursively"
     (expect (compile '(macro ()) stmt-ctx) equal? "<>")
     (expect (compile '(macro (x)) stmt-ctx) equal? "<x>")
     (expect (compile '(macro (x y)) stmt-ctx) equal? "<y x>")

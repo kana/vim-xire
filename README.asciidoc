@@ -1,4 +1,4 @@
-xire -- Turn Vim script into a programmable programming language
+Xire -- Turn Vim script into a programmable programming language
 ================================================================
 Kana Natsuno <kana@whileimautomaton.n3t>
 :toc:
@@ -11,11 +11,11 @@ Introduction
 ------------
 
 Xire is a tool to compile a domain-specific language into Vim script,
-and xire is also the name of the DSL itself.  The DSL is based on Scheme
+and Xire is also the name of the DSL itself.  The DSL is based on Scheme
 which is a dialect of Lisp.  Xire turns Vim script into a programmable
 programming language.
 
-One might wonder about reasons to use xire.  There are the following
+One might wonder about reasons to use Xire.  There are the following
 problems about Vim script:
 
 - Vim script is weak.  Because it is not designed as a programming
@@ -28,7 +28,7 @@ problems about Vim script:
   Tcl.  But the foreign language interfaces are not portable and they
   are not seamlessly integrated with Vim.
 
-And all of the above problems can be resolved with xire.
+And all of the above problems can be resolved with Xire.
 
 
 
@@ -57,7 +57,7 @@ External Commands
 xirec
 ~~~~~
 
-A compiler that compile a xire script into Vim script.  It reads a xire
+A compiler that compile a Xire script into Vim script.  It reads a Xire
 script from the standard input, then it writes the resulting Vim script
 to the standard output.
 
@@ -77,11 +77,11 @@ Abstract
 ~~~~~~~~
 
 Xire script is a Scheme-based DSL to write Vim script.  Xire script
-consists of a series of xire expressions.  Xire expressions are
+consists of a series of Xire expressions.  Xire expressions are
 evaluated sequentially from first to last.
 
-Each xire expression is a list of S expressions.  The first value of the
-list is used to determine the type of the expression.  Each xire
+Each Xire expression is a list of S expressions.  The first value of the
+list is used to determine the type of the expression.  Each Xire
 expression can be classified into one of the following categories:
 
 Directives::
@@ -277,7 +277,7 @@ IVS - An Intermediate Format of Vim script
 
 Xire script is finally compiled into corresponding code in Vim script.
 However, there is a huge gap between Xire script and Vim script.  So
-that xire script is compiled into code in *an intermediate format* of
+that Xire script is compiled into code in *an intermediate format* of
 Vim script, then resulting code in the intermediate format is finally
 compiled into Vim script.
 
@@ -326,7 +326,7 @@ Available atoms are as follows:
     non-integer numbers such as real numbers, though real numbers should
     be supported later.  Note that numbers in Vim script are limited in
     a range, and the range depends on how Vim executable is compiled.
-    So that xire does not check whether a given number is also valid as
+    So that Xire does not check whether a given number is also valid as
     Vim script or not.
 
 `<regexp>` objects::
@@ -387,7 +387,7 @@ Other notations (`\0` and `\UNNNNNNNN`) must not be used.  Because:
 ===== Unavailable Backslash-Escape Notations in Vim script Strings
 
 The following backslash-escape notations in Vim script are not available
-in xire script:
+in Xire script:
 
 [options='header']
 |===================================================================
@@ -523,7 +523,7 @@ There are also the following shorthands for `define-xire-stmt`:
 Helper API
 ~~~~~~~~~~
 
-In xire script, the following API is available to define xire macros:
+In Xire script, the following API is available to define Xire macros:
 
 
 
@@ -532,7 +532,7 @@ In xire script, the following API is available to define xire macros:
 
 A function which generates a body of clause for
 http://practical-scheme.net/gauche/man/?l=en&p=match[`match`]
-from `pat` and `rule` of clause for high-level xire macro.
+from `pat` and `rule` of clause for high-level Xire macro.
 
 For example,
 
@@ -562,7 +562,7 @@ See also <<_high_level_macro_rules,high-level macro rules>>.
 
 A function which generates a pattern of clause for
 http://practical-scheme.net/gauche/man/?l=en&p=match[`match`]
-from a `pat` of clause for high-level xire macros.
+from a `pat` of clause for high-level Xire macros.
 
 For example,
 
@@ -591,11 +591,11 @@ Vim script notation.  See also <<ivs,IVS>>.
 [[__transform_value]]
 ==== `(transform-value form-or-forms manyp type upper-ctx)`
 
-A function which compiles given `form-or-forms` in xire script into Vim script,
+A function which compiles given `form-or-forms` in Xire script into Vim script,
 according to other arguments:
 
 `form-or-forms`::
-    A form or a list of forms written in xire script.
+    A form or a list of forms written in Xire script.
 
 `manyp`::
     A boolean value which specifies the format of `form-or-forms`.

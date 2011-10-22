@@ -122,8 +122,8 @@
      (convert-string-conventions x)]
     [(symbol? x)
      (convert-identifier-conventions (symbol->string x))]
-    ; List literal is provided by a xire macro.
-    ; Dictionary literal is provided by a xire macro.
+    ; List literal is provided by a Xire macro.
+    ; Dictionary literal is provided by a Xire macro.
     ; FIXME: How about Funcref?
     [else
       (errorf "Invalid Scheme object for Vim script: ~s" x)]
@@ -155,7 +155,7 @@
 
 ;; Convert Scheme string object into Vim script string notation.
 ;;
-;; In xire script, Vim script strings are written as Scheme strings.  But both
+;; In Xire script, Vim script strings are written as Scheme strings.  But both
 ;; notations are not completely equivalent.  So that we put the following
 ;; limitations on Scheme strings which will be compiled into Vim script:
 ;;
@@ -179,7 +179,7 @@
 ;;         must not be used.
 ;;
 ;; (ii) The following backslash-escape notations in Vim script are not
-;;      available in xire script:
+;;      available in Xire script:
 ;;
 ;;      (o) \. \.. \... (arbitrary byte, in octal digits)
 ;;      (x) \x.         (arbitrary byte, in single hex digit)
@@ -210,7 +210,7 @@
 ;;
 ;;     But it's possible to write equivalent Vim script if (kbd "<Key> ...")
 ;;     form is available.  So that it's not a problem even if we cannot write
-;;     "\<Key>" directly in xire script.
+;;     "\<Key>" directly in Xire script.
 (define (convert-string-conventions scheme-string)
   ; FIXME: Check the above limitations are met.
   (format "~s" scheme-string))
