@@ -407,6 +407,7 @@
 (define (generate-match-pat pat)
   (define (escape x)
     (if (and (symbol? x)
+             (not (eq? x '_))
              (not (eq? x '...))
              (not (#/^\$/ (symbol->string x))))
       `',x

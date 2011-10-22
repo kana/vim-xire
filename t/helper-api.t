@@ -73,6 +73,11 @@
             equal?
             '("just" #\a #(test)))
     )
+  (it "should leave _ as is"
+    (expect (generate-match-pat '(_ $cond:expr $then:stmt))
+            equal?
+            '(_ $cond:expr $then:stmt))
+    )
   )
 
 (describe "transform-value"
