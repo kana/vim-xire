@@ -65,7 +65,7 @@
   )
 
 (define-xire-stmt when
-  [(_ $cond:expr $then:stmt ...)
+  [(_ $cond:form $then:form ...)
    `(if ,$cond
       (begin
         ,@$then))]
