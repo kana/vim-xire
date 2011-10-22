@@ -11,12 +11,12 @@
 
 
 (define-xire-stmt begin
-  [(begin $body:stmt ...)
+  [(_ $body:stmt ...)
    (apply IVS $body)]
   )
 
 (define-xire-stmt cond
-  [(cond [$cond:expr $then:stmt] ...)
+  [(_ [$cond:expr $then:stmt] ...)
    (let go ([cond:exprs $cond:expr]
             [conds $cond]
             [thens $then]
@@ -42,16 +42,16 @@
   )
 
 (define-xire-stmt echo
-  [(echo $value:expr ...)
+  [(_ $value:expr ...)
    (IVS (apply S 'echo $value))]
   )
 
 (define-xire-stmt if
-  [(if $cond:expr $then:stmt)
+  [(_ $cond:expr $then:stmt)
    (IVS (S 'if $cond)
         $then
         (S 'endif))]
-  [(if $cond:expr $then:stmt $else:stmt)
+  [(_ $cond:expr $then:stmt $else:stmt)
    (IVS (S 'if $cond)
         $then
         (S 'else)
@@ -60,12 +60,12 @@
   )
 
 (define-xire-stmt set!
-  [(set! $var:expr $value:expr)
+  [(_ $var:expr $value:expr)
    (IVS (S 'let $var (Q '=) $value))]
   )
 
 (define-xire-stmt when
-  [(when $cond:expr $then:stmt ...)
+  [(_ $cond:expr $then:stmt ...)
    `(if ,$cond
       (begin
         ,@$then))]
