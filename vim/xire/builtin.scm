@@ -109,6 +109,11 @@
 (define-binary-operator - "-")
 (define-binary-operator .. ".")
 
+;;; expr6
+;;; -----
+
+(define-binary-operator * "*")
+
 ;;; expr9
 ;;; -----
 

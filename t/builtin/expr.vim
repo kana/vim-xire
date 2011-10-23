@@ -79,6 +79,12 @@ echo n1 - n2 - n3
 echo n1 . n2
 echo n1 . n2 . n3
 
+let n1 = 36
+let n2 = 5
+let n3 = 3
+echo n1 * n2
+echo n1 * n2 * n3
+
 echo []
 echo [0, 1, 2, 3, 4, 5]
 echo [0, 1, [2, 3], 4, 5]
