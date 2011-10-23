@@ -4,6 +4,7 @@
 (select-module vim.xire.builtin)
 
 (use srfi-1)
+(use util.list)
 (use vim.xire.compiler)
 (use vim.xire.ivs)
 
@@ -53,6 +54,16 @@
 ;;; -----
 
 (define-binary-operator and "&&")
+
+;;; expr9
+;;; -----
+
+(define-xire-expr list
+  [(_ $value:expr ...)
+   (IVS (E (Q "[")
+           (apply E (intersperse (Q ",") $value))
+           (Q "]")))]
+  )
 
 
 

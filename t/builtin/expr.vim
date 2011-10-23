@@ -24,3 +24,7 @@ echo 0 && 1 && 1 ? 'then' : 'else'
 echo 1 && 0 && 1 ? 'then' : 'else'
 echo 1 && 1 && 0 ? 'then' : 'else'
 echo 1 && 1 && 1 ? 'then' : 'else'
+
+echo []
+echo [0, 1, 2, 3, 4, 5]
+echo [0, 1, [2, 3], 4, 5]

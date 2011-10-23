@@ -24,3 +24,7 @@
 (echo (if (and #t #f #t) "then" "else"))
 (echo (if (and #t #t #f) "then" "else"))
 (echo (if (and #t #t #t) "then" "else"))
+
+(echo (list))
+(echo (list 0 1 2 3 4 5))
+(echo (list 0 1 (list 2 3) 4 5))
