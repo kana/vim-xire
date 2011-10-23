@@ -17,8 +17,12 @@
 ;;; Helpers
 ;;; -------
 
-(define-macro (define-binary-operator name op)
+(define-macro (define-binary-operator name op :optional default-val)
   `(define-xire-expr ,name
+     [(_ $val1:form)
+      (when (undefined? ,default-val)
+        (errorf "Operator ~s takes two or more arguments" ',name))
+      `(,',name ,',default-val ,$val1)]
      [(_ $val1:expr $val2:expr)
       (IVS (E (Q "(")
               $val1
