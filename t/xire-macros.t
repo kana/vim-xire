@@ -141,31 +141,7 @@
     )
   )
 
-(describe "define-xire-expr :low"
-  (define stmt-ctx (make-stmt-ctx (make-toplevel-ctx)))
-  (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))
-  (it "should define new expression macro in the current environment"
-    (parameterize ([xire-env (make <xire-env>)])
-      (expect (xire-lookup-macro 'foo stmt-ctx (xire-env)) eq? #f)
-      (expect (xire-lookup-macro 'foo expr-ctx (xire-env)) eq? #f)
-      (define-xire-expr foo :low
-        [(_ 1)
-         '(foo 2)]
-        [(_ x)
-         (IVS (Q x x))])
-      (expect (xire-lookup-macro 'foo stmt-ctx (xire-env)) eq? #f)
-      (expect (xire-lookup-macro 'foo expr-ctx (xire-env)) procedure?)
-      (expect (compile '(foo 1) stmt-ctx) raise?)
-      (expect (compile '(foo 2) stmt-ctx) raise?)
-      (expect (compile '(foo 3) stmt-ctx) raise?)
-      (expect (compile '(foo 1) expr-ctx) equal? "22")
-      (expect (compile '(foo 2) expr-ctx) equal? "22")
-      (expect (compile '(foo 3) expr-ctx) equal? "33")
-      )
-    )
-  )
-
-(describe "define-xire-expr :high"
+(describe "define-xire-expr"
   (define stmt-ctx (make-stmt-ctx (make-toplevel-ctx)))
   (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))
   (it "should define new expression macro in the current environment"

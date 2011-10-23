@@ -205,27 +205,8 @@
 ;; This is a wrapper for define-xire-macro.
 (define-syntax define-xire-expr
   (syntax-rules ()
-    [(_ name :low . args)
-     (%define-xire-expr-low name . args)]
     [(_ name . args)
      (define-high-level-xire-macro name expr . args)]
-    ))
-
-(define-syntax %define-xire-expr-low
-  (syntax-rules ()
-    ; The most low-level form.
-    [(_ "internal" name ctx [pat . body] ...)
-     (define-xire-macro expr (name form ctx)
-       (ensure-expr-ctx form ctx)
-       (match form
-         [pat . body]
-         ...))]
-    ; Basic form.
-    [(_ name [pat . body] ...)
-     (%define-xire-expr-low name ctx [pat . body] ...)]
-    ; Basic form with the name of context.
-    [(_ name ctx [pat . body] ...)
-     (%define-xire-expr-low "internal" name ctx [pat . body] ...)]
     ))
 
 ;; Define new Xire statement macro in the current environment.
