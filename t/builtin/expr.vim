@@ -69,6 +69,12 @@ endfor
 echo 1 < 2 && 2 < 3
 echo 1 < 3 && 3 < 2
 
+let n1 = 12
+let n2 = 2
+let n3 = 3
+echo n1 + n2
+echo n1 + n2 + n3
+
 echo []
 echo [0, 1, 2, 3, 4, 5]
 echo [0, 1, [2, 3], 4, 5]

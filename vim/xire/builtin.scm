@@ -102,6 +102,11 @@
 (define-comparison-operator isnot# " isnot# ")
 (define-comparison-operator isnot? " isnot? ")
 
+;;; expr5
+;;; -----
+
+(define-binary-operator + "+")
+
 ;;; expr9
 ;;; -----
 
