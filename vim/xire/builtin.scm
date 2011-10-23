@@ -10,6 +10,27 @@
 
 
 
+;;; Expressions
+;;; ===========
+
+(define-xire-expr if
+  [(_ $cond:expr $then:expr $else:expr)
+   (IVS (E (Q "(")
+           $cond
+           (Q "?")
+           $then
+           (Q " ")  ; To parse r?s:t as (r)?(s):(t) not (r)?(s:t).
+           (Q ":")
+           $else
+           (Q ")")))]
+  )
+
+
+
+
+;;; Fundamental statements
+;;; ======================
+
 (define-xire-stmt begin
   [(_ $body:stmt ...)
    (apply IVS $body)]

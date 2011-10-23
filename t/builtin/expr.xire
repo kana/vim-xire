@@ -1,0 +1,6 @@
+(set! r #t)
+(set! s "then")
+(set! t "else")
+(echo (if 0 1 2))
+(echo (if 3 4 5))
+(echo (if r s t))
