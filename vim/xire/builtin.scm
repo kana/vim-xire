@@ -30,6 +30,19 @@
                 ,@$valN)]
      ))
 
+(define-macro (define-comparison-operator name op)
+  `(define-xire-expr ,name
+     [(_ $val1:expr $val2:expr)
+      (IVS (E (Q "(")
+              $val1
+              (Q ,op)
+              $val2
+              (Q ")")))]
+     [(_ $val1:form $val2:form $valN:form ...)
+      `(and (,',name ,$val1 ,$val2)
+            (,',name ,$val2 ,@$valN))]
+     ))
+
 ;;; expr1
 ;;; -----
 
@@ -54,6 +67,40 @@
 ;;; -----
 
 (define-binary-operator and "&&")
+
+;;; expr4
+;;; -----
+
+(define-comparison-operator != "!=")
+(define-comparison-operator !=# "!=#")
+(define-comparison-operator !=? "!=?")
+(define-comparison-operator !~ "!~")
+(define-comparison-operator !~# "!~#")
+(define-comparison-operator !~? "!~?")
+(define-comparison-operator < "<")
+(define-comparison-operator <# "<#")
+(define-comparison-operator <= "<=")
+(define-comparison-operator <=# "<=#")
+(define-comparison-operator <=? "<=?")
+(define-comparison-operator <? "<?")
+(define-comparison-operator == "==")
+(define-comparison-operator ==# "==#")
+(define-comparison-operator ==? "==?")
+(define-comparison-operator =~ "=~")
+(define-comparison-operator =~# "=~#")
+(define-comparison-operator =~? "=~?")
+(define-comparison-operator > ">")
+(define-comparison-operator ># ">#")
+(define-comparison-operator >= ">=")
+(define-comparison-operator >=# ">=#")
+(define-comparison-operator >=? ">=?")
+(define-comparison-operator >? ">?")
+(define-comparison-operator is " is ")
+(define-comparison-operator is# " is# ")
+(define-comparison-operator is? " is? ")
+(define-comparison-operator isnot " isnot ")
+(define-comparison-operator isnot# " isnot# ")
+(define-comparison-operator isnot? " isnot? ")
 
 ;;; expr9
 ;;; -----
