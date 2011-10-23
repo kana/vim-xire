@@ -44,6 +44,11 @@
            (Q ")")))]
   )
 
+;;; expr3
+;;; -----
+
+(define-binary-operator and "&&")
+
 
 
 
