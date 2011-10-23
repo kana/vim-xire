@@ -100,74 +100,38 @@ Macros::
 
 
 
-Process of Macro Expansion
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Macros
+~~~~~~
 
-==== Low-Level Macros
+Macros are defined with <<define-xire-stmt,`define-xire-stmt`>> and
+<<define-xire-expr,`define-xire-expr`>>.  For example, a macro which is
+expanded into `:if` statement in Vim script can be defined as follows:
 
-Suppose that there is a following expression macro `foo`:
-
+[[example_if]]
 ----
-(define-xire-expr foo :low
-  [pat1 body1 ...]
-  [pat2 body2 ...]
-  ...)
-----
-
-The process to expand a use of an expression macro `(foo bar baz)` is
-roughly equivalent to the following code:
-
-----
-(use util.match)
-(match '(bar baz)
-  [pat1 body1 ...]
-  [pat2 body2 ...]
-  ...)
+(define-xire-stmt if
+  [(_ $cond:expr $then:stmt)
+   (IVS (S 'if $cond)
+        $then
+        (S 'endif))]
+  [(_ $cond:expr $then:stmt $else:stmt)
+   (IVS (S 'if $cond)
+        $then
+        (S 'else)
+        $else
+        (S 'endif))])
 ----
 
-This process is also used to expand a use of statement macros.
+Macros consist of one or more *clauses*.  Macro definitions are mostly
+same as http://practical-scheme.net/gauche/man/?l=en&p=match[`match`],
+but there are several differences to define transformation rules easily.
 
 
 
-==== High-Level Macros
+==== Interpretation
 
-Suppose that there is a following macro `foo`:
-
-----
-(define-xire-expr foo :high
-  [pat1 rule1]
-  [pat2 rule2]
-  ...)
-----
-
-This definition is roughly equivalent to the following:
-
-----
-(eval
-  `(define-xire-expr foo :low
-    [,(generate-match-pat 'pat1)
-     ,(generate-match-body 'pat1 'rule1)]
-    [,(generate-match-pat 'pat2)
-     ,(generate-match-body 'pat2 'rule2)]
-    ...)
-  (current-module))
-----
-
-
-
-==== High-Level Macro Clauses
-
-Low-level macros are defined with patterns and list processing code.
-High-level macros are defined with *clauses*.  Each clause is like
-a http://practical-scheme.net/gauche/man/?l=en&p=match[`match`] clause;
-it consists of a pattern and a transformation rule, but it is designed
-to generate <<ivs,IVS>> easily.
-
-
-===== Interpretation
-
-A use of high-level macro (the form) is matched against each pattern of
-clause, from first one to last one.
+A use of macro (the form) is matched against each pattern of clause,
+from first one to last one.
 
 If a matching clause is found, the form is expanded by the
 transformation rule of the clause, then this form returns the expanded
@@ -175,45 +139,45 @@ form.
 
 Otherwise, it is an error.
 
+For example:
 
-===== Clause
-
-The details of a `clause` are as follows:
-
-* `clause` is a list with two elements.
-* The first element of `clause` is a `pattern`.
-* The second element of `clause` is a transformation `rule`.
-
-Examples:
-
-----
-[(when $cond:expr $then:stmt ...)
- (IVS (S 'if $cond)
-      $then
-      (S 'endif))]
-
-[(if $cond:expr $then:stmt $else:stmt)
- (IVS (S 'if $cond)
-      $then
-      (S 'else)
-      $else
-      (S 'endif))]
-----
+* `(if 0 1)` is matched to the first clause of <<example_if,example `if`>>.
+* `(if 0 1 2)` is matched to the second clause of the `if`.
+* `(if 0 1 2 3)` is not matched to any clause of the `if`; so it is an error.
 
 
-===== Patterns
 
-The details of a `pattern` are as follows:
+==== Clauses
 
-* `pattern` is a list of S expressions.
+The details of a clause are as follows:
+
+* A clause is a list with two elements.
+* The first element of a clause is a *pattern*.
+* The second element of a clause is a *body*.
+
+For example:
+
+* <<example_if,Example `if`>> consists of two clauses.
+* The first clause is ++[(_ $cond:expr $then:stmt) ...]++.
+* The second clause is ++[(_ $cond:expr $then:stmt $else:stmt) ...]++.
+* `(_ $cond:expr $then:stmt)` and `(_ $cond:expr $then:stmt $else:stmt)`
+  are patterns.
+
+
+
+==== Patterns
+
+The details of a *pattern* are as follows:
+
+* A pattern is a list of S expressions.
 ** Examples: `(break)`, `(return $value:expr)`, `(if $cond:expr $then:stmt)`
-* In `pattern`, a symbol which name starts with `$` is called a *slot*.
+* In a pattern, a symbol which name starts with `$` is called a *slot*.
 * Slots are symbols.  The format of slot symbols is `$<name>:<type>`,
   where `<name>` is the name of a slot and `<type>` is the type of
   a resulting value.
 ** Examples: `$cond:expr`, `$then:stmt`
 
-The details of ++pattern++-matching process are as follows:
+The details of pattern-matching process are as follows:
 
 * Non-slot values in a pattern match the same objects in a sense of `equal?`.
 ** Example: Pattern `(break)` matches only `(break)`.
@@ -222,53 +186,49 @@ The details of ++pattern++-matching process are as follows:
 ** Example: Pattern `(return $value:expr)`
    matches `(return 1)`, `(return (list))`, etc.
 * The symbol `_` in a pattern is also treated as a pattern variable.
-  It matches arbitrary object, but it is not a slot.
-  So that matched object can not be referred in transformation rules.
+  It matches arbitrary object, but matched object can not be referred in
+  corresponding body.  It can be used to show "don't care" placeholder.
 ** Example: Pattern `(rem _)` matches `(rem 1)`, `(rem (2 3))`, etc.
-* As a special case, the last value in a pattern may be `...` (the symbol
-  spelled with three periods).  The symbol `...` matches as if it is the
-  value just before the symbol `...`.
+* As a special case, the last value in a pattern may be `...` (the
+  symbol spelled with three periods).  The pattern just before `...` is
+  applied repeatedly until it consumes all elements in the given object.
 ** Example: Pattern `(echo $value:expr ...)`
    matches `(echo 1)`, `(echo 1 2)`, etc.
 
 
-===== Transformation Rules
 
-If a use of high-level macro (the form) matches the pattern of a clause,
-the form is transformed into a new list.  This transformation process is
-based on the transformation `rule` of the matching clause.
+==== Bodies and Transformation
 
-Transformation ++rule++s are like ++quasiquote++d lists,
-but there are the following differences:
+If a use of macro (the form) matches the pattern of a clause, the form
+is transformed into a new form.  This transformation process is based on
+*body* of the matching clause.
 
-* Values in the form which match slot values in the pattern of a clause are
-  <<__transform_value,transformed into some values based on slot types>>,
-  then the transformed values are bound to *slot symbols*.
-* Slot symbols are spelled with `$<name>`, where `<name>` is the name of
-  a slot which is appeared in the pattern.
+Bodies are arbitrary Scheme expressions, but they are evaluated with the
+following context:
 
-For example, suppose that there is the following use of a macro:
+* Symbols such as `$<name>:<type>` are bound to values in the form which
+  are matched to correcponding slots in the pattern of a clause.
+* Symbols such as `$<name>` are bound to results of
+  <<__transform_value,`transform-value`>> with corresponding values
+  bound to `$<name>:<type>`.
 
-----
-(return (+ 1 1))
-----
+`transform-value` is called with the following arguments:
 
-And suppose that the use of macro matches the following clause:
+* A part of the form bound to a slot `$<name>:<type>`.
+* `#t` if the slot is followed by `...`, or `#f` otherwise.
+* Slot type as a symbol.
+* Internal information to process compilation.
 
-----
-[(return $result:expr)
- (IVS (S 'return $result))]
-----
+For example, suppose that the form `(if c t e)` is expanded with
+<<example_if,example `if`>>:
 
-Transforming process of the form is roughly equivalent to the following:
-
-----
-(use util.match)
-(match '(return (+ 1 1))
-  [('return $result:expr)
-   (let ([$result (transform-value $result:expr #f 'expr ctx)])
-     (IVS (S 'return $result)))])
-----
+* `$cond:expr` is bound to `c`.
+* `$then:stmt` is bound to `t`.
+* `$else:stmt` is bound to `e`.
+* `$cond` is bound to result of ++(transform-value $cond:expr #f 'expr ...)++.
+* `$then` is bound to result of ++(transform-value $then:stmt #f 'stmt ...)++.
+* `$else` is bound to result of ++(transform-value $else:stmt #f 'stmt ...)++.
+* Then the body of the second clause are evaluated.
 
 
 
@@ -436,6 +396,7 @@ be used for symbols in IVS.
 Directives
 ~~~~~~~~~~
 
+[[define-xire-expr]]
 ==== `(define-xire-expr name [mode] [ctx] clause ...)`
 
 `define-xire-expr` directive defines a new expression macro.
@@ -465,6 +426,7 @@ See also <<_process_of_macro_expansion,Process of Macro Expansion>>.
 
 
 
+[[define-xire-stmt]]
 ==== `(define-xire-stmt name [mode] [ctx] clause ...)`
 
 `define-xire-stmt` directive defines a new statement macro.
@@ -526,59 +488,6 @@ Helper API
 ~~~~~~~~~~
 
 In Xire script, the following API is available to define Xire macros:
-
-
-
-[[__generate_match_body]]
-==== `(generate-match-body pat rule)`
-
-A function which generates a body of clause for
-http://practical-scheme.net/gauche/man/?l=en&p=match[`match`]
-from `pat` and `rule` of clause for high-level Xire macro.
-
-For example,
-
-----
-(generate-match-body '(if $cond:expr $then:stmt)
-                     '((IVS (S 'if $cond)
-                            $then
-                            (S 'endif))))
-----
-
-is roughly equivalent to the following:
-
-----
-'(let ([$then (transform-value $then:stmt #f 'stmt ctx)]
-       [$cond (transform-value $cond:expr #f 'expr ctx)])
-   (IVS (S 'if $cond)
-        $then
-        (S 'endif)))
-----
-
-See also <<_high_level_macro_rules,high-level macro rules>>.
-
-
-
-[[__generate_match_pat]]
-==== `(generate-match-pat pat)`
-
-A function which generates a pattern of clause for
-http://practical-scheme.net/gauche/man/?l=en&p=match[`match`]
-from a `pat` of clause for high-level Xire macros.
-
-For example,
-
-----
-(generate-match-pat '(if $cond:expr $then:stmt $else:stmt))
-----
-
-is roughly equivalent to the following:
-
-----
-'('if $cond:expr $then:stmt $else:stmt)
-----
-
-See also <<_high_level_macro_rules,high-level macro rules>>.
 
 
 
