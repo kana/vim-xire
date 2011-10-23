@@ -13,6 +13,25 @@
 ;;; Expressions
 ;;; ===========
 
+;;; Helpers
+;;; -------
+
+(define-macro (define-binary-operator name op)
+  `(define-xire-expr ,name
+     [(_ $val1:expr $val2:expr)
+      (IVS (E (Q "(")
+              $val1
+              (Q ,op)
+              $val2
+              (Q ")")))]
+     [(_ $val1:form $val2:form $valN:form ...)
+      `(,',name (,',name ,$val1 ,$val2)
+                ,@$valN)]
+     ))
+
+;;; expr1
+;;; -----
+
 (define-xire-expr if
   [(_ $cond:expr $then:expr $else:expr)
    (IVS (E (Q "(")
