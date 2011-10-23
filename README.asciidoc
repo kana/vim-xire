@@ -91,7 +91,7 @@ Directives::
 
 Macros::
     Macros are corresponding to pieces of Vim script.  There are two
-    types of statements.  One is a *statement macro* which is expanded
+    types of macros.  One is a *statement macro* which is expanded
     into a series of Ex commands, and the other is an *expression macro*
     which is expanded into an expression of Vim script.  Macros can be
     nested.  Such macros are recursively expanded.
