@@ -107,6 +107,15 @@
    (IVS (apply S 'echo $value))]
   )
 
+(define-xire-stmt for
+  [(_ $var:expr $list:expr $body:stmt)
+   (IVS (S 'for $var 'in $list)
+        $body
+        (S 'endfor))]
+  [(_ $var:form $list:form $body:form ...)
+   `(for ,$var ,$list (begin ,@$body))]
+  )
+
 (define-xire-stmt if
   [(_ $cond:expr $then:stmt)
    (IVS (S 'if $cond)
