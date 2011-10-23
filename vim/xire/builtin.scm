@@ -44,6 +44,11 @@
            (Q ")")))]
   )
 
+;;; expr2
+;;; -----
+
+(define-binary-operator or "||")
+
 ;;; expr3
 ;;; -----
 

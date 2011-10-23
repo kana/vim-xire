@@ -5,6 +5,16 @@
 (echo (if 3 4 5))
 (echo (if r s t))
 
+(echo (if (or #f #f) "then" "else"))
+(echo (if (or #f #t) "then" "else"))
+(echo (if (or #t #f) "then" "else"))
+(echo (if (or #t #t) "then" "else"))
+(echo (if (or #f #f #f) "then" "else"))
+(echo (if (or #f #t #t) "then" "else"))
+(echo (if (or #t #f #t) "then" "else"))
+(echo (if (or #t #t #f) "then" "else"))
+(echo (if (or #t #t #t) "then" "else"))
+
 (echo (if (and #f #f) "then" "else"))
 (echo (if (and #f #t) "then" "else"))
 (echo (if (and #t #f) "then" "else"))
