@@ -74,6 +74,8 @@ let n2 = 2
 let n3 = 3
 echo n1 + n2
 echo n1 + n2 + n3
+echo n1 - n2
+echo n1 - n2 - n3
 
 echo []
 echo [0, 1, 2, 3, 4, 5]
