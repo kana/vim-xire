@@ -3,8 +3,6 @@
     ; Public API
     define-xire-expr
     define-xire-stmt
-    generate-match-body
-    generate-match-pat
     transform-value
     xire-translate
 
@@ -30,6 +28,8 @@
     ; Not public, but exported to test.
     ctx-type->xire-env-slot-name
     generate-expanded-form-of-high-level-macro
+    generate-match-body
+    generate-match-pat
     xire-lookup-macro
     xire-register-macro!
 
