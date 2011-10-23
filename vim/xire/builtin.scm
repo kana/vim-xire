@@ -116,6 +116,17 @@
 (define-binary-operator / "/")
 (define-binary-operator % "%")
 
+;;; expr7
+;;; -----
+
+(define-xire-expr not
+  [(_ $value:expr)
+   (IVS (E (Q "(")
+           (Q "!")
+           $value
+           (Q ")")))]
+  )
+
 ;;; expr9
 ;;; -----
 
