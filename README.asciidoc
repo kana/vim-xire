@@ -397,82 +397,50 @@ Directives
 ~~~~~~~~~~
 
 [[define-xire-expr]]
-==== `(define-xire-expr name [mode] [ctx] clause ...)`
+==== `(define-xire-expr name clause ...)`
 
 `define-xire-expr` directive defines a new expression macro.
 
 `name` (arbitrary symbol)::
     Specifies the name of the new macro.
 
-`mode` (`:high` or `:low`)::
-    Specifies the mode which determines how the new macro is expanded.
-    If `mode` is omitted, `:high` is used.
-
-`ctx` (arbitrary symbol)::
-    Specifies the name of a variable which is bound to the current
-    context of a macro expansion.  This variable is available in
-    ++body++s of each `clause`.  It may be omitted if `ctx` is not used
-    in each `clause`.
-
-`clause` (`[pat body ...]`, `[pat (=> id) body ...]` or `rule`)::
-    Specifies an expansion rule for the new macro.
-    The first two formats of `clause` are available only for low-level
-    macros, and the formats are the same as
-    http://practical-scheme.net/gauche/man/?l=en&p=match[`match`].
-    The third format is available only for high-level macros;
-    see also <<__translate_rule,`translate-rule`>> for details.
-
-See also <<_process_of_macro_expansion,Process of Macro Expansion>>.
+`clause` (`[pat body ...]`)::
+    Specifies a transformation process for the new macro.
+    See also <<_bodies_and_transformation,Bodies and Transformation>>.
 
 
 
 [[define-xire-stmt]]
-==== `(define-xire-stmt name [mode] [ctx] clause ...)`
+==== `(define-xire-stmt name clause ...)`
 
 `define-xire-stmt` directive defines a new statement macro.
 
 `name` (arbitrary symbol)::
     Specifies the name of the new macro.
 
-`mode` (`:high` or `:low`)::
-    Specifies the mode which determines how the new macro is expanded.
-    If `mode` is omitted, `:high` is used.
-
-`ctx` (arbitrary symbol)::
-    Specifies the name of a variable which is bound to the current
-    context of a macro expansion.  This variable is available in
-    ++body++s of each `clause`.  It may be omitted if `ctx` is not used
-    in each `clause`.
-
-`clause` (`[pat body ...]`, `[pat (=> id) body ...]` or `rule`)::
-    Specifies an expansion rule for the new macro.
-    The first two formats of `clause` are available only for low-level
-    macros, and the formats are the same as
-    http://practical-scheme.net/gauche/man/?l=en&p=match[`match`].
-    The third format is available only for high-level macros;
-    see also <<__translate_rule,`translate-rule`>> for details.
-
-See also <<_process_of_macro_expansion,Process of Macro Expansion>>.
+`clause` (`[pat body ...]`)::
+    Specifies a transformation process for the new macro.
+    See also <<_bodies_and_transformation,Bodies and Transformation>>.
 
 There are also the following shorthands for `define-xire-stmt`:
 
 `(define-xire-stmt <name>)`::
     Roughly equivalent to the following:
 
-    (define-xire-stmt <name> "<name>")
+    (define-xire-stmt <name> <name>)
 
 `(define-xire-stmt <name> :!)`::
     Roughly equivalent to the following:
 
-    (define-xire-stmt <name> "<name>")
-    (define-xire-stmt <name> "<name>!")
+    (define-xire-stmt <name> <name>)
+    (define-xire-stmt <name> <name>!)
 
 `(define-xire-stmt <name> <ex-command-name>)`::
     Roughly equivalent to the following:
 
     (define-xire-stmt <name>
       [(_)
-       '(<ex-command-name>)])  ; <ex-command-name> must be a string.
+       (IVS (S '<ex-command-name>))])  ; <ex-command-name> must be a symbol.
 
 
 
