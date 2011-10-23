@@ -109,7 +109,7 @@
 ;;; expr5
 ;;; -----
 
-(define-binary-operator + "+")
+(define-binary-operator + "+" 0)
 (define-binary-operator - "-" 0)
 (define-binary-operator .. ".")
 
@@ -131,6 +131,7 @@
            (Q ")")))]
   )
 ; Macro "-" supports both unary and binary usage.
+; Macro "+" supports both unary and binary usage.
 
 ;;; expr9
 ;;; -----
