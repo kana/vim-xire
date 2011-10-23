@@ -110,7 +110,7 @@
 ;;; -----
 
 (define-binary-operator + "+")
-(define-binary-operator - "-")
+(define-binary-operator - "-" 0)
 (define-binary-operator .. ".")
 
 ;;; expr6
@@ -130,6 +130,7 @@
            $value
            (Q ")")))]
   )
+; Macro "-" supports both unary and binary usage.
 
 ;;; expr9
 ;;; -----

@@ -91,6 +91,7 @@ echo n1 % n2 % n3
 
 echo !0
 echo !1
+echo -(1)
 
 echo []
 echo [0, 1, 2, 3, 4, 5]
