@@ -143,6 +143,21 @@
            (Q "]")))]
   )
 
+(define-xire-expr dict
+  [(_ ($key:expr $value:expr) ...)
+   (IVS (E (Q "{")
+           (apply IVS
+                  (map (cut E
+                            <>
+                            (Q " ")  ; To parse {s:x} as {(s):x} not {(s:x)}.
+                            (Q ":")
+                            <>
+                            (Q ","))
+                       $key
+                       $value))
+           (Q "}")))]
+  )
+
 
 
 

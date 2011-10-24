@@ -94,6 +94,10 @@ echo !1
 echo -(1)
 echo +(1)
 
+let s = 1
 echo []
 echo [0, 1, 2, 3, 4, 5]
 echo [0, 1, [2, 3], 4, 5]
+echo {}
+echo {'a': 'A', 'b': 'B', 'c': 'C'}
+echo {(s): 2}
