@@ -98,6 +98,7 @@
 (set! s 1)
 (set! x 3)
 (echo (slice (list 0 1 2 3 4) s x))
+(echo (slice-until (list 0 1 2 3 4) x))
 
 (set! s 1)
 (echo (list))

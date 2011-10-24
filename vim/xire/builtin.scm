@@ -159,6 +159,17 @@
            (Q ")")))]
   )
 
+(define-xire-expr slice-until
+  [(_ $container:expr $index-to:expr)
+   (IVS (E (Q "(")
+           $container
+           (Q "[")
+           (Q ":")
+           $index-to
+           (Q "]")
+           (Q ")")))]
+  )
+
 ;;; expr9
 ;;; -----
 

@@ -100,6 +100,7 @@ echo {'a': 'A', 'b': 'B', 'c': 'C'}['c']
 let s = 1
 let x = 3
 echo [0, 1, 2, 3, 4][(s):x]
+echo [0, 1, 2, 3, 4][:x]
 
 let s = 1
 echo []
