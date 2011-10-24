@@ -95,6 +95,9 @@
 (echo (ref "abc" 1))
 (echo (ref (list 0 4 8) 1))
 (echo (ref (dict ("a" "A") ("b" "B") ("c" "C")) "c"))
+(set! s 1)
+(set! x 3)
+(echo (slice (list 0 1 2 3 4) s x))
 
 (set! s 1)
 (echo (list))
