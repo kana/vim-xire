@@ -133,6 +133,19 @@
 ; Macro "-" supports both unary and binary usage.
 ; Macro "+" supports both unary and binary usage.
 
+;;; expr8
+;;; -----
+
+(define-xire-expr ref
+  [(_ $container:expr $index:expr)
+   (IVS (E (Q "(")
+           $container
+           (Q "[")
+           $index
+           (Q "]")
+           (Q ")")))]
+  )
+
 ;;; expr9
 ;;; -----
 
