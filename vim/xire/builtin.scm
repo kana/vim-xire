@@ -170,6 +170,18 @@
            (Q ")")))]
   )
 
+(define-xire-expr slice-from
+  [(_ $container:expr $index-from:expr)
+   (IVS (E (Q "(")
+           $container
+           (Q "[")
+           $index-from
+           (Q " ")  ; To parse l[s:] as l[(s):] not l[(s:)].
+           (Q ":")
+           (Q "]")
+           (Q ")")))]
+  )
+
 ;;; expr9
 ;;; -----
 
