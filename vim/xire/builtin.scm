@@ -182,6 +182,15 @@
            (Q ")")))]
   )
 
+(define-xire-expr ->
+  [(_ $dict:expr $name:expr)  ; FIXME: $name:sym?
+   (IVS (E (Q "(")
+           $dict
+           (Q ".")
+           $name
+           (Q ")")))]
+  )
+
 ;;; expr9
 ;;; -----
 
