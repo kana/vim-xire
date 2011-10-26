@@ -112,6 +112,8 @@
 (set! foo-bar-baz #t)
 (echo foo-bar-baz)
 (echo $HOME)
+(set! @a "abc")
+(echo @a)
 
 (set! s 1)
 (echo (list))

@@ -114,6 +114,8 @@ echo (10 + 10) / 2
 let foo_bar_baz = 1
 echo foo_bar_baz
 echo $HOME
+let @a = 'abc'
+echo @a
 
 let s = 1
 echo []

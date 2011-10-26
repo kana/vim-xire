@@ -244,6 +244,8 @@
 
 ; $ENVIRONMENT_VARIABLE is treated the same as a variable.
 
+; @r (register content) is treated the same as a variable.
+
 
 
 
