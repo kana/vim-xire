@@ -104,6 +104,7 @@
 (set! F (function "printf"))
 (echo (F "%02x" 33))
 (echo 123)
+(echo "abc")
 
 (set! s 1)
 (echo (list))

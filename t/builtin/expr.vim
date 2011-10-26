@@ -106,6 +106,7 @@ echo {'a': 'A'}.a
 let F = function('printf')
 echo F('%02x', 33)
 echo 123
+echo 'abc'
 
 let s = 1
 echo []
