@@ -248,6 +248,8 @@
 
 ; function(call) is processed by Xire-script-to-IVS layer, not macros.
 
+; fun{ct}ion(call) is not supported as var{ia}ble is not supported.
+
 
 
 
