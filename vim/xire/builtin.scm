@@ -200,6 +200,14 @@
 
 ; "String literal" is processed by IVS-to-Vim-script layer.
 
+; 'String literal' is not supported.
+;
+; Currently there is no plan to add this notation, because:
+; - It's necessary to customize reader to support this notation,
+;   but it's a bit hard to implement.
+; - This notation is mostly used to write regular expressions,
+;   but Xire script provides its own notation for regular expressions.
+
 (define-xire-expr list
   [(_ $value:expr ...)
    (IVS (E (Q "[")
