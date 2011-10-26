@@ -232,6 +232,8 @@
 
 ; &option is treated the same as a variable.
 
+; (expr1) is implicitly supported by Xire script syntax.
+
 
 
 

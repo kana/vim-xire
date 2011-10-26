@@ -108,6 +108,7 @@
 (echo &ignorecase)
 (echo &g:expandtab)
 (echo &l:expandtab)
+(echo (/ (+ 10 10) 2))
 
 (set! s 1)
 (echo (list))

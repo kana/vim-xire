@@ -110,6 +110,7 @@ echo 'abc'
 echo &ignorecase
 echo &g:expandtab
 echo &l:expandtab
+echo (10 + 10) / 2
 
 let s = 1
 echo []
