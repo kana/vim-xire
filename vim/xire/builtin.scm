@@ -191,6 +191,8 @@
            (Q ")")))]
   )
 
+; expr8(expr1, ...) is processed by Xire-script-to-IVS layer, not macros.
+
 ;;; expr9
 ;;; -----
 

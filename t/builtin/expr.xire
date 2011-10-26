@@ -101,6 +101,8 @@
 (echo (slice-until (list 0 1 2 3 4) x))
 (echo (slice-from (list 0 1 2 3 4) s))
 (echo (-> (dict ("a" "A")) a))
+(set! F (function "printf"))
+(echo (F "%02x" 33))
 
 (set! s 1)
 (echo (list))
