@@ -326,6 +326,15 @@
         ,@$then))]
   )
 
+(define-xire-stmt while
+  [(_ $cond:expr $body:stmt)
+   (IVS (S 'while $cond)
+        $body
+        (S 'endwhile))]
+  [(_ $cond:form $body:form ...)
+   `(while ,$cond (begin ,@$body))]
+  )
+
 
 
 
