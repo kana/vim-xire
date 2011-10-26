@@ -319,6 +319,11 @@
    (IVS (S 'let $var (Q '=) $value))]
   )
 
+(define-xire-stmt until
+  [(_ $cond:form $body:form ...)
+   `(while (not ,$cond) (begin ,@$body))]
+  )
+
 (define-xire-stmt when
   [(_ $cond:form $then:form ...)
    `(if ,$cond
