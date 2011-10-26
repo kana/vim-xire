@@ -107,6 +107,9 @@ let F = function('printf')
 echo F('%02x', 33)
 echo 123
 echo 'abc'
+echo &ignorecase
+echo &g:expandtab
+echo &l:expandtab
 
 let s = 1
 echo []

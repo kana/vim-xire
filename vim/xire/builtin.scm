@@ -230,6 +230,8 @@
            (Q "}")))]
   )
 
+; &option is treated the same as a variable.
+
 
 
 
