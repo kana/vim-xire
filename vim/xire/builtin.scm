@@ -234,6 +234,8 @@
 
 ; (expr1) is implicitly supported by Xire script syntax.
 
+; Variable is processed by IVS-to-Vim-script layer, not macros.
+
 
 
 

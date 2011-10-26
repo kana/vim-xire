@@ -111,6 +111,8 @@ echo &ignorecase
 echo &g:expandtab
 echo &l:expandtab
 echo (10 + 10) / 2
+let foo_bar_baz = 1
+echo foo_bar_baz
 
 let s = 1
 echo []
