@@ -103,6 +103,7 @@
 (echo (-> (dict ("a" "A")) a))
 (set! F (function "printf"))
 (echo (F "%02x" 33))
+(echo 123)
 
 (set! s 1)
 (echo (list))

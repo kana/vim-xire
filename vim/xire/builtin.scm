@@ -196,6 +196,8 @@
 ;;; expr9
 ;;; -----
 
+; Number literal is processed by IVS-to-Vim-script layer.
+
 (define-xire-expr list
   [(_ $value:expr ...)
    (IVS (E (Q "[")

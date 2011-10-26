@@ -105,6 +105,7 @@ echo [0, 1, 2, 3, 4][(s):]
 echo {'a': 'A'}.a
 let F = function('printf')
 echo F('%02x', 33)
+echo 123
 
 let s = 1
 echo []
