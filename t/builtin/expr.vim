@@ -116,6 +116,7 @@ echo foo_bar_baz
 echo $HOME
 let @a = 'abc'
 echo @a
+echo function('printf')
 
 let s = 1
 echo []

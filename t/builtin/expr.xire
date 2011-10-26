@@ -114,6 +114,7 @@
 (echo $HOME)
 (set! @a "abc")
 (echo @a)
+(echo (function "printf"))
 
 (set! s 1)
 (echo (list))

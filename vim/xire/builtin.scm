@@ -246,6 +246,8 @@
 
 ; @r (register content) is treated the same as a variable.
 
+; function(call) is processed by Xire-script-to-IVS layer, not macros.
+
 
 
 
