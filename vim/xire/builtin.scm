@@ -242,6 +242,8 @@
 ; - This feature is not frequently used.
 ; - It's easy to emulate the same behavior with other ways.
 
+; $ENVIRONMENT_VARIABLE is treated the same as a variable.
+
 
 
 

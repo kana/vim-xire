@@ -111,6 +111,7 @@
 (echo (/ (+ 10 10) 2))
 (set! foo-bar-baz #t)
 (echo foo-bar-baz)
+(echo $HOME)
 
 (set! s 1)
 (echo (list))
