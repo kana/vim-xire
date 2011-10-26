@@ -236,6 +236,12 @@
 
 ; Variable is processed by IVS-to-Vim-script layer, not macros.
 
+; Var{ia}ble is not supported.
+;
+; Currently there is no plan to add this notation, because:
+; - This feature is not frequently used.
+; - It's easy to emulate the same behavior with other ways.
+
 
 
 
