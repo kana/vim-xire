@@ -314,6 +314,21 @@
         (S 'endif))]
   )
 
+(define-xire-stmt let*
+  [(_ (($var:form $value:form) ...) $body:form ...)  ; FIXME: $var:sym?
+   `(begin
+      ,@(let go ([vars $var]
+                 [values $value]
+                 [forms '()])
+          (if (null? vars)
+            (reverse forms)
+            (go (cdr vars)
+                (cdr values)
+                (cons `(set! ,(car vars) ,(car values)) forms))))
+      ,@$body
+      )]
+  )
+
 (define-xire-stmt set!
   [(_ $var:expr $value:expr)
    (IVS (S 'let $var (Q '=) $value))]
