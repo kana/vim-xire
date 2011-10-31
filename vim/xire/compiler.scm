@@ -32,6 +32,7 @@
     generate-expanded-form-of-high-level-macro
     generate-match-body
     generate-match-pat
+    rename-local-bindings
     xire-lookup-macro
     xire-register-macro!
 
@@ -307,7 +308,7 @@
          ; simplify the compiler implementation.
          (if (expr-ctx? ctx)
            (IVS (E (Q "(")
-                   name
+                   (rename-local-bindings name ctx)
                    (Q "(")
                    (apply E (intersperse (Q ",")
                                          (xire-compile-forms args ctx)))
@@ -320,7 +321,7 @@
      form]
     [_
       (ensure-expr-ctx form ctx)
-      (IVS (E form))]))
+      (IVS (E (rename-local-bindings form ctx)))]))
 
 ;; Compile a Xire script EXPR then return a resulting Vim script in IVS.
 ;; This is an abbreviated form of xire-compile for typical use.
@@ -334,6 +335,18 @@
 ;; IVS.  This is an abbreviated form of xire-compile for typical use.
 (define (xire-compile-forms forms ctx)
   (map (cut xire-compile <> ctx) forms))
+
+;; Rename a variable reference in FORM according to CTX, if necessary.
+(define (rename-local-bindings form ctx)
+  (cond
+    [(not (symbol? form))
+     form]
+    [(not (func-ctx? ctx))
+     form]
+    [(memq form (ref ctx 'func-args))
+     (string->symbol #`"a:,form")]
+    [else
+      form]))
 
 
 
