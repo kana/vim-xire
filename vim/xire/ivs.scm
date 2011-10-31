@@ -10,6 +10,7 @@
 
     ; Not public, but exported to test.
     convert-identifier-conventions
+    convert-key-sequence-conventions
     convert-regexp-conventions
     convert-string-conventions
     ))
@@ -214,6 +215,27 @@
 (define (convert-string-conventions scheme-string)
   ; FIXME: Check the above limitations are met.
   (format "~s" scheme-string))
+
+;; Translate a key sequence string S into equivalent Vim script string.
+;; For example, "ixyx<BS>z" in Scheme string will be translated into
+;; "ixyx\<BS>z" in Vim script string.
+;;
+;; The format of a key sequence string S is almost same as {rhs} for
+;; :map-family in Vim script.  Note that we define the following conventions
+;; to simplify writing Xire script and the compiler implementation:
+;;
+;; (a) Don't use ``\'' directly.  Use ``<Bslash>'' instead.  Because ``\'' is
+;;     processed by Scheme reader, so that we have to escape ``\'' and such
+;;     escaping makes script unreadable.
+(define (convert-key-sequence-conventions s)
+  (string-append
+    "\""
+    (regexp-replace-all*
+      s
+      #/<[^<>]+>/ "\\\\\\0"
+      #/"/ "\\\\\""
+      )
+    "\""))
 
 
 

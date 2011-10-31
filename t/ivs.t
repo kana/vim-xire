@@ -62,6 +62,17 @@
     )
   )
 
+(describe "convert-key-sequence-conventions"
+  (it "should translate key sequence string properly"
+    (expect (convert-key-sequence-conventions "foo")
+            equal? "\"foo\"")
+    (expect (convert-key-sequence-conventions "\"*p")
+            equal? "\"\\\"*p\"")
+    (expect (convert-key-sequence-conventions "bar<BS>z")
+            equal? "\"bar\\<BS>z\"")
+    )
+  )
+
 (describe "scheme-object->vim-script-notation"
   (it "should convert given Scheme boolean into equivalent one in Vim script"
     (expect (scheme-object->vim-script-notation #f) equal? 0)
