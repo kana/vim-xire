@@ -18,6 +18,7 @@
     func-ctx?
     make-expr-ctx
     make-func-ctx
+    make-local-ctx
     make-stmt-ctx
     make-toplevel-ctx
     stmt-ctx?
@@ -99,6 +100,9 @@
    [func-args
      :init-keyword :func-args
      :init-value '()]
+   [locals
+     :init-keyword :locals
+     :init-value '()]
    ))
 
 (define (copy-ctx ctx)
@@ -129,6 +133,11 @@
   (define new-ctx (copy-ctx ctx))
   (set! (ref new-ctx 'in-funcp) #t)
   (set! (ref new-ctx 'func-args) func-args)
+  new-ctx)
+(define (make-local-ctx ctx vars)
+  (define new-ctx (copy-ctx ctx))
+  (set! (ref new-ctx 'locals)
+        (map (cut cons <> (gensym)) vars))  ; FIXME: Rename properly.
   new-ctx)
 
 (define (toplevel-ctx? ctx)

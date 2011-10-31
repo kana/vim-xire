@@ -97,6 +97,29 @@
     )
   )
 
+(describe "make-local-ctx"
+  (it "should make a local binding context from a given context"
+    (define c1 (make-stmt-ctx (make-toplevel-ctx)))
+    (define c2 (make-local-ctx c1 '(a b c)))
+    (define c3 (make-stmt-ctx c2))
+    (define (check %c1 %c2)
+      (define different-slot-names '(locals))
+      (for-each
+        (lambda (slot-name)
+          (expect (ref %c2 slot-name) equal? (ref %c1 slot-name)))
+        (filter
+          (lambda (slot-name)
+            (not (memq slot-name different-slot-names)))
+          (map slot-definition-name (class-direct-slots <xire-ctx>)))))
+    (check c2 c1)
+    (expect (ref c1 'locals) equal? '())
+    (expect (map (lambda (p) (cons (car p) '_)) (ref c2 'locals))
+            equal? '((a . _) (b . _) (c . _)))
+    (check c3 c2)
+    (expect (ref c2 'locals) equal? (ref c3 'locals))
+    )
+  )
+
 (describe "make-stmt-ctx"
   (it "should make a statement context from a given context"
     (define c1 (make <xire-ctx>))
