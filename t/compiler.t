@@ -183,12 +183,19 @@
     (check #/bar/ ctx)
     (check '(func arg) ctx)
     )
-  (it "should leave form as is if it is not in a function context"
+  (it "should leave form as is if it is not in a function context (1)"
     (define ctx (make-toplevel-ctx))
     (check 'a ctx)
     (check 'b ctx)
     (check 'c ctx)
     (check 'd ctx)
+    )
+  (it "should leave form as is if it is not in a function context (2)"
+    (define ctx (make-local-ctx (make-toplevel-ctx) '(x y z)))
+    (check 'x ctx)
+    (check 'y ctx)
+    (check 'z ctx)
+    (check 'g ctx)
     )
   (it "should rename form if it is a reference to a function parameter"
     (define ctx (make-func-ctx (make-toplevel-ctx) '(a b c)))
@@ -196,6 +203,17 @@
     (expect (rename-local-bindings 'b ctx) eq? 'a:b)
     (expect (rename-local-bindings 'c ctx) eq? 'a:c)
     (expect (rename-local-bindings 'd ctx) eq? 'd)
+    )
+  (it "should rename form if it is a reference to a function local variable"
+    (define ctx (make-local-ctx (make-func-ctx (make-toplevel-ctx) '(a b c))
+                                '(x y z)))
+    (expect (rename-local-bindings 'a ctx) eq? 'a:a)
+    (expect (rename-local-bindings 'b ctx) eq? 'a:b)
+    (expect (rename-local-bindings 'c ctx) eq? 'a:c)
+    (expect (rename-local-bindings 'x ctx) not eq? 'x)
+    (expect (rename-local-bindings 'y ctx) not eq? 'y)
+    (expect (rename-local-bindings 'z ctx) not eq? 'z)
+    (expect (rename-local-bindings 'g ctx) eq? 'g)
     )
   )
 

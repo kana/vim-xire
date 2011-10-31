@@ -352,6 +352,8 @@
      form]
     [(not (func-ctx? ctx))
      form]
+    [(assq form (ref ctx 'locals))
+     => cdr]
     [(memq form (ref ctx 'func-args))
      (string->symbol #`"a:,form")]
     [else
