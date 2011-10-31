@@ -15,7 +15,9 @@
     ensure-expr-ctx
     ensure-stmt-ctx
     expr-ctx?
+    func-ctx?
     make-expr-ctx
+    make-func-ctx
     make-stmt-ctx
     make-toplevel-ctx
     stmt-ctx?
@@ -90,6 +92,12 @@
    [toplevelp
      :init-keyword :toplevelp
      :init-value #t]
+   [in-funcp
+     :init-keyword :in-funcp
+     :init-value #f]
+   [func-args
+     :init-keyword :func-args
+     :init-value '()]
    ))
 
 (define (copy-ctx ctx)
@@ -112,6 +120,15 @@
   (set! (ref new-ctx 'type) 'expr)
   (set! (ref new-ctx 'toplevelp) #f)
   new-ctx)
+(define (make-func-ctx ctx func-args)
+  ; NB: Though :function can be written in the body of a :function,
+  ;     Vim script does not have lexical scope.  So that nested function
+  ;     definition is equivalent to independent function definitions.
+  ;     Therefore the compiler does not care about nested functions.
+  (define new-ctx (copy-ctx ctx))
+  (set! (ref new-ctx 'in-funcp) #t)
+  (set! (ref new-ctx 'func-args) func-args)
+  new-ctx)
 
 (define (toplevel-ctx? ctx)
   (ref ctx 'toplevelp))
@@ -119,6 +136,8 @@
   (eq? (ref ctx 'type) 'stmt))
 (define (expr-ctx? ctx)
   (eq? (ref ctx 'type) 'expr))
+(define (func-ctx? ctx)
+  (ref ctx 'in-funcp))
 
 (define (ensure-stmt-ctx form ctx)
   (unless (stmt-ctx? ctx)

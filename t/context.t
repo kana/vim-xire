@@ -3,6 +3,7 @@
 (add-load-path ".")
 (add-load-path "./gauche-test-gasmine")
 
+(use srfi-1)
 (use test.gasmine)
 (use vim.xire)
 
@@ -47,12 +48,52 @@
     )
   )
 
+(describe "func-ctx?"
+  (it "should return true for function context"
+    (define ctx (make-toplevel-ctx))
+    (expect (func-ctx? ctx) eq? #f)
+    (expect (func-ctx? (make-stmt-ctx ctx)) eq? #f)
+    (expect (func-ctx? (make-expr-ctx ctx)) eq? #f)
+    (expect (func-ctx? (make-func-ctx ctx '())) eq? #t)
+    (expect (func-ctx? (make-func-ctx (make-stmt-ctx ctx) '())) eq? #t)
+    (expect (func-ctx? (make-func-ctx (make-expr-ctx ctx) '())) eq? #t)
+    (expect (func-ctx? (make-expr-ctx (make-func-ctx ctx '()))) eq? #t)
+    (expect (func-ctx? (make-stmt-ctx (make-func-ctx ctx '()))) eq? #t)
+    (expect (func-ctx? (make-func-ctx (make-func-ctx ctx '()) '())) eq? #t)
+    )
+  )
+
 (describe "make-expr-ctx"
   (it "should make an expression context from a given context"
     (define c1 (make <xire-ctx>))
     (define c2 (make-expr-ctx c1))
     (expect (expr-ctx? c2) eq? #t)
     (expect (ref c2 'toplevelp) eq? #f)
+    )
+  )
+
+(describe "make-func-ctx"
+  (it "should make a function context from a given context"
+    (define c1 (make-stmt-ctx (make-toplevel-ctx)))
+    (define c2 (make-func-ctx c1 '(a b c)))
+    (define c3 (make-stmt-ctx c2))
+    (define (check %c1 %c2)
+      (define different-slot-names '(in-funcp func-args))
+      (for-each
+        (lambda (slot-name)
+          (expect (ref %c2 slot-name) equal? (ref %c1 slot-name)))
+        (filter
+          (lambda (slot-name)
+            (not (memq slot-name different-slot-names)))
+          (map slot-definition-name (class-direct-slots <xire-ctx>)))))
+    (check c2 c1)
+    (expect (ref c1 'in-funcp) eq? #f)
+    (expect (ref c2 'in-funcp) eq? #t)
+    (expect (ref c1 'func-args) equal? '())
+    (expect (ref c2 'func-args) equal? '(a b c))
+    (check c3 c2)
+    (expect (ref c2 'in-funcp) eq? (ref c3 'in-funcp))
+    (expect (ref c2 'func-args) equal? (ref c3 'func-args))
     )
   )
 
