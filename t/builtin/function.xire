@@ -1,0 +1,9 @@
+(function (s:hello a b c)
+  (return (printf "%s/%s/%s" c b a)))
+(echo (s:hello 100 10 1))
+
+(function (s:hi)
+  (return "hi"))
+(function (s:call f)
+  (return (f)))
+(echo (s:call (function "s:hi")))

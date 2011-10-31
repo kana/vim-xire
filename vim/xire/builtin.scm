@@ -297,6 +297,18 @@
    (IVS (apply S 'echo $value))]
   )
 
+(define-xire-stmt function
+  ; FIXME: Support !.
+  ; FIXME: Support range, abort and dict.
+  ; FIXME: Check values on $name and $arg.
+  [(_ ($name:form $arg:form ...) $body:form ...)
+   (IVS
+     (S 'function $name (Q "(") (apply E (intersperse (Q ",") $arg)) (Q ")"))
+     (apply IVS (xire-compile-forms $body (make-func-ctx ctx $arg)))
+     (S 'endfunction)
+     )]
+  )
+
 (define-xire-stmt for
   [(_ $var:expr $list:expr $body:stmt)
    (IVS (S 'for $var 'in $list)
@@ -332,6 +344,11 @@
                 (cons `(set! ,(car vars) ,(car values)) forms))))
       ,@$body
       )]
+  )
+
+(define-xire-stmt return
+  [(_ $value:expr)
+   (IVS (S 'return $value))]
   )
 
 (define-xire-stmt set!
