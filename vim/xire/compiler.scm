@@ -93,15 +93,12 @@
    ))
 
 (define (copy-ctx ctx)
-  (apply make
-         <xire-ctx>
-         (concatenate
-           (map
-             (lambda (slot-name)
-               `(:type ,(ref ctx slot-name)))
-             (map slot-definition-name (class-direct-slots <xire-ctx>))
-             ))
-         ))
+  (let1 new-ctx (make <xire-ctx>)
+    (for-each
+      (lambda (slot-name)
+        (set! (ref new-ctx slot-name) (ref ctx slot-name)))
+      (map slot-definition-name (class-direct-slots <xire-ctx>)))
+    new-ctx))
 
 (define (make-toplevel-ctx)
   (make <xire-ctx>))
