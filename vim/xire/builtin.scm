@@ -208,6 +208,11 @@
 ; - This notation is mostly used to write regular expressions,
 ;   but Xire script provides its own notation for regular expressions.
 
+; Supplimental notation for strings to describe key sequences.
+(define-xire-expr kbd
+  [(_ $string:form)
+   (IVS (E (Q (convert-key-sequence-conventions $string))))])
+
 (define-xire-expr list
   [(_ $value:expr ...)
    (IVS (E (Q "[")
