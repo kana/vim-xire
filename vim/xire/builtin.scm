@@ -360,18 +360,19 @@
   )
 
 (define-xire-stmt let*
+  ; FIXME: Add tests on failure cases.
   [(_ (($var:form $value:form) ...) $body:form ...)  ; FIXME: $var:sym?
-   `(begin
-      ,@(let go ([vars $var]
-                 [values $value]
-                 [forms '()])
-          (if (null? vars)
-            (reverse forms)
-            (go (cdr vars)
-                (cdr values)
-                (cons `(set! ,(car vars) ,(car values)) forms))))
-      ,@$body
-      )]
+   (unless (func-ctx? ctx)
+     (errorf "\"let*\" is available only in functions: ~s" form))
+   (let go ([form `(begin ,@$body)]
+            [vars (reverse $var)]
+            [values (reverse $value)])
+     (if (null? vars)
+       form
+       (go `(let ([,(car vars) ,(car values)])
+              ,form)
+           (cdr vars)
+           (cdr values))))]
   )
 
 (define-xire-stmt return

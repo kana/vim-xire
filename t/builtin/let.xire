@@ -8,7 +8,12 @@
     (echo "let (outer) 2:" "x =" x "y = " y)))
 (call (s:let))
 
-(let* ([x 3]
-       [y (+ x 1)]
-       [z (* x y)])
-  (echo x y z))
+(function (s:let-star)
+  (let* ([x 3]
+         [y (+ x 1)]
+         [z (* x y)])
+    (echo "let* (outer) 1:" x y z)
+    (let* ([x (+ x y z)])
+      (echo "let* (inner):" x y z))
+    (echo "let* (outer) 2:" x y z)))
+(call (s:let-star))

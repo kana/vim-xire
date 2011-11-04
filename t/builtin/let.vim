@@ -9,7 +9,13 @@ function s:let()
 endfunction
 call s:let()
 
-let x = 3
-let y = x + 1
-let z = x * y
-echo x y z
+function s:let_star()
+  let x1 = 3
+  let y1 = x1 + 1
+  let z1 = x1 * y1
+  echo 'let* (outer) 1:' x1 y1 z1
+  let x2 = x1 + y1 + z1
+  echo 'let* (inner):' x2 y1 z1
+  echo 'let* (outer) 2:' x1 y1 z1
+endfunction
+call s:let_star()
