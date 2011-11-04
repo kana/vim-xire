@@ -375,6 +375,8 @@
            (cdr values))))]
   )
 
+; letrec and letrec* are not useful unless real closures are implemented.
+
 (define-xire-stmt return
   [(_ $value:expr)
    (IVS (S 'return $value))]
