@@ -266,6 +266,11 @@
    (apply IVS $body)]
   )
 
+(define-xire-stmt call
+  [(_ $application:expr)
+   (IVS (S 'call $application))]
+  )
+
 (define-xire-stmt cond
   [(_ [$cond:expr $then:stmt] ...)
    (let go ([cond:exprs $cond:expr]

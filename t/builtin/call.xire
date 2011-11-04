@@ -1,0 +1,7 @@
+(function (s:hi x y z)
+  (echo "x = " x)
+  (echo "y = " y)
+  (echo "z = " z)
+  (return "w = ..."))
+(echo (s:hi 1 2 3))
+(call (s:hi 4 5 6))
