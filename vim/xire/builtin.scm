@@ -336,6 +336,29 @@
         (S 'endif))]
   )
 
+(define-xire-stmt let
+  ; FIXME: Add tests on failure cases.
+  [(_ (($var:form $value:form) ...) $body:form ...)  ; FIXME: $var:sym?
+   (unless (func-ctx? ctx)
+     (errorf "\"let\" is available only in functions: ~s" form))
+   (let ([old-ctx ctx]
+         [new-ctx (make-local-ctx ctx $var)])
+     `(begin
+        ,@(let go ([vars $var]
+                   [values $value]
+                   [forms '()])
+            (if (null? vars)
+              (reverse forms)
+              (go (cdr vars)
+                  (cdr values)
+                  (cons `(set! ,(transform-value (car vars) #f 'expr new-ctx)
+                           ,(transform-value (car values) #f 'expr old-ctx))
+                        forms))))
+        ,@(transform-value $body #t 'stmt new-ctx)
+        )
+     )]
+  )
+
 (define-xire-stmt let*
   [(_ (($var:form $value:form) ...) $body:form ...)  ; FIXME: $var:sym?
    `(begin
