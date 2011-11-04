@@ -113,8 +113,8 @@
     (expect (compile '(macro (x y z)) stmt-ctx) equal? "<z y x>")
     )
   (it "should compile use of undefined macro in expr-ctx as function call"
-    (expect (compile '(MyFunc) expr-ctx) equal? "(MyFunc())")
-    (expect (compile '(MyFunc 1 2 3) expr-ctx) equal? "(MyFunc(1,2,3))")
+    (expect (compile '(MyFunc) expr-ctx) equal? "MyFunc()")
+    (expect (compile '(MyFunc 1 2 3) expr-ctx) equal? "MyFunc(1,2,3)")
     )
   (it "should return form as is if it is already compiled"
     (define compiled-form (IVS (Q 1 2 3)))

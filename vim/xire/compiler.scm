@@ -318,12 +318,10 @@
          ; where foo is not known as a Xire macro.  This convention is to
          ; simplify the compiler implementation.
          (if (expr-ctx? ctx)
-           (IVS (E (Q "(")
-                   (rename-local-bindings name ctx)
+           (IVS (E (rename-local-bindings name ctx)
                    (Q "(")
                    (apply E (intersperse (Q ",")
                                          (xire-compile-forms args ctx)))
-                   (Q ")")
                    (Q ")")))
            (report-syntax-error))])]
     [(_ . _)  ; FORM is already compiled.

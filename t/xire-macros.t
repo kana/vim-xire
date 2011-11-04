@@ -187,7 +187,7 @@
       (expect (xire-lookup-macro 'if expr-ctx (xire-env)) eq? #f)
       (expect (compile '(break) stmt-ctx) equal? "break\n")
       (expect (compile '(return) stmt-ctx) equal? "return\n")
-      (expect (compile '(if 3) expr-ctx) equal? "(if(3))")
+      (expect (compile '(if 3) expr-ctx) equal? "if(3)")
       (expect (compile '(if co-nd (break)) stmt-ctx)
               equal?
               (lines "if co_nd"
