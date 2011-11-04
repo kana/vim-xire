@@ -215,6 +215,29 @@
     (expect (rename-local-bindings 'z ctx) not eq? 'z)
     (expect (rename-local-bindings 'g ctx) eq? 'g)
     )
+  (it "should rename a local variable from outer context if necessary"
+    ; (define (_)
+    ;   ; ctx0
+    ;   (let ([x 3]
+    ;         [y 2])
+    ;     ; ctx1
+    ;     (let ([x (* x y)])
+    ;       ; ctx2
+    ;       ...)))
+    (define ctx0 (make-func-ctx (make-toplevel-ctx) '()))
+    (define ctx1 (make-local-ctx ctx0 '(x y)))
+    (define ctx2 (make-local-ctx ctx1 '(x)))
+    (expect (rename-local-bindings 'x ctx0) eq? 'x)
+    (expect (rename-local-bindings 'y ctx0) eq? 'y)
+    (expect (rename-local-bindings 'x ctx1) not eq? 'x)
+    (expect (rename-local-bindings 'y ctx1) not eq? 'y)
+    (expect (rename-local-bindings 'x ctx2) not eq? 'x)
+    (expect (rename-local-bindings 'y ctx2) not eq? 'y)
+    (expect (rename-local-bindings 'x ctx1)
+            not eq? (rename-local-bindings 'x ctx2))
+    (expect (rename-local-bindings 'y ctx1)
+            eq? (rename-local-bindings 'y ctx2))
+    )
   )
 
 

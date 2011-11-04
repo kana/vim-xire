@@ -137,7 +137,9 @@
 (define (make-local-ctx ctx vars)
   (define new-ctx (copy-ctx ctx))
   (set! (ref new-ctx 'locals)
-        (map (cut cons <> (gensym)) vars))  ; FIXME: Rename properly.
+    (append 
+      (map (cut cons <> (gensym)) vars)  ; FIXME: Rename properly.
+      (ref new-ctx 'locals)))
   new-ctx)
 
 (define (toplevel-ctx? ctx)
