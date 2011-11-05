@@ -355,7 +355,9 @@
     [(assq form (ref ctx 'locals))
      => cdr]
     [(memq form (ref ctx 'func-args))
-     (string->symbol #`"a:,form")]
+     (if (eq? form '...)
+       'a:000
+       (string->symbol #`"a:,form"))]
     [else
       form]))
 

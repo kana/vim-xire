@@ -10,3 +10,8 @@ function s:call(f)
   return a:f()
 endfunction
 echo s:call(function('s:hi'))
+
+function! s:rest(a, b, c, ...)
+  return [a:a, a:b, a:c, a:000]
+endfunction
+echo s:rest(1, 2, 3, 4, 5, 6)

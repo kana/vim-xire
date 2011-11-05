@@ -8,4 +8,8 @@
   (return (f)))
 (echo (s:call (function "s:hi")))
 
+(function (s:rest a b c ...)
+  (return (list a b c ...)))
+(echo (s:rest 1 2 3 4 5 6))
+
 ; vim: filetype=scheme

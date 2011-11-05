@@ -198,10 +198,11 @@
     (check 'g ctx)
     )
   (it "should rename form if it is a reference to a function parameter"
-    (define ctx (make-func-ctx (make-toplevel-ctx) '(a b c)))
+    (define ctx (make-func-ctx (make-toplevel-ctx) '(a b c ...)))
     (expect (rename-local-bindings 'a ctx) eq? 'a:a)
     (expect (rename-local-bindings 'b ctx) eq? 'a:b)
     (expect (rename-local-bindings 'c ctx) eq? 'a:c)
+    (expect (rename-local-bindings '... ctx) eq? 'a:000)
     (expect (rename-local-bindings 'd ctx) eq? 'd)
     )
   (it "should rename form if it is a reference to a function local variable"
