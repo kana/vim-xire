@@ -7,3 +7,5 @@
 (function (s:call f)
   (return (f)))
 (echo (s:call (function "s:hi")))
+
+; vim: filetype=scheme

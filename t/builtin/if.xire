@@ -11,3 +11,5 @@
 (if #t
   (echo "4-then")
   (echo "4-else"))
+
+; vim: filetype=scheme

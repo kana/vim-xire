@@ -1,3 +1,5 @@
 (echo (kbd "foo"))
 (echo (kbd "\"*p"))
 (echo (kbd "bar<BS>z"))
+
+; vim: filetype=scheme

@@ -4,3 +4,5 @@
   (echo i)
   (set! i (+ i 1))
   )
+
+; vim: filetype=scheme

@@ -1,2 +1,4 @@
 (set! foo 123)
 (echo foo)
+
+; vim: filetype=scheme

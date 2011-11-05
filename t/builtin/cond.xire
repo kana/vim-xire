@@ -19,3 +19,5 @@
 
 (cond
   [else (echo "then-1")])
+
+; vim: filetype=scheme

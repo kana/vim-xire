@@ -17,3 +17,5 @@
       (echo "let* (inner):" x y z))
     (echo "let* (outer) 2:" x y z)))
 (call (s:let-star))
+
+; vim: filetype=scheme
