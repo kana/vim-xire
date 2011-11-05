@@ -245,4 +245,5 @@
 
 (run-suites)
 
+; __END__
 ; vim: filetype=scheme
