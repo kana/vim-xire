@@ -51,6 +51,15 @@ Links
 
 
 
+Installation
+------------
+
+FIXME: Write details.
+
+
+
+
+
 External Commands
 -----------------
 
@@ -506,6 +515,24 @@ Macros
 ~~~~~~
 
 FIXME: Write about details of macros.
+
+
+
+
+
+Testing
+-------
+
+FIXME: Write details.
+
+
+
+
+
+Roadmap
+-------
+
+FIXME: Write details.
 
 
 
