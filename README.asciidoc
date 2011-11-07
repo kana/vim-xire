@@ -228,6 +228,9 @@ is transformed into a new form.  This transformation process is based on
 Bodies are arbitrary Scheme expressions, but they are evaluated with the
 following context:
 
+* Symbol `form` is bound to the form.
+* Symbol `ctx` is bound to the *context* in which the form is compiled.
+  FIXME: Write about API to use context.
 * Symbols such as `$<name>:<type>` are bound to values in the form which
   are matched to correcponding slots in the pattern of a clause.
 * Symbols such as `$<name>` are bound to results of
