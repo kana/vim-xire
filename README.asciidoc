@@ -562,7 +562,26 @@ to test all scripts easily.
 Roadmap
 -------
 
-FIXME: Write details.
+0.0.0::
+    Finish infrastructure of the compiler.
+
+0.1.0::
+    Cover major features of Vim script
+    to write applications without drawbacks.
+    Minor features such as `:|` (which works the same as `:p`)
+    will not be supported.
+
+0.2.0::
+    Add more useful syntax.
+
+0.3.0::
+    Add more documentation.
+
+0.4.0::
+    Add features for ease of debugging.
+
+0.5.0::
+    Tune up performance.
 
 
 
