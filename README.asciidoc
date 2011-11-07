@@ -54,7 +54,20 @@ Links
 Installation
 ------------
 
-FIXME: Write details.
+To install Xire, run commands like the following:
+
+----
+git clone git://github.com/kana/vim-xire.git
+cd ./vim-xire
+./DIST gen
+./configure
+make install
+----
+
+The above commands install the following:
+
+* <<_external_commands,Command-line tools>>
+* Gauche package `vim.xire` which is required to run the command-line tools
 
 
 
