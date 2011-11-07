@@ -536,7 +536,24 @@ FIXME: Write about details of macros.
 Testing
 -------
 
-FIXME: Write details.
+In source tree of Xire, all files matching the pattern `t/*.t` are test
+scripts.  The simplest way to run tets is to run each test script.  For
+example:
+
+----
+$ ./t/context.t
+ok 1 - should be a class for a context
+ok 2 - should copy a given context
+ok 3 - should raise error if non-expression context is given
+ok 4 - should raise error if non-statement context is given
+...
+----
+
+Since test scripts output results in
+http://testanything.org/wiki/index.php/TAP_specification[TAP version 12].
+So that it is recommended to use
+http://perldoc.perl.org/prove.html:[prove] or other TAP harness
+to test all scripts easily.
 
 
 
