@@ -300,10 +300,10 @@
 (define-xire-stmt define
   ; FIXME: Add tests on failure cases.
   ; FIXME: Detect reassignment.  (run-time? or compile-time?)
-  [(_ $var:sym $value:expr)
+  [(_ $var:sym $val:expr)
    (unless (not (func-ctx? ctx))
      (errorf "\"define\" is not available in functions: ~s" form))
-   (IVS (S 'let $var (Q '=) $value))]
+   (IVS (S 'let $var (Q '=) $val))]
   )
 
 (define-xire-stmt echo
