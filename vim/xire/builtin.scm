@@ -392,8 +392,8 @@
   )
 
 (define-xire-stmt set!
-  [(_ $var:expr $value:expr)
-   (IVS (S 'let $var (Q '=) $value))]
+  [(_ $lval:expr $rval:expr)
+   (IVS (S 'let $lval (Q '=) $rval))]
   )
 
 (define-xire-stmt until
