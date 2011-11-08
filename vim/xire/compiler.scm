@@ -444,6 +444,10 @@
        (when (not (symbol? form))
          (fail "invalid form for this type"))
        (IVS (E form))]
+      [(eq? type 'qsym)
+       (when (not (symbol? form))
+         (fail "invalid form for this type"))
+       form]
       [else
         (fail "invalid type")]))
   (if manyp

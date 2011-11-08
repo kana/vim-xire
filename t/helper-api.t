@@ -138,6 +138,13 @@
     (expect (transform-value '(x) #f 'sym expr-ctx)
             raise? <error>)
     )
+  (it "should transform give value into equivalent 'qsym'"
+    (expect (transform-value 'foo #f 'qsym stmt-ctx) eq? 'foo)
+    (expect (transform-value 'foo #f 'qsym expr-ctx) eq? 'foo)
+    )
+  (it "should raise error for invalid form with 'qsym'"
+    (expect (transform-value '(foo) #f 'qsym expr-ctx) raise? <error>)
+    )
   )
 
 
