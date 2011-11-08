@@ -522,6 +522,8 @@ according to other arguments:
         be a symbol, and variable renaming is not applied to `form`.
         This type is to express a name of variable, a name of entry in
         a dictionary etc.
+    `qsym`;;
+        Like type `form`, but `form` must be a symbol.
     Otherwise;;
         It is an error.
 
