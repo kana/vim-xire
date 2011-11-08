@@ -324,7 +324,7 @@
   )
 
 (define-xire-stmt for
-  [(_ $var:form $list:expr $body:form)  ; FIXME: $var:sym?
+  [(_ $var:qsym $list:expr $body:form)
    (let1 local-ctx (make-local-ctx ctx (list $var))
      (IVS (S 'for (xire-compile-expr $var local-ctx) 'in $list)
           (xire-compile $body local-ctx)
@@ -348,7 +348,7 @@
 
 (define-xire-stmt let
   ; FIXME: Add tests on failure cases.
-  [(_ (($var:form $val:form) ...) $body:form ...)  ; FIXME: $var:sym?
+  [(_ (($var:qsym $val:form) ...) $body:form ...)
    (unless (func-ctx? ctx)
      (errorf "\"let\" is available only in functions: ~s" form))
    (let ([old-ctx ctx]
@@ -371,7 +371,7 @@
 
 (define-xire-stmt let*
   ; FIXME: Add tests on failure cases.
-  [(_ (($var:form $val:form) ...) $body:form ...)  ; FIXME: $var:sym?
+  [(_ (($var:qsym $val:form) ...) $body:form ...)
    (unless (func-ctx? ctx)
      (errorf "\"let*\" is available only in functions: ~s" form))
    (let go ([form `(begin ,@$body)]
