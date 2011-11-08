@@ -123,6 +123,21 @@
     (expect (cadr (transform-value (list form-a form-b) #t 'form stmt-ctx))
             eq? form-b)
     )
+  (it "should transform give value into equivalent 'sym'"
+    (define func-ctx (make-func-ctx (make-toplevel-ctx) '(foo->bar)))
+    (expect (transform-value 'foo->bar #f 'sym stmt-ctx)
+            equal? (xire-compile-expr 'foo->bar stmt-ctx))
+    (expect (transform-value 'foo->bar #f 'sym expr-ctx)
+            equal? (xire-compile-expr 'foo->bar expr-ctx))
+    (expect (transform-value 'foo->bar #f 'sym func-ctx)
+            not equal? (xire-compile-expr 'foo->bar func-ctx))
+    (expect (transform-value 'foo->bar #f 'sym func-ctx)
+            equal? (xire-compile-expr 'foo->bar expr-ctx))
+    )
+  (it "should raise error for invalid form with 'sym'"
+    (expect (transform-value '(x) #f 'sym expr-ctx)
+            raise? <error>)
+    )
   )
 
 

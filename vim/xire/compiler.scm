@@ -433,6 +433,10 @@
        (xire-compile-expr form upper-ctx)]
       [(eq? type 'form)
        form]
+      [(eq? type 'sym)
+       (when (not (symbol? form))
+         (errorf "Invalid form for tranform-value with type ~s: ~s" type form))
+       (IVS (E form))]
       [else
         (errorf "Invalid type for transform-value: ~s" type)]))
   (if manyp
