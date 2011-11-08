@@ -1,3 +1,8 @@
-for i in [1, 2, 3]
-  echo i
-endfor
+function s:for()
+  let i0 = 123
+  for i1 in [1, 2, 3]
+    echo i1
+  endfor
+  echo i0
+endfunction
+call s:for()

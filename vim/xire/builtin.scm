@@ -324,10 +324,11 @@
   )
 
 (define-xire-stmt for
-  [(_ $var:expr $list:expr $body:stmt)
-   (IVS (S 'for $var 'in $list)
-        $body
-        (S 'endfor))]
+  [(_ $var:form $list:expr $body:form)  ; FIXME: $var:sym?
+   (let1 local-ctx (make-local-ctx ctx (list $var))
+     (IVS (S 'for (xire-compile-expr $var local-ctx) 'in $list)
+          (xire-compile $body local-ctx)
+          (S 'endfor)))]
   [(_ $var:form $list:form $body:form ...)
    `(for ,$var ,$list (begin ,@$body))]
   )
