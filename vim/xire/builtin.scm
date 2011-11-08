@@ -124,10 +124,10 @@
 ;;; -----
 
 (define-xire-expr not
-  [(_ $value:expr)
+  [(_ $val:expr)
    (IVS (E (Q "(")
            (Q "!")
-           $value
+           $val
            (Q ")")))]
   )
 ; Macro "-" supports both unary and binary usage.
@@ -214,14 +214,14 @@
    (IVS (E (Q (convert-key-sequence-conventions $string))))])
 
 (define-xire-expr list
-  [(_ $value:expr ...)
+  [(_ $val:expr ...)
    (IVS (E (Q "[")
-           (apply E (intersperse (Q ",") $value))
+           (apply E (intersperse (Q ",") $val))
            (Q "]")))]
   )
 
 (define-xire-expr dict
-  [(_ ($key:expr $value:expr) ...)
+  [(_ ($key:expr $val:expr) ...)
    (IVS (E (Q "{")
            (apply IVS
                   (map (cut E
@@ -231,7 +231,7 @@
                             <>
                             (Q ","))
                        $key
-                       $value))
+                       $val))
            (Q "}")))]
   )
 
@@ -307,8 +307,8 @@
   )
 
 (define-xire-stmt echo
-  [(_ $value:expr ...)
-   (IVS (apply S 'echo $value))]
+  [(_ $val:expr ...)
+   (IVS (apply S 'echo $val))]
   )
 
 (define-xire-stmt function
@@ -347,21 +347,21 @@
 
 (define-xire-stmt let
   ; FIXME: Add tests on failure cases.
-  [(_ (($var:form $value:form) ...) $body:form ...)  ; FIXME: $var:sym?
+  [(_ (($var:form $val:form) ...) $body:form ...)  ; FIXME: $var:sym?
    (unless (func-ctx? ctx)
      (errorf "\"let\" is available only in functions: ~s" form))
    (let ([old-ctx ctx]
          [new-ctx (make-local-ctx ctx $var)])
      `(begin
         ,@(let go ([vars $var]
-                   [values $value]
+                   [vals $val]
                    [forms '()])
             (if (null? vars)
               (reverse forms)
               (go (cdr vars)
-                  (cdr values)
+                  (cdr vals)
                   (cons `(set! ,(transform-value (car vars) #f 'expr new-ctx)
-                           ,(transform-value (car values) #f 'expr old-ctx))
+                           ,(transform-value (car vals) #f 'expr old-ctx))
                         forms))))
         ,@(transform-value $body #t 'stmt new-ctx)
         )
@@ -370,25 +370,25 @@
 
 (define-xire-stmt let*
   ; FIXME: Add tests on failure cases.
-  [(_ (($var:form $value:form) ...) $body:form ...)  ; FIXME: $var:sym?
+  [(_ (($var:form $val:form) ...) $body:form ...)  ; FIXME: $var:sym?
    (unless (func-ctx? ctx)
      (errorf "\"let*\" is available only in functions: ~s" form))
    (let go ([form `(begin ,@$body)]
             [vars (reverse $var)]
-            [values (reverse $value)])
+            [vals (reverse $val)])
      (if (null? vars)
        form
-       (go `(let ([,(car vars) ,(car values)])
+       (go `(let ([,(car vars) ,(car vals)])
               ,form)
            (cdr vars)
-           (cdr values))))]
+           (cdr vals))))]
   )
 
 ; letrec and letrec* are not useful unless real closures are implemented.
 
 (define-xire-stmt return
-  [(_ $value:expr)
-   (IVS (S 'return $value))]
+  [(_ $val:expr)
+   (IVS (S 'return $val))]
   )
 
 (define-xire-stmt set!
