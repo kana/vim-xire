@@ -620,5 +620,4 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 
-// vim: filetype=asciidoc
-// vim: textwidth=72 expandtab softtabstop=4 shiftwidth=4
+// vim: filetype=asciidoc textwidth=72 expandtab softtabstop=4 shiftwidth=4
