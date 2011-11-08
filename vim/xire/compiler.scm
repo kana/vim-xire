@@ -422,6 +422,13 @@
 (define match match)
 
 (define (transform-value form-or-forms manyp type upper-ctx)
+  (define (fail detail)
+    (errorf "Invalid usage (~a): (transform-value ~s ~s ~s ~s)"
+            detail
+            form-or-forms
+            manyp
+            type
+            upper-ctx))
   (define (transform-form form)
     (cond
       [(eq? type 'stmt)
@@ -435,10 +442,10 @@
        form]
       [(eq? type 'sym)
        (when (not (symbol? form))
-         (errorf "Invalid form for tranform-value with type ~s: ~s" type form))
+         (fail "invalid form for this type"))
        (IVS (E form))]
       [else
-        (errorf "Invalid type for transform-value: ~s" type)]))
+        (fail "invalid type")]))
   (if manyp
     (map transform-form form-or-forms)
     (transform-form form-or-forms)))
