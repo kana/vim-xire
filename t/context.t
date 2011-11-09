@@ -143,6 +143,18 @@
     )
   )
 
+(describe "script-ctx?"
+  (it "should return true for script context"
+    (define ctx (make-toplevel-ctx))
+    (expect (script-ctx? ctx) eq? #t)
+    (expect (script-ctx? (make-stmt-ctx ctx)) eq? #t)
+    (expect (script-ctx? (make-expr-ctx ctx)) eq? #t)
+    (expect (script-ctx? (make-func-ctx ctx '())) eq? #t)
+    (expect (script-ctx? (make <xire-ctx>)) eq? #t)
+    (expect (script-ctx? (make <xire-ctx> :in-scriptp #f)) eq? #f)
+    )
+  )
+
 (describe "stmt-ctx?"
   (it "should return true for statement context"
     (expect (stmt-ctx? (make <xire-ctx> :type 'stmt)) eq? #t)

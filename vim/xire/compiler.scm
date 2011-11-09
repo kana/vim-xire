@@ -21,6 +21,7 @@
     make-local-ctx
     make-stmt-ctx
     make-toplevel-ctx
+    script-ctx?
     stmt-ctx?
     toplevel-ctx?
     xire-compile
@@ -163,6 +164,8 @@
   (eq? (ref ctx 'type) 'expr))
 (define (func-ctx? ctx)
   (ref ctx 'in-funcp))
+(define (script-ctx? ctx)
+  (ref ctx 'in-scriptp))
 
 (define (ensure-stmt-ctx form ctx)
   (unless (stmt-ctx? ctx)
