@@ -349,8 +349,6 @@
 (define-xire-stmt let
   ; FIXME: Add tests on failure cases.
   [(_ (($var:qsym $val:qexpr) ...) $body:qstmt ...)
-   (unless (func-ctx? ctx)
-     (errorf "\"let\" is available only in functions: ~s" form))
    (let ([old-ctx ctx]
          [new-ctx (make-local-ctx ctx $var)])
      `(begin
@@ -372,8 +370,6 @@
 (define-xire-stmt let*
   ; FIXME: Add tests on failure cases.
   [(_ (($var:qsym $val:qexpr) ...) $body:qstmt ...)
-   (unless (func-ctx? ctx)
-     (errorf "\"let*\" is available only in functions: ~s" form))
    (let go ([form `(begin ,@$body)]
             [vars (reverse $var)]
             [vals (reverse $val)])

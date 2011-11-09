@@ -1,4 +1,5 @@
 (function (s:let)
+  (echo "==== let in function")
   (let ([x 2]
         [y 3])
     (echo "let (outer) 1:" "x =" x "y = " y)
@@ -8,7 +9,17 @@
     (echo "let (outer) 2:" "x =" x "y = " y)))
 (call (s:let))
 
+(echo "==== let in top-level")
+(let ([x 2]
+      [y 3])
+  (echo "let (outer) 1:" "x =" x "y = " y)
+  (let ([x 7]
+        [z (+ x y)])
+    (echo "let (inner):" "x =" x "y = " y "z = " z))
+  (echo "let (outer) 2:" "x =" x "y = " y))
+
 (function (s:let-star)
+  (echo "==== let* in function")
   (let* ([x 3]
          [y (+ x 1)]
          [z (* x y)])
@@ -17,5 +28,14 @@
       (echo "let* (inner):" x y z))
     (echo "let* (outer) 2:" x y z)))
 (call (s:let-star))
+
+(echo "==== let* in top-level")
+(let* ([x 3]
+       [y (+ x 1)]
+       [z (* x y)])
+  (echo "let* (outer) 1:" x y z)
+  (let* ([x (+ x y z)])
+    (echo "let* (inner):" x y z))
+  (echo "let* (outer) 2:" x y z))
 
 ; vim: filetype=scheme
