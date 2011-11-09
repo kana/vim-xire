@@ -238,6 +238,10 @@
     (expect (rename-local-bindings 'y ctx1)
             eq? (rename-local-bindings 'y ctx2))
     )
+  (it "should rename a function-local variable with 'L' prefix"
+    (define ctx (make-local-ctx (make-func-ctx (make-toplevel-ctx) '()) '(x)))
+    (expect (symbol->string (rename-local-bindings 'x ctx)) #/^L\d+$/)
+    )
   )
 
 
