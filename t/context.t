@@ -18,7 +18,12 @@
 
 (describe "copy-ctx"
   (it "should copy a given context"
-    (define c1 (make <xire-ctx> :type 'expr :toplevelp #f))
+    (define c1 (make <xire-ctx>  ; with slots having non-default values.
+                     :type 'expr
+                     :toplevelp #f
+                     :in-funcp #t
+                     :func-args '(a)
+                     :locals '(l)))
     (define c2 (copy-ctx c1))
     (for-each
       (lambda (slot-name)
