@@ -433,7 +433,8 @@
     (cond
       [(eq? type 'expr)
        (xire-compile-expr form upper-ctx)]
-      [(eq? type 'form)
+      [(or (eq? type 'form)
+           (eq? type 'qexpr))
        form]
       [(eq? type 'qsym)
        (when (not (symbol? form))

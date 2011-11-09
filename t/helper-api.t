@@ -145,6 +145,11 @@
   (it "should raise error for invalid form with 'qsym'"
     (expect (transform-value '(foo) #f 'qsym expr-ctx) raise? <error>)
     )
+  (it "should transform give value into equivalent 'qexpr'"
+    (define form '(expr form))
+    (expect (transform-value form #f 'qexpr expr-ctx) eq? form)
+    (expect (transform-value form #f 'qexpr stmt-ctx) eq? form)
+    )
   )
 
 
