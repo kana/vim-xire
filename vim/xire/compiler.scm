@@ -431,23 +431,23 @@
             upper-ctx))
   (define (transform-form form)
     (cond
+      [(eq? type 'expr)
+       (xire-compile-expr form upper-ctx)]
+      [(eq? type 'form)
+       form]
+      [(eq? type 'qsym)
+       (when (not (symbol? form))
+         (fail "invalid form for this type"))
+       form]
       [(eq? type 'stmt)
        (xire-compile form
                      (if (stmt-ctx? upper-ctx)
                        upper-ctx
                        (make-stmt-ctx upper-ctx)))]
-      [(eq? type 'expr)
-       (xire-compile-expr form upper-ctx)]
-      [(eq? type 'form)
-       form]
       [(eq? type 'sym)
        (when (not (symbol? form))
          (fail "invalid form for this type"))
        (IVS (E form))]
-      [(eq? type 'qsym)
-       (when (not (symbol? form))
-         (fail "invalid form for this type"))
-       form]
       [else
         (fail "invalid type")]))
   (if manyp
