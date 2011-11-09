@@ -88,7 +88,7 @@
 ;; - While <xire-ctx> holds local information, for example, whether a Xire
 ;;   script being compiled is a top-level statement or not.
 (define-class <xire-ctx> ()
-  ([type  ; The type of a form being compiled -- statement, expression, etc.
+  ([type  ; The type of a form being compiled -- stmt or expr.
      :init-keyword :type
      :init-value 'stmt]
    [toplevelp
