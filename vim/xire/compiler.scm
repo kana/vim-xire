@@ -434,7 +434,8 @@
       [(eq? type 'expr)
        (xire-compile-expr form upper-ctx)]
       [(or (eq? type 'form)
-           (eq? type 'qexpr))
+           (eq? type 'qexpr)
+           (eq? type 'qstmt))
        form]
       [(eq? type 'qsym)
        (when (not (symbol? form))

@@ -150,6 +150,11 @@
     (expect (transform-value form #f 'qexpr expr-ctx) eq? form)
     (expect (transform-value form #f 'qexpr stmt-ctx) eq? form)
     )
+  (it "should transform give value into equivalent 'qstmt"
+    (define form '(stmt form))
+    (expect (transform-value form #f 'qstmt expr-ctx) eq? form)
+    (expect (transform-value form #f 'qstmt stmt-ctx) eq? form)
+    )
   )
 
 
