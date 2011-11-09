@@ -515,6 +515,9 @@ according to other arguments:
         Given `form` is compiled as an expression.
     `form`;;
         Given `form` is not compiled; it is returned as is.
+    `qexpr`;;
+        Same as type `form`.  This type is to express given `form` is
+        expected to be an expression.
     `qsym`;;
         Like type `form`, but `form` must be a symbol.
     `stmt`;;
