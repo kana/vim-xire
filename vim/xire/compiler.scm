@@ -139,9 +139,19 @@
   new-ctx)
 (define (make-local-ctx ctx vars)
   (define new-ctx (copy-ctx ctx))
+  (define (generate-new-name)
+    (cond
+      [(func-ctx? ctx)
+       ; Xire script doesn't provide any way to define function-local
+       ; variables except "let" family.  And it's not usual to access
+       ; function-local variables from other context.  So that it's not
+       ; necessary to take care on name collisions.
+       (gensym)]
+      [else  ; FIXME: Rename properly.
+        (gensym)]))
   (set! (ref new-ctx 'locals)
     (append 
-      (map (cut cons <> (gensym)) vars)  ; FIXME: Rename properly.
+      (map (cut cons <> (generate-new-name)) vars)
       (ref new-ctx 'locals)))
   new-ctx)
 
