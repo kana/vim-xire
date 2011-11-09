@@ -182,18 +182,18 @@
     (expect (rename-local-bindings #/bar/ ctx) raise? <error>)
     (expect (rename-local-bindings '(func arg) ctx) raise? <error>)
     )
-  (it "should leave form as is if it is not in a function context (1)"
+  (it "should leave form as is if it is not in any local context"
     (define ctx (make-toplevel-ctx))
     (expect (rename-local-bindings 'a ctx) eq? 'a)
     (expect (rename-local-bindings 'b ctx) eq? 'b)
     (expect (rename-local-bindings 'c ctx) eq? 'c)
     (expect (rename-local-bindings 'd ctx) eq? 'd)
     )
-  (it "should leave form as is if it is not in a function context (2)"
+  (it "should rename form if it is in a local but not function context"
     (define ctx (make-local-ctx (make-toplevel-ctx) '(x y z)))
-    (expect (rename-local-bindings 'x ctx) eq? 'x)
-    (expect (rename-local-bindings 'y ctx) eq? 'y)
-    (expect (rename-local-bindings 'z ctx) eq? 'z)
+    (expect (rename-local-bindings 'x ctx) not eq? 'x)
+    (expect (rename-local-bindings 'y ctx) not eq? 'y)
+    (expect (rename-local-bindings 'z ctx) not eq? 'z)
     (expect (rename-local-bindings 'g ctx) eq? 'g)
     )
   (it "should rename form if it is a reference to a function parameter"
@@ -241,6 +241,12 @@
   (it "should rename a function-local variable with 'L' prefix"
     (define ctx (make-local-ctx (make-func-ctx (make-toplevel-ctx) '()) '(x)))
     (expect (symbol->string (rename-local-bindings 'x ctx)) #/^L\d+$/)
+    )
+  (it "should rename a script-local variable with 's:__L' prefix"
+    (define ctx (make-local-ctx (make-toplevel-ctx) '(x)))
+    (expect (script-ctx? ctx) eq? #t)
+    (expect (func-ctx? ctx) eq? #f)
+    (expect (symbol->string (rename-local-bindings 'x ctx)) #/^s:__L\d+$/)
     )
   )
 

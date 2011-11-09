@@ -141,13 +141,19 @@
 (define (make-local-ctx ctx vars)
   (define new-ctx (copy-ctx ctx))
   (define (generate-new-name)
-    (cond
+    (cond  ; The order of clauses is important.
       [(func-ctx? new-ctx)
        ; Xire script doesn't provide any way to define function-local
        ; variables except "let" family.  And it's not usual to access
        ; function-local variables from other context.  So that it's not
        ; necessary to take care on name collision.
        (gensym "L")]
+      [(script-ctx? new-ctx)
+       ; There is a chance of name collision between variables explicitly
+       ; defined with "define" and variables implicitly defined with "let"
+       ; family.  To avoid unexpected name collision, generate variable name
+       ; with a prefix which, probably, users will not use.
+       (gensym "s:__L")]
       [else  ; FIXME: Rename properly.
         (gensym)]))
   (set! (ref new-ctx 'locals)
@@ -368,8 +374,6 @@
   (cond
     [(not (symbol? form))
      (errorf "Error: rename-local-bindings with non-symbol value: ~s" form)]
-    [(not (func-ctx? ctx))
-     form]
     [(assq form (ref ctx 'locals))
      => cdr]
     [(memq form (ref ctx 'func-args))
