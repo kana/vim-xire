@@ -513,17 +513,17 @@ according to other arguments:
 
     `expr`;;
         Given `form` is compiled as an expression.
-    `stmt`;;
-        Given `form` is compiled as a statement.
     `form`;;
         Given `form` is not compiled; it is returned as is.
+    `qsym`;;
+        Like type `form`, but `form` must be a symbol.
+    `stmt`;;
+        Given `form` is compiled as a statement.
     `sym`;;
         Given `form` is compiled as an expression, but the `form` must
         be a symbol, and variable renaming is not applied to `form`.
         This type is to express a name of variable, a name of entry in
         a dictionary etc.
-    `qsym`;;
-        Like type `form`, but `form` must be a symbol.
     Otherwise;;
         It is an error.
 
