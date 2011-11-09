@@ -21,6 +21,7 @@
     (define c1 (make <xire-ctx>  ; with slots having non-default values.
                      :type 'expr
                      :toplevelp #f
+                     :in-scriptp #f
                      :in-funcp #t
                      :func-args '(a)
                      :locals '(l)))

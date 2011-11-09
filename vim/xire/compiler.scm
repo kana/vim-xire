@@ -94,6 +94,9 @@
    [toplevelp
      :init-keyword :toplevelp
      :init-value #t]
+   [in-scriptp  ; #t if a form in a scirpt file being compiled; otherwise, #f.
+     :init-keyword :in-scriptp
+     :init-value #t]
    [in-funcp
      :init-keyword :in-funcp
      :init-value #f]
