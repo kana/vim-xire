@@ -19,7 +19,7 @@
 
 (define-macro (define-binary-operator name op :optional default-val)
   `(define-xire-expr ,name
-     [(_ $val1:form)
+     [(_ $val1:qexpr)
       (when (undefined? ,default-val)
         (errorf "Operator ~s takes two or more arguments" ',name))
       `(,',name ,',default-val ,$val1)]
@@ -29,7 +29,7 @@
               (Q ,op)
               $val2
               (Q ")")))]
-     [(_ $val1:form $val2:form $valN:form ...)
+     [(_ $val1:qexpr $val2:qexpr $valN:qexpr ...)
       `(,',name (,',name ,$val1 ,$val2)
                 ,@$valN)]
      ))
@@ -42,7 +42,7 @@
               (Q ,op)
               $val2
               (Q ")")))]
-     [(_ $val1:form $val2:form $valN:form ...)
+     [(_ $val1:qexpr $val2:qexpr $valN:qexpr ...)
       `(and (,',name ,$val1 ,$val2)
             (,',name ,$val2 ,@$valN))]
      ))
@@ -210,7 +210,7 @@
 
 ; Supplimental notation for strings to describe key sequences.
 (define-xire-expr kbd
-  [(_ $string:form)
+  [(_ $string:qexpr)
    (IVS (E (Q (convert-key-sequence-conventions $string))))])
 
 (define-xire-expr list
@@ -315,21 +315,21 @@
   ; FIXME: Support !.
   ; FIXME: Support range, abort and dict.
   ; FIXME: Check values on $name and $arg.
-  [(_ ($name:form $arg:form ...) $body:form ...)
+  [(_ ($name:qsym $arg:sym ...) $body:qstmt ...)
    (IVS
      (S 'function $name (Q "(") (apply E (intersperse (Q ",") $arg)) (Q ")"))
-     (apply IVS (xire-compile-forms $body (make-func-ctx ctx $arg)))
+     (apply IVS (xire-compile-forms $body (make-func-ctx ctx $arg:sym)))
      (S 'endfunction)
      )]
   )
 
 (define-xire-stmt for
-  [(_ $var:qsym $list:expr $body:form)
+  [(_ $var:qsym $list:expr $body:qstmt)
    (let1 local-ctx (make-local-ctx ctx (list $var))
      (IVS (S 'for (xire-compile-expr $var local-ctx) 'in $list)
           (xire-compile $body local-ctx)
           (S 'endfor)))]
-  [(_ $var:form $list:form $body:form ...)
+  [(_ $var:qsym $list:qexpr $body:qstmt ...)
    `(for ,$var ,$list (begin ,@$body))]
   )
 
@@ -348,7 +348,7 @@
 
 (define-xire-stmt let
   ; FIXME: Add tests on failure cases.
-  [(_ (($var:qsym $val:form) ...) $body:form ...)
+  [(_ (($var:qsym $val:qexpr) ...) $body:qstmt ...)
    (unless (func-ctx? ctx)
      (errorf "\"let\" is available only in functions: ~s" form))
    (let ([old-ctx ctx]
@@ -371,7 +371,7 @@
 
 (define-xire-stmt let*
   ; FIXME: Add tests on failure cases.
-  [(_ (($var:qsym $val:form) ...) $body:form ...)
+  [(_ (($var:qsym $val:qexpr) ...) $body:qstmt ...)
    (unless (func-ctx? ctx)
      (errorf "\"let*\" is available only in functions: ~s" form))
    (let go ([form `(begin ,@$body)]
@@ -398,12 +398,12 @@
   )
 
 (define-xire-stmt until
-  [(_ $cond:form $body:form ...)
+  [(_ $cond:qexpr $body:qstmt ...)
    `(while (not ,$cond) (begin ,@$body))]
   )
 
 (define-xire-stmt when
-  [(_ $cond:form $then:form ...)
+  [(_ $cond:qexpr $then:qstmt ...)
    `(if ,$cond
       (begin
         ,@$then))]
@@ -414,7 +414,7 @@
    (IVS (S 'while $cond)
         $body
         (S 'endwhile))]
-  [(_ $cond:form $body:form ...)
+  [(_ $cond:qexpr $body:qstmt ...)
    `(while ,$cond (begin ,@$body))]
   )
 
