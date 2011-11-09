@@ -124,6 +124,10 @@
     (check c3 c2)
     (expect (ref c2 'locals) equal? (ref c3 'locals))
     )
+  (it "should fail to 'inherit' from non-function and non-script context"
+    (expect (make-local-ctx (make <xire-ctx> :in-scriptp #f) '(x))
+            raise? <error>)
+    )
   )
 
 (describe "make-stmt-ctx"

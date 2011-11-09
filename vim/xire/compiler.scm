@@ -154,8 +154,8 @@
        ; family.  To avoid unexpected name collision, generate variable name
        ; with a prefix which, probably, users will not use.
        (gensym "s:__L")]
-      [else  ; FIXME: Rename properly.
-        (gensym)]))
+      [else
+        (error "Lexical variables are not available in this context.")]))
   (set! (ref new-ctx 'locals)
     (append 
       (map (cut cons <> (generate-new-name)) vars)
