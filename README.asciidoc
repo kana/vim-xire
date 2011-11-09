@@ -518,6 +518,9 @@ according to other arguments:
     `qexpr`;;
         Same as type `form`.  This type is to express given `form` is
         expected to be an expression.
+    `qstmt`;;
+        Same as type `form`.  This type is to express given `form` is
+        expected to be a statement.
     `qsym`;;
         Like type `form`, but `form` must be a symbol.
     `stmt`;;
