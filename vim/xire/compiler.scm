@@ -333,7 +333,9 @@
      form]
     [_
       (ensure-expr-ctx form ctx)
-      (IVS (E (rename-local-bindings form ctx)))]))
+      (IVS (E (if (symbol? form)
+                (rename-local-bindings form ctx)
+                form)))]))
 
 ;; Compile a Xire script EXPR then return a resulting Vim script in IVS.
 ;; This is an abbreviated form of xire-compile for typical use.
@@ -352,7 +354,7 @@
 (define (rename-local-bindings form ctx)
   (cond
     [(not (symbol? form))
-     form]
+     (errorf "Error: rename-local-bindings with non-symbol value: ~s" form)]
     [(not (func-ctx? ctx))
      form]
     [(assq form (ref ctx 'locals))

@@ -174,14 +174,15 @@
 (describe "rename-local-bindings"
   (define (check value ctx)
     (expect (rename-local-bindings value ctx) eq? value))
-  (it "should leave form as is if it is not a variable reference"
+  (it "should fail if form is not a variable reference"
     (define ctx (make-func-ctx (make-toplevel-ctx) '(a b c)))
-    (check #f ctx)
-    (check #t ctx)
-    (check 123 ctx)
-    (check "foo" ctx)
-    (check #/bar/ ctx)
-    (check '(func arg) ctx)
+    (expect (rename-local-bindings #f ctx) raise? <error>)
+    (expect (rename-local-bindings #f ctx) raise? <error>)
+    (expect (rename-local-bindings #t ctx) raise? <error>)
+    (expect (rename-local-bindings 123 ctx) raise? <error>)
+    (expect (rename-local-bindings "foo" ctx) raise? <error>)
+    (expect (rename-local-bindings #/bar/ ctx) raise? <error>)
+    (expect (rename-local-bindings '(func arg) ctx) raise? <error>)
     )
   (it "should leave form as is if it is not in a function context (1)"
     (define ctx (make-toplevel-ctx))
