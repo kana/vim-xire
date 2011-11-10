@@ -15,9 +15,9 @@
 
 (describe "xire-translate"
   (define env (make <xire-env>))
-  (define toplevel-ctx (make-toplevel-ctx))
-  (define stmt-ctx (make-stmt-ctx toplevel-ctx))
-  (define expr-ctx (make-expr-ctx toplevel-ctx))
+  (define root-ctx (make-root-ctx))
+  (define stmt-ctx (make-stmt-ctx root-ctx))
+  (define expr-ctx (make-expr-ctx root-ctx))
   (define (translate s)
     (call-with-string-io s
       (cut xire-translate <> <> :env env)))
@@ -91,9 +91,9 @@
       (with-output-to-string
         (lambda ()
           (write-tree (xire-compile form ctx))))))
-  (define toplevel-ctx (make-toplevel-ctx))
-  (define stmt-ctx (make-stmt-ctx toplevel-ctx))
-  (define expr-ctx (make-expr-ctx toplevel-ctx))
+  (define root-ctx (make-root-ctx))
+  (define stmt-ctx (make-stmt-ctx root-ctx))
+  (define expr-ctx (make-expr-ctx root-ctx))
   (xire-register-macro!
     'macro
     (lambda (form ctx)
@@ -134,9 +134,9 @@
       (with-output-to-string
         (lambda ()
           (write-tree (xire-compile-expr form ctx))))))
-  (define toplevel-ctx (make-toplevel-ctx))
-  (define stmt-ctx (make-stmt-ctx toplevel-ctx))
-  (define expr-ctx (make-expr-ctx toplevel-ctx))
+  (define root-ctx (make-root-ctx))
+  (define stmt-ctx (make-stmt-ctx root-ctx))
+  (define expr-ctx (make-expr-ctx root-ctx))
   (it "should compile an expression in expression context"
     (expect (compile 'foo expr-ctx) equal? "foo")
     )
@@ -152,9 +152,9 @@
       (with-output-to-string
         (lambda ()
           (write-tree (xire-compile-forms forms ctx))))))
-  (define toplevel-ctx (make-toplevel-ctx))
-  (define stmt-ctx (make-stmt-ctx toplevel-ctx))
-  (define expr-ctx (make-expr-ctx toplevel-ctx))
+  (define root-ctx (make-root-ctx))
+  (define stmt-ctx (make-stmt-ctx root-ctx))
+  (define expr-ctx (make-expr-ctx root-ctx))
   (xire-register-macro!
     'macro
     (lambda (form ctx)
@@ -173,7 +173,7 @@
 
 (describe "rename-local-bindings"
   (it "should fail if form is not a variable reference"
-    (define ctx (make-func-ctx (make-toplevel-ctx) '(a b c)))
+    (define ctx (make-func-ctx (make-root-ctx) '(a b c)))
     (expect (rename-local-bindings #f ctx) raise? <error>)
     (expect (rename-local-bindings #f ctx) raise? <error>)
     (expect (rename-local-bindings #t ctx) raise? <error>)
@@ -183,21 +183,21 @@
     (expect (rename-local-bindings '(func arg) ctx) raise? <error>)
     )
   (it "should leave form as is if it is not in any local context"
-    (define ctx (make-toplevel-ctx))
+    (define ctx (make-root-ctx))
     (expect (rename-local-bindings 'a ctx) eq? 'a)
     (expect (rename-local-bindings 'b ctx) eq? 'b)
     (expect (rename-local-bindings 'c ctx) eq? 'c)
     (expect (rename-local-bindings 'd ctx) eq? 'd)
     )
   (it "should rename form if it is in a local but not function context"
-    (define ctx (make-local-ctx (make-toplevel-ctx) '(x y z)))
+    (define ctx (make-local-ctx (make-root-ctx) '(x y z)))
     (expect (rename-local-bindings 'x ctx) not eq? 'x)
     (expect (rename-local-bindings 'y ctx) not eq? 'y)
     (expect (rename-local-bindings 'z ctx) not eq? 'z)
     (expect (rename-local-bindings 'g ctx) eq? 'g)
     )
   (it "should rename form if it is a reference to a function parameter"
-    (define ctx (make-func-ctx (make-toplevel-ctx) '(a b c ...)))
+    (define ctx (make-func-ctx (make-root-ctx) '(a b c ...)))
     (expect (rename-local-bindings 'a ctx) eq? 'a:a)
     (expect (rename-local-bindings 'b ctx) eq? 'a:b)
     (expect (rename-local-bindings 'c ctx) eq? 'a:c)
@@ -205,7 +205,7 @@
     (expect (rename-local-bindings 'd ctx) eq? 'd)
     )
   (it "should rename form if it is a reference to a function local variable"
-    (define ctx (make-local-ctx (make-func-ctx (make-toplevel-ctx) '(a b c))
+    (define ctx (make-local-ctx (make-func-ctx (make-root-ctx) '(a b c))
                                 '(x y z)))
     (expect (rename-local-bindings 'a ctx) eq? 'a:a)
     (expect (rename-local-bindings 'b ctx) eq? 'a:b)
@@ -224,7 +224,7 @@
     ;     (let ([x (* x y)])
     ;       ; ctx2
     ;       ...)))
-    (define ctx0 (make-func-ctx (make-toplevel-ctx) '()))
+    (define ctx0 (make-func-ctx (make-root-ctx) '()))
     (define ctx1 (make-local-ctx ctx0 '(x y)))
     (define ctx2 (make-local-ctx ctx1 '(x)))
     (expect (rename-local-bindings 'x ctx0) eq? 'x)
@@ -239,11 +239,11 @@
             eq? (rename-local-bindings 'y ctx2))
     )
   (it "should rename a function-local variable with 'L' prefix"
-    (define ctx (make-local-ctx (make-func-ctx (make-toplevel-ctx) '()) '(x)))
+    (define ctx (make-local-ctx (make-func-ctx (make-root-ctx) '()) '(x)))
     (expect (symbol->string (rename-local-bindings 'x ctx)) #/^L\d+$/)
     )
   (it "should rename a script-local variable with 's:__L' prefix"
-    (define ctx (make-local-ctx (make-toplevel-ctx) '(x)))
+    (define ctx (make-local-ctx (make-root-ctx) '(x)))
     (expect (script-ctx? ctx) eq? #t)
     (expect (func-ctx? ctx) eq? #f)
     (expect (symbol->string (rename-local-bindings 'x ctx)) #/^s:__L\d+$/)

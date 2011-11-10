@@ -19,8 +19,8 @@
     make-expr-ctx
     make-func-ctx
     make-local-ctx
+    make-root-ctx
     make-stmt-ctx
-    make-toplevel-ctx
     script-ctx?
     stmt-ctx?
     xire-compile
@@ -86,7 +86,7 @@
 ;;
 ;; - <xire-env> holds global information such as Xire macro bindings.
 ;; - While <xire-ctx> holds local information, for example, whether a Xire
-;;   script being compiled is a top-level statement or not.
+;;   script being compiled is a statement or not.
 (define-class <xire-ctx> ()
   ([type  ; The type of a form being compiled -- stmt or expr.
      :init-keyword :type
@@ -113,7 +113,7 @@
       (map slot-definition-name (class-direct-slots <xire-ctx>)))
     new-ctx))
 
-(define (make-toplevel-ctx)
+(define (make-root-ctx)
   (make <xire-ctx>))
 (define (make-stmt-ctx ctx)
   (define new-ctx (copy-ctx ctx))
@@ -295,7 +295,7 @@
   (define compiled-vim-script-tree (list))
   (define (finish)
     (write-tree (reverse compiled-vim-script-tree) output-port))
-  (define ctx (make-toplevel-ctx))
+  (define ctx (make-root-ctx))
 
   (eval '(extend user) scheme-env)
   (parameterize ([xire-env env])

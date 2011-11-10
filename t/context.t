@@ -55,7 +55,7 @@
 
 (describe "func-ctx?"
   (it "should return true for function context"
-    (define ctx (make-toplevel-ctx))
+    (define ctx (make-root-ctx))
     (expect (func-ctx? ctx) eq? #f)
     (expect (func-ctx? (make-stmt-ctx ctx)) eq? #f)
     (expect (func-ctx? (make-expr-ctx ctx)) eq? #f)
@@ -78,7 +78,7 @@
 
 (describe "make-func-ctx"
   (it "should make a function context from a given context"
-    (define c1 (make-stmt-ctx (make-toplevel-ctx)))
+    (define c1 (make-stmt-ctx (make-root-ctx)))
     (define c2 (make-func-ctx c1 '(a b c)))
     (define c3 (make-stmt-ctx c2))
     (define (check %c1 %c2)
@@ -103,7 +103,7 @@
 
 (describe "make-local-ctx"
   (it "should make a local binding context from a given context"
-    (define c1 (make-stmt-ctx (make-toplevel-ctx)))
+    (define c1 (make-stmt-ctx (make-root-ctx)))
     (define c2 (make-local-ctx c1 '(a b c)))
     (define c3 (make-stmt-ctx c2))
     (define (check %c1 %c2)
@@ -136,16 +136,16 @@
     )
   )
 
-(describe "make-toplevel-ctx"
-  (it "should make a top-level context"
-    (define c1 (make-toplevel-ctx))
+(describe "make-root-ctx"
+  (it "should make a root context"
+    (define c1 (make-root-ctx))
     (expect (stmt-ctx? c1) eq? #t)
     )
   )
 
 (describe "script-ctx?"
   (it "should return true for script context"
-    (define ctx (make-toplevel-ctx))
+    (define ctx (make-root-ctx))
     (expect (script-ctx? ctx) eq? #t)
     (expect (script-ctx? (make-stmt-ctx ctx)) eq? #t)
     (expect (script-ctx? (make-expr-ctx ctx)) eq? #t)

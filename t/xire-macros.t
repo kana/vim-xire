@@ -32,8 +32,8 @@
   )
 
 (describe "xire-lookup-macro"
-  (define stmt-ctx (make-stmt-ctx (make-toplevel-ctx)))
-  (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))
+  (define stmt-ctx (make-stmt-ctx (make-root-ctx)))
+  (define expr-ctx (make-expr-ctx (make-root-ctx)))
   (define env (make <xire-env>))
   (define (stmt-expander form ctx) "stmt")
   (define (expr-expander form ctx) "expr")
@@ -50,8 +50,8 @@
   )
 
 (describe "xire-register-macro!"
-  (define stmt-ctx (make-stmt-ctx (make-toplevel-ctx)))
-  (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))
+  (define stmt-ctx (make-stmt-ctx (make-root-ctx)))
+  (define expr-ctx (make-expr-ctx (make-root-ctx)))
   (define env (make <xire-env>))
   (define (stmt-expander form ctx) "stmt")
   (define (expr-expander form ctx) "expr")
@@ -68,8 +68,8 @@
   )
 
 (describe "define-xire-macro"
-  (define stmt-ctx (make-stmt-ctx (make-toplevel-ctx)))
-  (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))
+  (define stmt-ctx (make-stmt-ctx (make-root-ctx)))
+  (define expr-ctx (make-expr-ctx (make-root-ctx)))
   (it "should define new macro for given context in the current environment"
     (parameterize ([xire-env (make <xire-env>)])
       (expect (xire-lookup-macro 'foo stmt-ctx (xire-env)) eq? #f)
@@ -142,8 +142,8 @@
   )
 
 (describe "define-xire-expr"
-  (define stmt-ctx (make-stmt-ctx (make-toplevel-ctx)))
-  (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))
+  (define stmt-ctx (make-stmt-ctx (make-root-ctx)))
+  (define expr-ctx (make-expr-ctx (make-root-ctx)))
   (it "should define new expression macro in the current environment"
     (parameterize ([xire-env (make <xire-env>)])
       (expect (xire-lookup-macro if stmt-ctx (xire-env)) eq? #f)
@@ -162,8 +162,8 @@
   )
 
 (describe "define-xire-stmt"
-  (define stmt-ctx (make-stmt-ctx (make-toplevel-ctx)))
-  (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))
+  (define stmt-ctx (make-stmt-ctx (make-root-ctx)))
+  (define expr-ctx (make-expr-ctx (make-root-ctx)))
   (define (lines . strings)
     (string-join strings "\n" 'suffix))
   (it "should define new statement macro in the current environment"
@@ -205,8 +205,8 @@
   )
 
 (describe "define-xire-stmt shorthand"
-  (define stmt-ctx (make-stmt-ctx (make-toplevel-ctx)))
-  (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))
+  (define stmt-ctx (make-stmt-ctx (make-root-ctx)))
+  (define expr-ctx (make-expr-ctx (make-root-ctx)))
   (it "should define a statement macro for simple cocmmand"
     (parameterize ([xire-env (make <xire-env>)])
       (expect (xire-lookup-macro 'break stmt-ctx (xire-env)) eq? #f)

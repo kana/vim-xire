@@ -81,8 +81,8 @@
   )
 
 (describe "transform-value"
-  (define stmt-ctx (make-stmt-ctx (make-toplevel-ctx)))
-  (define expr-ctx (make-expr-ctx (make-toplevel-ctx)))
+  (define stmt-ctx (make-stmt-ctx (make-root-ctx)))
+  (define expr-ctx (make-expr-ctx (make-root-ctx)))
   (it "should transform give value into equivalent 'stmt'"
     (parameterize ([xire-env (make <xire-env>)])
       (define-xire-stmt halt break)
@@ -124,7 +124,7 @@
             eq? form-b)
     )
   (it "should transform give value into equivalent 'sym'"
-    (define func-ctx (make-func-ctx (make-toplevel-ctx) '(foo->bar)))
+    (define func-ctx (make-func-ctx (make-root-ctx) '(foo->bar)))
     (expect (transform-value 'foo->bar #f 'sym stmt-ctx)
             equal? (xire-compile-expr 'foo->bar stmt-ctx))
     (expect (transform-value 'foo->bar #f 'sym expr-ctx)
