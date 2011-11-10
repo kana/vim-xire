@@ -122,7 +122,7 @@
     (expect (ref c2 'locals) equal? (ref c3 'locals))
     )
   (it "should fail to 'inherit' from non-function and non-script context"
-    (expect (make-local-ctx (make <xire-ctx> :in-scriptp #f) '(x))
+    (expect (make-local-ctx (make-root-ctx :in-scriptp #f) '(x))
             raise? <error>)
     )
   )
@@ -157,13 +157,16 @@
 
 (describe "script-ctx?"
   (it "should return true for script context"
-    (define ctx (make-root-ctx))
-    (expect (script-ctx? ctx) eq? #t)
-    (expect (script-ctx? (make-stmt-ctx ctx)) eq? #t)
-    (expect (script-ctx? (make-expr-ctx ctx)) eq? #t)
-    (expect (script-ctx? (make-func-ctx ctx '())) eq? #t)
-    (expect (script-ctx? (make <xire-ctx>)) eq? #t)
-    (expect (script-ctx? (make <xire-ctx> :in-scriptp #f)) eq? #f)
+    (define ctx1 (make-root-ctx))
+    (define ctx2 (make-root-ctx :in-scriptp #f))
+    (expect (script-ctx? ctx1) eq? #t)
+    (expect (script-ctx? (make-stmt-ctx ctx1)) eq? #t)
+    (expect (script-ctx? (make-expr-ctx ctx1)) eq? #t)
+    (expect (script-ctx? (make-func-ctx ctx1 '())) eq? #t)
+    (expect (script-ctx? ctx2) eq? #f)
+    (expect (script-ctx? (make-stmt-ctx ctx2)) eq? #f)
+    (expect (script-ctx? (make-expr-ctx ctx2)) eq? #f)
+    (expect (script-ctx? (make-func-ctx ctx2 '())) eq? #f)
     )
   )
 
