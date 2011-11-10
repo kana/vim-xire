@@ -480,7 +480,7 @@ There are also the following shorthands for `define-xire-stmt`:
 Helper API
 ~~~~~~~~~~
 
-In Xire script, the following API is available to define Xire macros:
+The following Scheme API is available to define advanced Xire macros:
 
 
 
