@@ -34,22 +34,22 @@
 
 (describe "ensure-expr-ctx"
   (it "should raise error if non-expression context is given"
-    (expect (ensure-expr-ctx 'form (make <xire-ctx> :type 'expr)) not raise?)
-    (expect (ensure-expr-ctx 'form (make <xire-ctx> :type 'stmt)) raise?)
+    (expect (ensure-expr-ctx 'form (make-expr-ctx (make-root-ctx))) not raise?)
+    (expect (ensure-expr-ctx 'form (make-stmt-ctx (make-root-ctx))) raise?)
     )
   )
 
 (describe "ensure-stmt-ctx"
   (it "should raise error if non-statement context is given"
-    (expect (ensure-stmt-ctx 'form (make <xire-ctx> :type 'stmt)) not raise?)
-    (expect (ensure-stmt-ctx 'form (make <xire-ctx> :type 'expr)) raise?)
+    (expect (ensure-stmt-ctx 'form (make-stmt-ctx (make-root-ctx))) not raise?)
+    (expect (ensure-stmt-ctx 'form (make-expr-ctx (make-root-ctx))) raise?)
     )
   )
 
 (describe "expr-ctx?"
   (it "should return true for expression context"
-    (expect (expr-ctx? (make <xire-ctx> :type 'expr)) eq? #t)
-    (expect (expr-ctx? (make <xire-ctx> :type 'stmt)) eq? #f)
+    (expect (expr-ctx? (make-expr-ctx (make-root-ctx))) eq? #t)
+    (expect (expr-ctx? (make-stmt-ctx (make-root-ctx))) eq? #f)
     )
   )
 
@@ -70,9 +70,8 @@
 
 (describe "make-expr-ctx"
   (it "should make an expression context from a given context"
-    (define c1 (make <xire-ctx>))
-    (define c2 (make-expr-ctx c1))
-    (expect (expr-ctx? c2) eq? #t)
+    (expect (expr-ctx? (make-expr-ctx (make-root-ctx))) eq? #t)
+    (expect (expr-ctx? (make-expr-ctx (make-stmt-ctx (make-root-ctx)))) eq? #t)
     )
   )
 
@@ -128,18 +127,22 @@
     )
   )
 
-(describe "make-stmt-ctx"
-  (it "should make a statement context from a given context"
-    (define c1 (make <xire-ctx>))
-    (define c2 (make-stmt-ctx c1))
-    (expect (stmt-ctx? c2) eq? #t)
+(describe "make-root-ctx"
+  (it "should make a root context"
+    (define ctx (make-root-ctx))
+    (expect (stmt-ctx? ctx) eq? #t)
+    (expect (expr-ctx? ctx) eq? #f)
+    (expect (func-ctx? ctx) eq? #f)
+    (expect (script-ctx? ctx) eq? #t)
+    (expect (ref ctx 'func-args) equal? '())
+    (expect (ref ctx 'locals) equal? '())
     )
   )
 
-(describe "make-root-ctx"
-  (it "should make a root context"
-    (define c1 (make-root-ctx))
-    (expect (stmt-ctx? c1) eq? #t)
+(describe "make-stmt-ctx"
+  (it "should make a statement context from a given context"
+    (expect (stmt-ctx? (make-stmt-ctx (make-root-ctx))) eq? #t)
+    (expect (stmt-ctx? (make-stmt-ctx (make-expr-ctx (make-root-ctx)))) eq? #t)
     )
   )
 
@@ -157,8 +160,8 @@
 
 (describe "stmt-ctx?"
   (it "should return true for statement context"
-    (expect (stmt-ctx? (make <xire-ctx> :type 'stmt)) eq? #t)
-    (expect (stmt-ctx? (make <xire-ctx> :type 'expr)) eq? #f)
+    (expect (stmt-ctx? (make-stmt-ctx (make-root-ctx))) eq? #t)
+    (expect (stmt-ctx? (make-expr-ctx (make-root-ctx))) eq? #f)
     )
   )
 
