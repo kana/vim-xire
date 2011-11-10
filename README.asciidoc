@@ -73,7 +73,7 @@ The above commands install the following:
 
 
 
-External Commands
+External commands
 -----------------
 
 xirec
@@ -83,7 +83,7 @@ A compiler that compile a Xire script into Vim script.  It reads a Xire
 script from the standard input, then it writes the resulting Vim script
 to the standard output.
 
-.Typical Usage
+.Typical usage
 ----
 $ xirec <foo.xire >foo.vim
 ----
@@ -92,7 +92,7 @@ $ xirec <foo.xire >foo.vim
 
 
 
-Xire Script
+Xire script
 -----------
 
 Abstract
@@ -219,7 +219,7 @@ The details of pattern-matching process are as follows:
 
 
 
-==== Bodies and Transformation
+==== Bodies and transformation
 
 If a use of macro (the form) matches the pattern of a clause, the form
 is transformed into a new form.  This transformation process is based on
@@ -259,8 +259,8 @@ For example, suppose that the form `(if c t e)` is expanded with
 
 
 [[ivs]]
-IVS - An Intermediate Format of Vim script
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Intermediate format of Vim script
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Xire script is finally compiled into corresponding code in Vim script.
 However, there is a huge gap between Xire script and Vim script.  So
@@ -333,14 +333,14 @@ Available atoms are as follows:
 
 
 
-==== Conventions of String Values
+==== Conventions of string values
 
 The syntax of string literals is different between Scheme and Vim
 script.  So that there are the following limitations on Scheme strings
 which are compiled into Vim script:
 
 
-===== Available Backslash-Escape Notations in Scheme Strings
+===== Available backslash-escape notations in Scheme strings
 
 In Scheme strings, only the following backslash-escape notations may be
 used:
@@ -371,7 +371,7 @@ Other notations (`\0` and `\UNNNNNNNN`) must not be used.  Because:
   must not be used.
 
 
-===== Unavailable Backslash-Escape Notations in Vim script Strings
+===== Unavailable backslash-escape notations in Vim script strings
 
 The following backslash-escape notations in Vim script are not available
 in Xire script:
@@ -396,7 +396,7 @@ in Xire script:
 
 
 
-==== Normalization of Variable Names
+==== Normalization of variable names
 
 While various characters such as `$`, `!` and `%` can be used as
 variable names in Scheme, variable names in Vim script must match to
@@ -540,8 +540,8 @@ according to other arguments:
 
 
 
-Macros
-~~~~~~
+Built-in macros
+~~~~~~~~~~~~~~~
 
 FIXME: Write about details of macros.
 
