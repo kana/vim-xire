@@ -137,6 +137,15 @@
     (expect (ref ctx 'func-args) equal? '())
     (expect (ref ctx 'locals) equal? '())
     )
+  (it "should make a non-script root context"
+    (define ctx (make-root-ctx :in-scriptp #f))
+    (expect (stmt-ctx? ctx) eq? #t)
+    (expect (expr-ctx? ctx) eq? #f)
+    (expect (func-ctx? ctx) eq? #f)
+    (expect (script-ctx? ctx) eq? #f)
+    (expect (ref ctx 'func-args) equal? '())
+    (expect (ref ctx 'locals) equal? '())
+    )
   )
 
 (describe "make-stmt-ctx"

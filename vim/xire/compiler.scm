@@ -113,8 +113,8 @@
       (map slot-definition-name (class-direct-slots <xire-ctx>)))
     new-ctx))
 
-(define (make-root-ctx)
-  (make <xire-ctx>))
+(define (make-root-ctx :key (in-scriptp #t))
+  (make <xire-ctx> :in-scriptp in-scriptp))
 (define (make-stmt-ctx ctx)
   (define new-ctx (copy-ctx ctx))
   (set! (ref new-ctx 'type) 'stmt)
