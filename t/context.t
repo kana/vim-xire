@@ -166,14 +166,6 @@
     )
   )
 
-(describe "toplevel-ctx?"
-  (it "should return true for top-level context"
-    (expect (toplevel-ctx? (make-toplevel-ctx)) eq? #t)
-    (expect (toplevel-ctx? (make-stmt-ctx (make-toplevel-ctx))) eq? #f)
-    (expect (toplevel-ctx? (make-expr-ctx (make-toplevel-ctx))) eq? #f)
-    )
-  )
-
 
 
 

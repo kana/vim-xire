@@ -23,7 +23,6 @@
     make-toplevel-ctx
     script-ctx?
     stmt-ctx?
-    toplevel-ctx?
     xire-compile
     xire-compile-expr
     xire-compile-forms
@@ -162,8 +161,6 @@
       (ref new-ctx 'locals)))
   new-ctx)
 
-(define (toplevel-ctx? ctx)
-  (ref ctx 'toplevelp))
 (define (stmt-ctx? ctx)
   (eq? (ref ctx 'type) 'stmt))
 (define (expr-ctx? ctx)
