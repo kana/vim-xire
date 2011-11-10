@@ -20,7 +20,6 @@
   (it "should copy a given context"
     (define c1 (make <xire-ctx>  ; with slots having non-default values.
                      :type 'expr
-                     :toplevelp #f
                      :in-scriptp #f
                      :in-funcp #t
                      :func-args '(a)
@@ -74,7 +73,6 @@
     (define c1 (make <xire-ctx>))
     (define c2 (make-expr-ctx c1))
     (expect (expr-ctx? c2) eq? #t)
-    (expect (ref c2 'toplevelp) eq? #f)
     )
   )
 
@@ -135,7 +133,6 @@
     (define c1 (make <xire-ctx>))
     (define c2 (make-stmt-ctx c1))
     (expect (stmt-ctx? c2) eq? #t)
-    (expect (ref c2 'toplevelp) eq? #f)
     )
   )
 
@@ -143,7 +140,6 @@
   (it "should make a top-level context"
     (define c1 (make-toplevel-ctx))
     (expect (stmt-ctx? c1) eq? #t)
-    (expect (ref c1 'toplevelp) eq? #t)
     )
   )
 

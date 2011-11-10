@@ -91,9 +91,6 @@
   ([type  ; The type of a form being compiled -- stmt or expr.
      :init-keyword :type
      :init-value 'stmt]
-   [toplevelp
-     :init-keyword :toplevelp
-     :init-value #t]
    [in-scriptp  ; #t if a form in a scirpt file being compiled; otherwise, #f.
      :init-keyword :in-scriptp
      :init-value #t]
@@ -121,12 +118,10 @@
 (define (make-stmt-ctx ctx)
   (define new-ctx (copy-ctx ctx))
   (set! (ref new-ctx 'type) 'stmt)
-  (set! (ref new-ctx 'toplevelp) #f)
   new-ctx)
 (define (make-expr-ctx ctx)
   (define new-ctx (copy-ctx ctx))
   (set! (ref new-ctx 'type) 'expr)
-  (set! (ref new-ctx 'toplevelp) #f)
   new-ctx)
 (define (make-func-ctx ctx func-args)
   ; NB: Though :function can be written in the body of a :function,
