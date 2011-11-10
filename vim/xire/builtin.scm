@@ -326,7 +326,7 @@
   ; FIXME: Detect reassignment.  (run-time? or compile-time?)
   [(_ $var:sym $val:expr)
    (unless (not (func-ctx? ctx))
-     (errorf "\"define\" is not available in functions: ~s" form))
+     (errorf "\"define\" is available only in top-level: ~s" form))
    (IVS (S 'let $var (Q '=) $val))]
   )
 
