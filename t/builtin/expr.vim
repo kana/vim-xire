@@ -130,3 +130,5 @@ echo [0, 1, [2, 3], 4, 5]
 echo {}
 echo {'a': 'A', 'b': 'B', 'c': 'C'}
 echo {(s): 2}
+echo {'key1': 'val1', 'key2': 'val2'}
+echo {'key1': 'val1', 'key2': 'val2'}

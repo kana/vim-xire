@@ -127,5 +127,7 @@
 (echo (dict))
 (echo (dict ("a" "A") ("b" "B") ("c" "C")))
 (echo (dict (s 2)))
+(echo (dict "key1" "val1" "key2" "val2"))
+(echo (dict :key1 "val1" :key2 "val2"))
 
 ; vim: filetype=scheme

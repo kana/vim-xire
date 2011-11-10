@@ -233,6 +233,30 @@
                        $key
                        $val))
            (Q "}")))]
+  [(_ $x:expr ...)
+   (define (adjust-key x x:expr)
+     (if (keyword? x:expr)
+       (keyword->string x:expr)
+       x))
+   (define (go result xs xs:expr)
+     (cond
+       [(null? xs)
+        (reverse result)]
+       [(and (pair? xs) (pair? (cdr xs)))
+        (go
+          (cons (E (adjust-key (car xs) (car xs:expr))
+                   (Q " ")  ; To parse {s:x} as {(s):x} not {(s:x)}.
+                   (Q ":")
+                   (cadr xs)
+                   (Q ","))
+                result)
+          (cddr xs)
+          (cddr xs:expr))]
+       [else
+         (errorf "Invalid key-value list for dict: ~s" form)]))
+   (IVS (E (Q "{")
+           (apply IVS (go '() $x $x:expr))
+           (Q "}")))]
   )
 
 ; &option is treated the same as a variable.
