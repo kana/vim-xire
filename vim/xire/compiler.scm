@@ -297,7 +297,6 @@
     (write-tree (reverse compiled-vim-script-tree) output-port))
   (define ctx (make-root-ctx))
 
-  (eval '(extend user) scheme-env)
   (parameterize ([xire-env env])
     (let loop ()
       (match (read input-port)
