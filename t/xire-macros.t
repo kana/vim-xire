@@ -161,7 +161,7 @@
     )
   )
 
-(describe "define-xire-stmt"
+(describe "defstmt"
   (define stmt-ctx (make-stmt-ctx (make-root-ctx)))
   (define expr-ctx (make-expr-ctx (make-root-ctx)))
   (define (lines . strings)
@@ -170,9 +170,9 @@
     (parameterize ([xire-env (make <xire-env>)])
       (expect (xire-lookup-macro 'if stmt-ctx (xire-env)) eq? #f)
       (expect (xire-lookup-macro 'if expr-ctx (xire-env)) eq? #f)
-      (define-xire-stmt break)
-      (define-xire-stmt return)
-      (define-xire-stmt if
+      (defstmt break)
+      (defstmt return)
+      (defstmt if
         [(if $cond:expr $then:stmt)
          (IVS (S 'if $cond)
               $then
@@ -204,14 +204,14 @@
     )
   )
 
-(describe "define-xire-stmt shorthand"
+(describe "defstmt shorthand"
   (define stmt-ctx (make-stmt-ctx (make-root-ctx)))
   (define expr-ctx (make-expr-ctx (make-root-ctx)))
   (it "should define a statement macro for simple cocmmand"
     (parameterize ([xire-env (make <xire-env>)])
       (expect (xire-lookup-macro 'break stmt-ctx (xire-env)) eq? #f)
       (expect (xire-lookup-macro 'break expr-ctx (xire-env)) eq? #f)
-      (define-xire-stmt break)
+      (defstmt break)
       (expect (xire-lookup-macro 'break stmt-ctx (xire-env)) procedure?)
       (expect (xire-lookup-macro 'break expr-ctx (xire-env)) eq? #f)
       (expect (compile '(break) stmt-ctx) equal? "break\n")
@@ -221,7 +221,7 @@
     (parameterize ([xire-env (make <xire-env>)])
       (expect (xire-lookup-macro 'halt stmt-ctx (xire-env)) eq? #f)
       (expect (xire-lookup-macro 'halt expr-ctx (xire-env)) eq? #f)
-      (define-xire-stmt halt break)
+      (defstmt halt break)
       (expect (xire-lookup-macro 'halt stmt-ctx (xire-env)) procedure?)
       (expect (xire-lookup-macro 'halt expr-ctx (xire-env)) eq? #f)
       (expect (compile '(halt) stmt-ctx) equal? "break\n")
@@ -233,7 +233,7 @@
       (expect (xire-lookup-macro 'break! stmt-ctx (xire-env)) eq? #f)
       (expect (xire-lookup-macro 'break expr-ctx (xire-env)) eq? #f)
       (expect (xire-lookup-macro 'break! expr-ctx (xire-env)) eq? #f)
-      (define-xire-stmt break :!)
+      (defstmt break :!)
       (expect (xire-lookup-macro 'break stmt-ctx (xire-env)) procedure?)
       (expect (xire-lookup-macro 'break! stmt-ctx (xire-env)) procedure?)
       (expect (xire-lookup-macro 'break expr-ctx (xire-env)) eq? #f)

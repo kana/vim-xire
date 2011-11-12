@@ -2,7 +2,7 @@
   (export
     ; Public API
     define-xire-expr
-    define-xire-stmt
+    defstmt
     transform-value
     xire-translate
 
@@ -253,7 +253,7 @@
 
 ;; Define new Xire statement macro in the current environment.
 ;; This is a wrapper for define-xire-macro.
-(define-syntax define-xire-stmt
+(define-syntax defstmt
   (syntax-rules ()
     ; Normal form.
     [(_ name [pat1 . rule1] [patN . ruleN] ...)
@@ -264,17 +264,17 @@
     ; Shorthand for simple command like :quit and :quit!.
     [(_ name :!)
      (let1 name! (string->symbol #`",'|name|!")
-       (define-xire-stmt name)
-       (eval `(define-xire-stmt ,name!)  ; FIXME: Refine.
+       (defstmt name)
+       (eval `(defstmt ,name!)  ; FIXME: Refine.
              (current-module)))]
     ; Shorthand for simple command like :break with different macro name.
     [(_ name cmd-name)
-     (define-xire-stmt name
+     (defstmt name
        [(_)
         (IVS (S (Q 'cmd-name)))])]
     ; Shorthand for simple command like :break.
     [(_ name)
-     (define-xire-stmt name
+     (defstmt name
        [(_)
         (IVS (S (Q 'name)))])]
     ))
@@ -305,7 +305,7 @@
          (finish)]
         [(and ((or 'define-xire-expr
                    'define-xire-macro
-                   'define-xire-stmt)
+                   'defstmt)
                . _)
               form)
          (eval form scheme-env)

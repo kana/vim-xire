@@ -85,8 +85,8 @@
   (define expr-ctx (make-expr-ctx (make-root-ctx)))
   (it "should transform give value into equivalent 'stmt'"
     (parameterize ([xire-env (make <xire-env>)])
-      (define-xire-stmt halt break)
-      (define-xire-stmt quit quit)
+      (defstmt halt break)
+      (defstmt quit quit)
       (expect (transform-value '(halt) #f 'stmt stmt-ctx)
               equal? (xire-compile '(halt) stmt-ctx))
       (expect (transform-value '((halt) (quit)) #t 'stmt stmt-ctx)
@@ -98,8 +98,8 @@
     )
   (it "should transform give value into equivalent 'expr'"
     (parameterize ([xire-env (make <xire-env>)])
-      (define-xire-stmt halt break)
-      (define-xire-stmt quit quit)
+      (defstmt halt break)
+      (defstmt quit quit)
       (expect (transform-value '(halt) #f 'expr expr-ctx)
               equal? (xire-compile '(halt) expr-ctx))
       (expect (transform-value '((halt) (quit)) #t 'expr expr-ctx)

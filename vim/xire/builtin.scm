@@ -285,17 +285,17 @@
 ;;; Fundamental statements
 ;;; ======================
 
-(define-xire-stmt begin
+(defstmt begin
   [(_ $body:stmt ...)
    (apply IVS $body)]
   )
 
-(define-xire-stmt call
+(defstmt call
   [(_ $application:expr)
    (IVS (S 'call $application))]
   )
 
-(define-xire-stmt cond
+(defstmt cond
   [(_ [$cond:expr $then:stmt] ...)
    (let go ([cond:exprs $cond:expr]
             [conds $cond]
@@ -321,7 +321,7 @@
                          result)))]))]
   )
 
-(define-xire-stmt define
+(defstmt define
   ; FIXME: Add tests on failure cases.
   ; FIXME: Detect reassignment.  (run-time? or compile-time?)
   [(_ $var:sym $val:expr)
@@ -330,12 +330,12 @@
    (IVS (S 'let $var (Q '=) $val))]
   )
 
-(define-xire-stmt echo
+(defstmt echo
   [(_ $val:expr ...)
    (IVS (apply S 'echo $val))]
   )
 
-(define-xire-stmt function
+(defstmt function
   ; FIXME: Support !.
   ; FIXME: Support range, abort and dict.
   ; FIXME: Check values on $name and $arg.
@@ -347,7 +347,7 @@
      )]
   )
 
-(define-xire-stmt for
+(defstmt for
   [(_ $var:qsym $list:expr $body:qstmt)
    (let1 local-ctx (make-local-ctx ctx (list $var))
      (IVS (S 'for (xire-compile-expr $var local-ctx) 'in $list)
@@ -357,7 +357,7 @@
    `(for ,$var ,$list (begin ,@$body))]
   )
 
-(define-xire-stmt if
+(defstmt if
   [(_ $cond:expr $then:stmt)
    (IVS (S 'if $cond)
         $then
@@ -370,7 +370,7 @@
         (S 'endif))]
   )
 
-(define-xire-stmt let
+(defstmt let
   ; FIXME: Add tests on failure cases.
   [(_ (($var:qsym $val:qexpr) ...) $body:qstmt ...)
    (let ([old-ctx ctx]
@@ -391,7 +391,7 @@
      )]
   )
 
-(define-xire-stmt let*
+(defstmt let*
   ; FIXME: Add tests on failure cases.
   [(_ (($var:qsym $val:qexpr) ...) $body:qstmt ...)
    (let go ([form `(begin ,@$body)]
@@ -407,29 +407,29 @@
 
 ; letrec and letrec* are not useful unless real closures are implemented.
 
-(define-xire-stmt return
+(defstmt return
   [(_ $val:expr)
    (IVS (S 'return $val))]
   )
 
-(define-xire-stmt set!
+(defstmt set!
   [(_ $lval:expr $rval:expr)
    (IVS (S 'let $lval (Q '=) $rval))]
   )
 
-(define-xire-stmt until
+(defstmt until
   [(_ $cond:qexpr $body:qstmt ...)
    `(while (not ,$cond) (begin ,@$body))]
   )
 
-(define-xire-stmt when
+(defstmt when
   [(_ $cond:qexpr $then:qstmt ...)
    `(if ,$cond
       (begin
         ,@$then))]
   )
 
-(define-xire-stmt while
+(defstmt while
   [(_ $cond:expr $body:stmt)
    (IVS (S 'while $cond)
         $body

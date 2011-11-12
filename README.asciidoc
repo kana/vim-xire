@@ -125,13 +125,13 @@ Macros::
 Macros
 ~~~~~~
 
-Macros are defined with <<define-xire-stmt,`define-xire-stmt`>> and
+Macros are defined with <<defstmt,`defstmt`>> and
 <<define-xire-expr,`define-xire-expr`>>.  For example, a macro which is
 expanded into `:if` statement in Vim script can be defined as follows:
 
 [[example_if]]
 ----
-(define-xire-stmt if
+(defstmt if
   [(_ $cond:expr $then:stmt)
    (IVS (S 'if $cond)
         $then
@@ -435,10 +435,10 @@ Directives
 
 
 
-[[define-xire-stmt]]
-==== `(define-xire-stmt name clause ...)`
+[[defstmt]]
+==== `(defstmt name clause ...)`
 
-`define-xire-stmt` directive defines a new statement macro.
+`defstmt` directive defines a new statement macro.
 
 `name` (arbitrary symbol)::
     Specifies the name of the new macro.
@@ -447,23 +447,23 @@ Directives
     Specifies a transformation process for the new macro.
     See also <<_bodies_and_transformation,Bodies and Transformation>>.
 
-There are also the following shorthands for `define-xire-stmt`:
+There are also the following shorthands for `defstmt`:
 
-`(define-xire-stmt <name>)`::
+`(defstmt <name>)`::
     Roughly equivalent to the following:
 
-    (define-xire-stmt <name> <name>)
+    (defstmt <name> <name>)
 
-`(define-xire-stmt <name> :!)`::
+`(defstmt <name> :!)`::
     Roughly equivalent to the following:
 
-    (define-xire-stmt <name> <name>)
-    (define-xire-stmt <name> <name>!)
+    (defstmt <name> <name>)
+    (defstmt <name> <name>!)
 
-`(define-xire-stmt <name> <ex-command-name>)`::
+`(defstmt <name> <ex-command-name>)`::
     Roughly equivalent to the following:
 
-    (define-xire-stmt <name>
+    (defstmt <name>
       [(_)
        (IVS (S '<ex-command-name>))])  ; <ex-command-name> must be a symbol.
 
