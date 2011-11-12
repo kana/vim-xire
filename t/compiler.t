@@ -63,15 +63,26 @@
     (expect (xire-lookup-macro 'expr-macro stmt-ctx env) eq? #f)
     (expect (xire-lookup-macro 'expr-macro expr-ctx env) not eq? #f)
     )
-  (it "should handle directive: scheme"
-    (define output
-      (with-output-to-string
-        (lambda ()
-          (expect (translate "(scheme (write 123) (write 456))") equal? ""))))
-    (expect output equal? "123456")
+  (it "should handle directive: scheme (normal case)"
+    (let ([translate-result (undefined)]
+          [direct-output (undefined)])
+      (set! direct-output
+        (with-output-to-string
+          (lambda ()
+            (set! translate-result
+              (translate "(scheme (write 123) (write 456))")))))
+      (expect translate-result equal? "")
+      (expect direct-output equal? "123456")
+      )
+    )
+  (it "should handle directive: scheme (no effect on caller's environment)"
     (let ([x 1])
-      (expect (translate "(scheme (define x 2) (set! x 3))") equal? "")
-      (expect x equal? 1)
+      (expect (translate "(scheme
+                            (guard (e [else])
+                              (set! x 2))
+                            (define x 3)
+                            (set! x 4))") equal? "")
+      (expect x eqv? 1)
       )
     )
   (it "should handle use of Xire macro"
