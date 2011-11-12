@@ -39,9 +39,9 @@
     (expect (translate "invalid expression") raise?)
     (expect (translate "(no-such-macro)") raise?)
     )
-  (it "should handle directive: define-xire-macro"
+  (it "should handle directive: defmacro"
     (expect
-      (translate "(define-xire-macro stmt (directive-macro f c) 0)")
+      (translate "(defmacro stmt (directive-macro f c) 0)")
       equal?
       "")
     (expect (xire-lookup-macro 'directive-macro stmt-ctx env) not eq? #f)

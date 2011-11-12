@@ -11,7 +11,7 @@
     <xire-env>
     copy-ctx
     copy-env
-    define-xire-macro
+    defmacro
     ensure-expr-ctx
     ensure-stmt-ctx
     expr-ctx?
@@ -216,7 +216,7 @@
 
 ;; Define new Xire macro in the current environment.
 ;; This is just a syntax sugar for xire-register-macro!.
-(define-syntax define-xire-macro
+(define-syntax defmacro
   (syntax-rules ()
     [(_ ctx-type (name form ctx) . body)
      (xire-register-macro! 'name
@@ -232,7 +232,7 @@
     (match-let1 (pat . body) clause
       `[,(generate-match-pat pat)
         ,(generate-match-body pat body)]))
-  `(define-xire-macro ,ctx-type (,name form ctx)
+  `(defmacro ,ctx-type (,name form ctx)
      ,(cond
         [(eq? ctx-type 'stmt)
          '(ensure-stmt-ctx form ctx)]
@@ -244,7 +244,7 @@
        ,@(map generate-match-clause clauses))))
 
 ;; Define new Xire expression macro in the current environment.
-;; This is a wrapper for define-xire-macro.
+;; This is a wrapper for defmacro.
 (define-syntax defexpr
   (syntax-rules ()
     [(_ name . args)
@@ -252,7 +252,7 @@
     ))
 
 ;; Define new Xire statement macro in the current environment.
-;; This is a wrapper for define-xire-macro.
+;; This is a wrapper for defmacro.
 (define-syntax defstmt
   (syntax-rules ()
     ; Normal form.
@@ -304,7 +304,7 @@
         [(? eof-object?)
          (finish)]
         [(and ((or 'defexpr
-                   'define-xire-macro
+                   'defmacro
                    'defstmt)
                . _)
               form)

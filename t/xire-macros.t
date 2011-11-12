@@ -67,17 +67,17 @@
     )
   )
 
-(describe "define-xire-macro"
+(describe "defmacro"
   (define stmt-ctx (make-stmt-ctx (make-root-ctx)))
   (define expr-ctx (make-expr-ctx (make-root-ctx)))
   (it "should define new macro for given context in the current environment"
     (parameterize ([xire-env (make <xire-env>)])
       (expect (xire-lookup-macro 'foo stmt-ctx (xire-env)) eq? #f)
       (expect (xire-lookup-macro 'foo expr-ctx (xire-env)) eq? #f)
-      (define-xire-macro stmt (foo form ctx)
+      (defmacro stmt (foo form ctx)
         "stmt1"
         "stmt2")
-      (define-xire-macro expr (foo form ctx)
+      (defmacro expr (foo form ctx)
         "expr1"
         "expr2")
       (expect (xire-lookup-macro 'foo stmt-ctx (xire-env)) procedure?)
@@ -103,7 +103,7 @@
                $else
                (S 'endif))])
       equal?
-      '(define-xire-macro stmt (if form ctx)
+      '(defmacro stmt (if form ctx)
          (ensure-stmt-ctx form ctx)
          (match form
            [('if $cond:expr $then:stmt)
