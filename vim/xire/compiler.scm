@@ -1,7 +1,7 @@
 (define-module vim.xire.compiler
   (export
     ; Public API
-    define-xire-expr
+    defexpr
     defstmt
     transform-value
     xire-translate
@@ -245,7 +245,7 @@
 
 ;; Define new Xire expression macro in the current environment.
 ;; This is a wrapper for define-xire-macro.
-(define-syntax define-xire-expr
+(define-syntax defexpr
   (syntax-rules ()
     [(_ name . args)
      (define-high-level-xire-macro name expr . args)]
@@ -303,7 +303,7 @@
       (match (read input-port)
         [(? eof-object?)
          (finish)]
-        [(and ((or 'define-xire-expr
+        [(and ((or 'defexpr
                    'define-xire-macro
                    'defstmt)
                . _)

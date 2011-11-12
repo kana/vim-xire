@@ -141,14 +141,14 @@
     )
   )
 
-(describe "define-xire-expr"
+(describe "defexpr"
   (define stmt-ctx (make-stmt-ctx (make-root-ctx)))
   (define expr-ctx (make-expr-ctx (make-root-ctx)))
   (it "should define new expression macro in the current environment"
     (parameterize ([xire-env (make <xire-env>)])
       (expect (xire-lookup-macro if stmt-ctx (xire-env)) eq? #f)
       (expect (xire-lookup-macro 'if expr-ctx (xire-env)) eq? #f)
-      (define-xire-expr if
+      (defexpr if
         [(if $cond:expr $then:expr $else:expr)
          (IVS $cond (Q "?") $then (Q ":") $else)])
       (expect (xire-lookup-macro 'if stmt-ctx (xire-env)) eq? #f)

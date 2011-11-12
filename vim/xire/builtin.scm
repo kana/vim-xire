@@ -18,7 +18,7 @@
 ;;; -------
 
 (define-macro (define-binary-operator name op :optional default-val)
-  `(define-xire-expr ,name
+  `(defexpr ,name
      [(_ $val1:qexpr)
       (when (undefined? ,default-val)
         (errorf "Operator ~s takes two or more arguments" ',name))
@@ -35,7 +35,7 @@
      ))
 
 (define-macro (define-comparison-operator name op)
-  `(define-xire-expr ,name
+  `(defexpr ,name
      [(_ $val1:expr $val2:expr)
       (IVS (E (Q "(")
               $val1
@@ -50,7 +50,7 @@
 ;;; expr1
 ;;; -----
 
-(define-xire-expr if
+(defexpr if
   [(_ $cond:expr $then:expr $else:expr)
    (IVS (E (Q "(")
            $cond
@@ -123,7 +123,7 @@
 ;;; expr7
 ;;; -----
 
-(define-xire-expr not
+(defexpr not
   [(_ $val:expr)
    (IVS (E (Q "(")
            (Q "!")
@@ -136,7 +136,7 @@
 ;;; expr8
 ;;; -----
 
-(define-xire-expr ref
+(defexpr ref
   [(_ $container:expr $index:expr)
    (IVS (E (Q "(")
            $container
@@ -146,7 +146,7 @@
            (Q ")")))]
   )
 
-(define-xire-expr slice
+(defexpr slice
   [(_ $container:expr $index-from:expr $index-to:expr)
    (IVS (E (Q "(")
            $container
@@ -159,7 +159,7 @@
            (Q ")")))]
   )
 
-(define-xire-expr slice-until
+(defexpr slice-until
   [(_ $container:expr $index-to:expr)
    (IVS (E (Q "(")
            $container
@@ -170,7 +170,7 @@
            (Q ")")))]
   )
 
-(define-xire-expr slice-from
+(defexpr slice-from
   [(_ $container:expr $index-from:expr)
    (IVS (E (Q "(")
            $container
@@ -182,7 +182,7 @@
            (Q ")")))]
   )
 
-(define-xire-expr ->
+(defexpr ->
   [(_ $dict:expr $name:sym)
    (IVS (E (Q "(")
            $dict
@@ -209,18 +209,18 @@
 ;   but Xire script provides its own notation for regular expressions.
 
 ; Supplimental notation for strings to describe key sequences.
-(define-xire-expr kbd
+(defexpr kbd
   [(_ $string:qexpr)
    (IVS (E (Q (convert-key-sequence-conventions $string))))])
 
-(define-xire-expr list
+(defexpr list
   [(_ $val:expr ...)
    (IVS (E (Q "[")
            (apply E (intersperse (Q ",") $val))
            (Q "]")))]
   )
 
-(define-xire-expr dict
+(defexpr dict
   [(_ ($key:expr $val:expr) ...)
    (IVS (E (Q "{")
            (apply IVS

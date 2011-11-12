@@ -126,7 +126,7 @@ Macros
 ~~~~~~
 
 Macros are defined with <<defstmt,`defstmt`>> and
-<<define-xire-expr,`define-xire-expr`>>.  For example, a macro which is
+<<defexpr,`defexpr`>>.  For example, a macro which is
 expanded into `:if` statement in Vim script can be defined as follows:
 
 [[example_if]]
@@ -421,10 +421,10 @@ be used for symbols in IVS.
 Directives
 ~~~~~~~~~~
 
-[[define-xire-expr]]
-==== `(define-xire-expr name clause ...)`
+[[defexpr]]
+==== `(defexpr name clause ...)`
 
-`define-xire-expr` directive defines a new expression macro.
+`defexpr` directive defines a new expression macro.
 
 `name` (arbitrary symbol)::
     Specifies the name of the new macro.
