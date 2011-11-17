@@ -1,7 +1,7 @@
 (define-module vim.xire.iform
   (export
     ; Public API.
-    ; ...
+    pass-final
 
     ; Not public, but exported to test.
     iform-tag
@@ -25,6 +25,8 @@
     make-while
     ))
 (select-module vim.xire.iform)
+
+(use util.match)
 
 
 
@@ -174,6 +176,44 @@
 (define (make-call func-expr-or-op-name arg-exprs)
   ; Call a function or a built-in operator.
   `#($CALL ,func-expr-or-op-name ,arg-exprs))
+
+
+
+
+;;; Pass Final (code generation)
+;;; ============================
+
+;;; State for code generation
+;;; -------------------------
+
+(define-class <pass-final/state> ()
+  ([in-scriptp
+     :init-keyword :in-scriptp
+     :init-value #t]
+   [in-funcp
+     :init-keyword :in-funcp
+     :init-value #f]
+   [func-args
+     :init-keyword :func-args
+     :init-value '()]  ; Alist of (original-name . new-name).
+   [lvars
+     :init-keyword :lvars
+     :init-value '()]))  ; Alist of (original-name . new-name).
+
+
+;;; Entry point
+;;; -----------
+
+(define (pass-final iforms)
+  (map (cut pass-final/rec <> (make <pass-final/state>))
+       iforms))
+
+(define (pass-final/rec iform state)
+  (let gen ([iform iform]
+            [state state])
+    (match iform
+      [else
+        (errorf "This iform is not valid: ~s" iform)])))
 
 
 

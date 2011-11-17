@@ -193,6 +193,20 @@
 
 
 
+(describe "pass-final"
+  (define (gen iform)
+    (call-with-output-string
+      (lambda (port)
+        (write-tree (pass-final (list iform)) port))))
+  (it "should reject an object which is not a valid iform"
+    (expect (gen '#($FOO)) raise? <error>)
+    (expect (gen '#($CONST 1 2)) raise? <error>)
+    )
+  )
+
+
+
+
 (run-suites)
 
 ; __END__
