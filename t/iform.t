@@ -213,6 +213,10 @@
     (expect (gen (make-gref 'g:var)) equal? "g:var")
     (expect (gen (make-gref 'g:foo-bar)) equal? "g:foo_bar")
     )
+  (it "should generate a valid code from $LREF"
+    (expect (gen (make-lref 'var)) equal? "var")
+    (expect (gen (make-lref 'foo-bar)) equal? "foo_bar")
+    )
   )
 
 

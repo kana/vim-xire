@@ -220,6 +220,8 @@
       [#('$GREF gvar)
         (convert-identifier-conventions
           (symbol->string gvar))]
+      [#('$LREF lvar)
+        (scheme-object->vim-script-notation lvar)]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 
