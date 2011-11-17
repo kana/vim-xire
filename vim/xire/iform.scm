@@ -217,6 +217,9 @@
         (if (or (boolean? obj) (number? obj) (regexp? obj) (string? obj))
           (scheme-object->vim-script-notation obj)
           (errorf "$CONST contains an invalid object: ~s" obj))]
+      [#('$GREF gvar)
+        (convert-identifier-conventions
+          (symbol->string gvar))]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 

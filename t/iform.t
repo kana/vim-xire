@@ -209,6 +209,10 @@
     (expect (gen (make-const "abc")) equal? "\"abc\"")
     (expect (gen (make-const #/regexp/)) equal? "'regexp'")
     )
+  (it "should generate a valid code from $GREF"
+    (expect (gen (make-gref 'g:var)) equal? "g:var")
+    (expect (gen (make-gref 'g:foo-bar)) equal? "g:foo_bar")
+    )
   )
 
 
