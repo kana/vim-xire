@@ -202,6 +202,13 @@
     (expect (gen '#($FOO)) raise? <error>)
     (expect (gen '#($CONST 1 2)) raise? <error>)
     )
+  (it "should generate a valid code from $CONST"
+    (expect (gen (make-const #f)) equal? "0")
+    (expect (gen (make-const #t)) equal? "1")
+    (expect (gen (make-const 123)) equal? "123")
+    (expect (gen (make-const "abc")) equal? "\"abc\"")
+    (expect (gen (make-const #/regexp/)) equal? "'regexp'")
+    )
   )
 
 

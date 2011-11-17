@@ -27,6 +27,7 @@
 (select-module vim.xire.iform)
 
 (use util.match)
+(use vim.xire.ivs)  ; FIXME: Migrate necessary procedures into vim.xire.iform.
 
 
 
@@ -212,6 +213,10 @@
   (let gen ([iform iform]
             [state state])
     (match iform
+      [#('$CONST obj)
+        (if (or (boolean? obj) (number? obj) (regexp? obj) (string? obj))
+          (scheme-object->vim-script-notation obj)
+          (errorf "$CONST contains an invalid object: ~s" obj))]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 
