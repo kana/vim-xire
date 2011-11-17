@@ -217,6 +217,24 @@
     (expect (gen (make-lref 'var)) equal? "var")
     (expect (gen (make-lref 'foo-bar)) equal? "foo_bar")
     )
+  (it "should generate a valid code from $CALL of a function"
+    (expect (gen (make-call (make-gref 'changenr)
+                            (list)))
+            equal? "changenr()")
+    (expect (gen (make-call (make-gref 'bufnr)
+                            (list (make-const "$"))))
+            equal? "bufnr(\"$\")")
+    (expect (gen (make-call (make-gref 'fnamemodify)
+                            (list (make-const "main.c")
+                                  (make-const ":p:h"))))
+            equal? "fnamemodify(\"main.c\",\":p:h\")")
+    )
+  (it "should not generate a code from $CALL of an invalid operator"
+    (expect (gen (make-call 'an-invalid-operator
+                            (list (make-const 1)
+                                  (make-const 2))))
+            raise? <error>)
+    )
   )
 
 

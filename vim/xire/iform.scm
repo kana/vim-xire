@@ -26,6 +26,7 @@
     ))
 (select-module vim.xire.iform)
 
+(use util.list)
 (use util.match)
 (use vim.xire.ivs)  ; FIXME: Migrate necessary procedures into vim.xire.iform.
 
@@ -222,6 +223,11 @@
           (symbol->string gvar))]
       [#('$LREF lvar)
         (scheme-object->vim-script-notation lvar)]
+      [#('$CALL (? iform? func-expr) arg-exprs)
+        (list (gen func-expr state)
+              "("
+              (intersperse "," (map (cut gen <> state) arg-exprs))
+              ")")]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 
