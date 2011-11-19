@@ -394,6 +394,17 @@
         (list "while" " " (gen expr state) "\n"
               (gen stmt state)
               "endwhile" "\n")]
+      [#('$FOR lvar expr stmt)
+        (list "for"
+              " "
+              (convert-identifier-conventions (symbol->string lvar))
+              " "
+              "in"
+              " "
+              (gen expr state)
+              "\n"
+              (gen stmt state)
+              "endfor" "\n")]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 

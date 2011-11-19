@@ -563,6 +563,32 @@
                              1))
             raise? <error>)  ; Non-iform arguments.
     )
+  (it "should generate a valid code from $FOR"
+    (expect (gen (make-for 'i
+                           (make-const 0)
+                           (make-lset 'i (make-const 1))))
+            equal? "for i in 0\nlet i=1\nendfor\n")
+    (expect (gen (make-for 'i
+                           (make-const 0)))
+            raise? <error>)  ; Too few arguments.
+    (expect (gen (make-for 'i
+                           (make-const 0)
+                           (make-lset 'i (make-const 1))
+                           0))
+            raise? <error>)  ; Too many arguments.
+    (expect (gen (make-for 0
+                           (make-const 0)
+                           (make-lset 'i (make-const 1))))
+            raise? <error>)  ; Non-iform arguments.
+    (expect (gen (make-for 'i
+                           0
+                           (make-lset 'i (make-const 1))))
+            raise? <error>)  ; Non-iform arguments.
+    (expect (gen (make-for 'i
+                           (make-const 0)
+                           0))
+            raise? <error>)  ; Non-iform arguments.
+    )
   )
 
 
