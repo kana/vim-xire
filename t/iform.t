@@ -235,6 +235,38 @@
                                   (make-const 2))))
             raise? <error>)
     )
+  (it "should generate a valid code from $CALL of the built-in 'if'"
+    (expect (gen (make-call 'if
+                            (list (make-const 1)
+                                  (make-const 2)
+                                  (make-const 3))))
+            equal? "(1 ? 2 : 3)")
+    (expect (gen (make-call 'if
+                            (list (make-const 1)
+                                  (make-const 2))))
+            raise? <error>)  ; Too few arguments.
+    (expect (gen (make-call 'if
+                            (list (make-const 1)
+                                  (make-const 2)
+                                  (make-const 3)
+                                  (make-const 4))))
+            raise? <error>)  ; Too many arguments.
+    (expect (gen (make-call 'if
+                            (list 1
+                                  (make-const 2)
+                                  (make-const 3))))
+            raise? <error>)  ; Non-iform arguments.
+    (expect (gen (make-call 'if
+                            (list (make-const 1)
+                                  2
+                                  (make-const 3))))
+            raise? <error>)  ; Non-iform arguments.
+    (expect (gen (make-call 'if
+                            (list (make-const 1)
+                                  (make-const 2)
+                                  3)))
+            raise? <error>)  ; Non-iform arguments.
+    )
   )
 
 

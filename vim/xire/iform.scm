@@ -228,6 +228,14 @@
               "("
               (intersperse "," (map (cut gen <> state) arg-exprs))
               ")")]
+      [#('$CALL 'if (cond-expr then-expr else-expr))
+        (list "("
+              (gen cond-expr state)
+              " ? "
+              (gen then-expr state)
+              " : "  ; To parse r?s:t as (r)?(s):(t) not (r)?(s:t).
+              (gen else-expr state)
+              ")")]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 
