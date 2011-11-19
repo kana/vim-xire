@@ -436,6 +436,17 @@
                                   (list "a"))))
             raise? <error>)  ; Non-iform arguments.
     )
+  (it "should generate a valid code from $DEF"
+    (expect (gen (make-def 'foo-bar (make-const 1)))
+            equal? "let foo_bar=1\n")
+    (expect (gen (make-def 'foo-bar))
+            raise? <error>)  ; Too few arguments.
+    (expect (gen (make-def 'foo-bar (make-const 1)
+                                    (make-const 2)))
+            raise? <error>)  ; Too many arguments.
+    (expect (gen (make-def 'foo-bar 1))
+            raise? <error>)  ; Non-iform arguments.
+    )
   )
 
 

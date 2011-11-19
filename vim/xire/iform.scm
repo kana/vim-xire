@@ -356,6 +356,13 @@
                      key-exprs
                      val-exprs))
               "}")]
+      [#('$DEF gvar expr)
+        (list "let"
+              " "
+              (convert-identifier-conventions (symbol->string gvar))
+              "="
+              (gen expr state)
+              "\n")]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 
