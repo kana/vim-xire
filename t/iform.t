@@ -293,6 +293,25 @@
         )
       bin-op-table)
     )
+  (it "should generate a valid code from $CALL of built-in unary operators"
+    (for-each
+      (lambda (op)
+        (expect (gen (make-call (car op)
+                                (list (make-const 1))))
+                equal? #`"(,(cdr op)1)")
+        (expect (gen (make-call (car op)
+                                (list)))
+                raise? <error>)  ; Too few arguments.
+        (expect (gen (make-call (car op)
+                                (list (make-const 1)
+                                      (make-const 2))))
+                raise? <error>)  ; Too many arguments.
+        (expect (gen (make-call (car op)
+                                (list 1)))
+                raise? <error>)  ; Non-iform arguments.
+        )
+      un-op-table)
+    )
   )
 
 

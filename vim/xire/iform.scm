@@ -24,6 +24,7 @@
     make-next
     make-ret
     make-while
+    un-op-table
     ))
 (select-module vim.xire.iform)
 
@@ -189,6 +190,17 @@
 ;;; Misc. utilities
 ;;; ---------------
 
+(define-constant un-op-table
+  '((not . "!")
+    (1- . "-")
+    (1+ . "+")))
+
+(define (un-op-info op-name)
+  (assq op-name un-op-table))
+
+(define (bin-op-info op-name)
+  (assq op-name bin-op-table))
+
 (define-constant bin-op-table
   '((or . "||")
     (and . "&&")
@@ -294,6 +306,14 @@
               (cdr op)
               " "
               (gen right-expr state)
+              ")")]
+      [#('$CALL (= un-op-info op) (expr))
+        (=> next)
+        (unless op
+          (next))
+        (list "("
+              (cdr op)
+              (gen expr state)
               ")")]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
