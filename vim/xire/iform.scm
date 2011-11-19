@@ -356,7 +356,7 @@
                      key-exprs
                      val-exprs))
               "}")]
-      [#('$DEF gvar expr)
+      [#((or '$DEF '$GSET) gvar expr)
         (list "let"
               " "
               (convert-identifier-conventions (symbol->string gvar))
