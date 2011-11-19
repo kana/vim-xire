@@ -546,6 +546,23 @@
                           2))
             raise? <error>)  ; Non-iform arguments.
     )
+  (it "should generate a valid code from $WHILE"
+    (expect (gen (make-while (make-const 0)
+                             (make-lset 't (make-const 1))))
+            equal? "while 0\nlet t=1\nendwhile\n")
+    (expect (gen (make-while (make-const 0)))
+            raise? <error>)  ; Too few arguments.
+    (expect (gen (make-while (make-const 0)
+                             (make-lset 't (make-const 1))
+                             2))
+            raise? <error>)  ; Too many arguments.
+    (expect (gen (make-while 0
+                             (make-lset 't (make-const 1))))
+            raise? <error>)  ; Non-iform arguments.
+    (expect (gen (make-while (make-const 0)
+                             1))
+            raise? <error>)  ; Non-iform arguments.
+    )
   )
 
 

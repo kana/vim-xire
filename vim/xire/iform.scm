@@ -390,6 +390,10 @@
               "else" "\n"
               (gen else-stmt state)
               "endif" "\n")]
+      [#('$WHILE expr stmt)
+        (list "while" " " (gen expr state) "\n"
+              (gen stmt state)
+              "endwhile" "\n")]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 
