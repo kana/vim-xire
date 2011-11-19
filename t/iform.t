@@ -595,6 +595,12 @@
     (expect (gen (make-break 0))
             raise? <error>)  ; Too many arguments.
     )
+  (it "should generate a valid code from $NEXT"
+    (expect (gen (make-next))
+            equal? "continue\n")
+    (expect (gen (make-next 0))
+            raise? <error>)  ; Too many arguments.
+    )
   )
 
 

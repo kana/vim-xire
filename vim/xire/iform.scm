@@ -407,6 +407,8 @@
               "endfor" "\n")]
       [#('$BREAK)
         '("break" "\n")]
+      [#('$NEXT)
+        '("continue" "\n")]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 
