@@ -520,6 +520,32 @@
     (expect (gen (make-begin 0))
             raise? <error>)  ; Non-iform arguments.
     )
+  (it "should generate a valid code from $IF"
+    (expect (gen (make-if (make-const 0)
+                          (make-lset 't (make-const 1))
+                          (make-lset 'e (make-const 2))))
+            equal? "if 0\nlet t=1\nelse\nlet e=2\nendif\n")
+    (expect (gen (make-if (make-const 0)
+                          (make-lset 't (make-const 1))))
+            raise? <error>)  ; Too few arguments.
+    (expect (gen (make-if (make-const 0)
+                          (make-lset 't (make-const 1))
+                          (make-lset 'e (make-const 2))
+                          0))
+            raise? <error>)  ; Too many arguments.
+    (expect (gen (make-if 0
+                          (make-lset 't (make-const 1))
+                          (make-lset 'e (make-const 2))))
+            raise? <error>)  ; Non-iform arguments.
+    (expect (gen (make-if (make-const 0)
+                          1
+                          (make-lset 'e (make-const 2))))
+            raise? <error>)  ; Non-iform arguments.
+    (expect (gen (make-if (make-const 0)
+                          (make-lset 't (make-const 1))
+                          2))
+            raise? <error>)  ; Non-iform arguments.
+    )
   )
 
 

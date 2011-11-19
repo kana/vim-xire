@@ -384,6 +384,12 @@
               (gen stmt state))]
       [#('$BEGIN (stmts ...))
         (map (cut gen <> state) stmts)]
+      [#('$IF cond-expr then-stmt else-stmt)
+        (list "if" " " (gen cond-expr state) "\n"
+              (gen then-stmt state)
+              "else" "\n"
+              (gen else-stmt state)
+              "endif" "\n")]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 
