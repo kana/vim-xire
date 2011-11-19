@@ -363,6 +363,13 @@
               "="
               (gen expr state)
               "\n")]
+      [#('$LSET lvar expr)
+        (list "let"
+              " "
+              (convert-identifier-conventions (symbol->string lvar))
+              "="
+              (gen expr state)
+              "\n")]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 
