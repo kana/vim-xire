@@ -469,6 +469,40 @@
     (expect (gen (make-lset 'foo-bar 1))
             raise? <error>)  ; Non-iform arguments.
     )
+  (it "should generate a valid code from $LET"
+    (expect (gen (make-let '()
+                           '()
+                           (make-lset 'foo-bar (make-const 999))))
+            equal? "let foo_bar=999\n")
+    (expect (gen (make-let '(foo-bar)
+                           (list (make-const 1))
+                           (make-lset 'foo-bar (make-const 999))))
+            equal? "let foo_bar=1\nlet foo_bar=999\n")
+    (expect (gen (make-let '(foo-bar a)
+                           (list (make-const 1) (make-const 2))
+                           (make-lset 'foo-bar (make-const 999))))
+            equal? "let foo_bar=1\nlet a=2\nlet foo_bar=999\n")
+    (expect (gen (make-let '()
+                           '()))
+            raise? <error>)  ; Too few arguments.
+    (expect (gen (make-let '()
+                           '()
+                           (make-lset 'foo-bar (make-const 999))
+                           '()))
+            raise? <error>)  ; Too many arguments.
+    (expect (gen (make-let 0
+                           '()
+                           (make-lset 'foo-bar (make-const 999))))
+            raise? <error>)  ; Invalid arguments.
+    (expect (gen (make-let '()
+                           0
+                           (make-lset 'foo-bar (make-const 999))))
+            raise? <error>)  ; Invalid arguments.
+    (expect (gen (make-let '()
+                           '()
+                           0))
+            raise? <error>)  ; Invalid arguments.
+    )
   )
 
 

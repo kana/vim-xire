@@ -370,6 +370,18 @@
               "="
               (gen expr state)
               "\n")]
+      [#('$LET (lvars ...) (exprs ...) stmt)
+        (list (map (lambda (lvar expr)
+                     (list "let"
+                           " "
+                           (convert-identifier-conventions
+                             (symbol->string lvar))
+                           "="
+                           (gen expr state)
+                           "\n"))
+                   lvars
+                   exprs)
+              (gen stmt state))]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 
