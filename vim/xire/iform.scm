@@ -322,6 +322,19 @@
               (gen index-expr state)
               "]"
               ")")]
+      [#('$CALL 'slice (collection-expr from-expr until-expr))
+        (list "("
+              (gen collection-expr state)
+              "["
+              (if from-expr
+                (gen from-expr state)
+                '())
+              " : "  ; To parse l[s:x] as l[(s):x] not l[(s:x)].
+              (if until-expr
+                (gen until-expr state)
+                '())
+              "]"
+              ")")]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 

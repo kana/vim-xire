@@ -334,6 +334,48 @@
                                   2)))
             raise? <error>)  ; Non-iform arguments.
     )
+  (it "should generate a valid code from $CALL of the built-in 'slice'"
+    (expect (gen (make-call 'slice
+                            (list (make-const 1)
+                                  (make-const 2)
+                                  (make-const 3))))
+            equal? "(1[2 : 3])")
+    (expect (gen (make-call 'slice
+                            (list (make-const 1)
+                                  #f
+                                  (make-const 3))))
+            equal? "(1[ : 3])")
+    (expect (gen (make-call 'slice
+                            (list (make-const 1)
+                                  (make-const 2)
+                                  #f)))
+            equal? "(1[2 : ])")
+    (expect (gen (make-call 'slice
+                            (list (make-const 1)
+                                  (make-const 2))))
+            raise? <error>)  ; Too few arguments.
+    (expect (gen (make-call 'slice
+                            (list (make-const 1)
+                                  (make-const 2)
+                                  (make-const 3)
+                                  (make-const 4))))
+            raise? <error>)  ; Too many arguments.
+    (expect (gen (make-call 'slice
+                            (list 1
+                                  (make-const 2)
+                                  (make-const 3))))
+            raise? <error>)  ; Non-iform arguments.
+    (expect (gen (make-call 'slice
+                            (list (make-const 1)
+                                  2
+                                  (make-const 3))))
+            raise? <error>)  ; Non-iform arguments.
+    (expect (gen (make-call 'slice
+                            (list (make-const 1)
+                                  (make-const 2)
+                                  3)))
+            raise? <error>)  ; Non-iform arguments.
+    )
   )
 
 
