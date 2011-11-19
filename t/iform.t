@@ -412,6 +412,30 @@
                             1))
             raise? <error>)  ; Non-iform arguments.
     )
+  (it "should generate a valid code from $CALL of the built-in 'dict'"
+    (expect (gen (make-call 'dict
+                            (list '()
+                                  '())))
+            equal? "{}")
+    (expect (gen (make-call 'dict
+                            (list (list (make-const "1"))
+                                  (list (make-const "a")))))
+            equal? "{\"1\" : \"a\"}")
+    (expect (gen (make-call 'dict
+                            (list (list (make-const "1")
+                                        (make-const "2"))
+                                  (list (make-const "a")
+                                        (make-const "b")))))
+            equal? "{\"1\" : \"a\",\"2\" : \"b\"}")
+    (expect (gen (make-call 'dict
+                            (list (list 1)
+                                  (list (make-const "a")))))
+            raise? <error>)  ; Non-iform arguments.
+    (expect (gen (make-call 'dict
+                            (list (list (make-const "1"))
+                                  (list "a"))))
+            raise? <error>)  ; Non-iform arguments.
+    )
   )
 
 

@@ -345,6 +345,17 @@
         (list "["
               (intersperse "," (map (cut gen <> state) exprs))
               "]")]
+      [#('$CALL 'dict ((key-exprs ...) (val-exprs ...)))
+        (list "{"
+              (intersperse
+                ","
+                (map (lambda (key-expr val-expr)
+                       (list (gen key-expr state)
+                             " : "  ; To parse {s:x} as {(s):x} not {(s:x)}.
+                             (gen val-expr state)))
+                     key-exprs
+                     val-exprs))
+              "}")]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 
