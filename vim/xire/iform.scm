@@ -335,6 +335,12 @@
                 '())
               "]"
               ")")]
+      [#('$CALL '-> (dict-expr name))
+        (list "("
+              (gen dict-expr state)
+              "."
+              name
+              ")")]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 

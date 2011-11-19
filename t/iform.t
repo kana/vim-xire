@@ -376,6 +376,24 @@
                                   3)))
             raise? <error>)  ; Non-iform arguments.
     )
+  (it "should generate a valid code from $CALL of the built-in '->'"
+    (expect (gen (make-call '->
+                            (list (make-const 1)
+                                  'name)))
+            equal? "(1.name)")
+    (expect (gen (make-call '->
+                            (list (make-const 1))))
+            raise? <error>)  ; Too few arguments.
+    (expect (gen (make-call '->
+                            (list (make-const 1)
+                                  'name
+                                  (make-const 3))))
+            raise? <error>)  ; Too many arguments.
+    (expect (gen (make-call '->
+                            (list 1
+                                  'name)))
+            raise? <error>)  ; Non-iform arguments.
+    )
   )
 
 
