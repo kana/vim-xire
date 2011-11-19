@@ -341,6 +341,10 @@
               "."
               name
               ")")]
+      [#('$CALL 'list (exprs ...))
+        (list "["
+              (intersperse "," (map (cut gen <> state) exprs))
+              "]")]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 

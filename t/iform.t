@@ -394,6 +394,24 @@
                                   'name)))
             raise? <error>)  ; Non-iform arguments.
     )
+  (it "should generate a valid code from $CALL of the built-in 'list'"
+    (expect (gen (make-call 'list
+                            (list)))
+            equal? "[]")
+    (expect (gen (make-call 'list
+                            (list (make-const 1))))
+            equal? "[1]")
+    (expect (gen (make-call 'list
+                            (list (make-const 1)
+                                  (make-const 2))))
+            equal? "[1,2]")
+    (expect (gen (make-call 'list
+                            (list 1)))
+            raise? <error>)  ; Non-iform arguments.
+    (expect (gen (make-call 'list
+                            1))
+            raise? <error>)  ; Non-iform arguments.
+    )
   )
 
 
