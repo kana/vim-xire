@@ -4,6 +4,7 @@
     pass-final
 
     ; Not public, but exported to test.
+    bin-op-table
     iform-tag
     iform?
     make-begin
@@ -185,6 +186,53 @@
 ;;; Pass Final (code generation)
 ;;; ============================
 
+;;; Misc. utilities
+;;; ---------------
+
+(define-constant bin-op-table
+  '((or . "||")
+    (and . "&&")
+    (!= . "!=")
+    (!=# . "!=#")
+    (!=? . "!=?")
+    (!~ . "!~")
+    (!~# . "!~#")
+    (!~? . "!~?")
+    (< . "<")
+    (<# . "<#")
+    (<= . "<=")
+    (<=# . "<=#")
+    (<=? . "<=?")
+    (<? . "<?")
+    (== . "==")
+    (==# . "==#")
+    (==? . "==?")
+    (=~ . "=~")
+    (=~# . "=~#")
+    (=~? . "=~?")
+    (> . ">")
+    (># . ">#")
+    (>= . ">=")
+    (>=# . ">=#")
+    (>=? . ">=?")
+    (>? . ">?")
+    (is . "is")
+    (is# . "is#")
+    (is? . "is?")
+    (isnot . "isnot")
+    (isnot# . "isnot#")
+    (isnot? . "isnot?")
+    (+ . "+")
+    (- . "-")
+    (.. . ".")
+    (* . "*")
+    (/ . "/")
+    (% . "%")))
+
+(define (bin-op-info op-name)
+  (assq op-name bin-op-table))
+
+
 ;;; State for code generation
 ;;; -------------------------
 
@@ -235,6 +283,17 @@
               (gen then-expr state)
               " : "  ; To parse r?s:t as (r)?(s):(t) not (r)?(s:t).
               (gen else-expr state)
+              ")")]
+      [#('$CALL (= bin-op-info op) (left-expr right-expr))
+        (=> next)
+        (unless op
+          (next))
+        (list "("
+              (gen left-expr state)
+              " "
+              (cdr op)
+              " "
+              (gen right-expr state)
               ")")]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
