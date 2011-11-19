@@ -503,6 +503,23 @@
                            0))
             raise? <error>)  ; Invalid arguments.
     )
+  (it "should generate a valid code from $BEGIN"
+    (expect (gen (make-begin '()))
+            equal? "")
+    (expect (gen (make-begin (list (make-lset 'foo (make-const 1)))))
+            equal? "let foo=1\n")
+    (expect (gen (make-begin (list (make-lset 'foo (make-const 1))
+                                   (make-lset 'bar (make-const 2)))))
+            equal? "let foo=1\nlet bar=2\n")
+    (expect (gen (make-begin))
+            raise? <error>)  ; Too few arguments.
+    (expect (gen (make-begin '() '()))
+            raise? <error>)  ; Too many arguments.
+    (expect (gen (make-begin (list 0)))
+            raise? <error>)  ; Non-iform arguments.
+    (expect (gen (make-begin 0))
+            raise? <error>)  ; Non-iform arguments.
+    )
   )
 
 

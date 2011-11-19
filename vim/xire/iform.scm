@@ -382,6 +382,8 @@
                    lvars
                    exprs)
               (gen stmt state))]
+      [#('$BEGIN (stmts ...))
+        (map (cut gen <> state) stmts)]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 
