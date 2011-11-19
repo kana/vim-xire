@@ -312,6 +312,28 @@
         )
       un-op-table)
     )
+  (it "should generate a valid code from $CALL of the built-in 'ref'"
+    (expect (gen (make-call 'ref
+                            (list (make-const 1)
+                                  (make-const 2))))
+            equal? "(1[2])")
+    (expect (gen (make-call 'ref
+                            (list (make-const 1))))
+            raise? <error>)  ; Too few arguments.
+    (expect (gen (make-call 'ref
+                            (list (make-const 1)
+                                  (make-const 2)
+                                  (make-const 3))))
+            raise? <error>)  ; Too many arguments.
+    (expect (gen (make-call 'ref
+                            (list 1
+                                  (make-const 2))))
+            raise? <error>)  ; Non-iform arguments.
+    (expect (gen (make-call 'ref
+                            (list (make-const 1)
+                                  2)))
+            raise? <error>)  ; Non-iform arguments.
+    )
   )
 
 

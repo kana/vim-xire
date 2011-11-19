@@ -315,6 +315,13 @@
               (cdr op)
               (gen expr state)
               ")")]
+      [#('$CALL 'ref (collection-expr index-expr))
+        (list "("
+              (gen collection-expr state)
+              "["
+              (gen index-expr state)
+              "]"
+              ")")]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 
