@@ -405,6 +405,8 @@
               "\n"
               (gen stmt state)
               "endfor" "\n")]
+      [#('$BREAK)
+        '("break" "\n")]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 

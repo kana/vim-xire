@@ -589,6 +589,12 @@
                            0))
             raise? <error>)  ; Non-iform arguments.
     )
+  (it "should generate a valid code from $BREAK"
+    (expect (gen (make-break))
+            equal? "break\n")
+    (expect (gen (make-break 0))
+            raise? <error>)  ; Too many arguments.
+    )
   )
 
 
