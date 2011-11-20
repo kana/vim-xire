@@ -6,6 +6,7 @@
 (use srfi-1)
 (use util.list)
 (use vim.xire.compiler)
+(use vim.xire.iform)
 (use vim.xire.ivs)
 
 
