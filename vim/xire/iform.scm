@@ -426,6 +426,18 @@
               "\n"
               (gen stmt state)
               "endfunction" "\n")]
+      [#('$EX (obj-or-iforms ...))
+        (letrec ([zap (lambda (x)
+                        (cond
+                          [(iform? x)
+                           (gen x state)]
+                          [(pair? x)
+                           (cons (zap (car x))
+                                 (zap (cdr x)))]
+                          [else
+                            x]))])
+              (list (intersperse " " (map zap obj-or-iforms))
+                    "\n"))]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 

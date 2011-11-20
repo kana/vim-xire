@@ -638,6 +638,28 @@
                             0))
             raise? <error>)  ; Non-iform arguments.
     )
+  (it "should generate a valid code from $EX"
+    (expect (gen (make-ex '()))
+            equal? "\n")
+    (expect (gen (make-ex '(foo-bar)))
+            equal? "foo-bar\n")
+    (expect (gen (make-ex '(foo "bar" 123)))
+            equal? "foo bar 123\n")
+    (expect (gen (make-ex '(foo ("bar" (123) 456))))
+            equal? "foo bar123456\n")
+    (expect (gen (make-ex (list (make-gref 'foo-bar))))
+            equal? "foo_bar\n")
+    (expect (gen (make-ex (list (list (make-gref 'foo-bar)
+                                      123)
+                                (make-gref 'bar-baz))))
+            equal? "foo_bar123 bar_baz\n")
+    (expect (gen (make-ex))
+            raise? <error>)  ; Too few arguments.
+    (expect (gen (make-ex '() '()))
+            raise? <error>)  ; Too many arguments.
+    (expect (gen (make-ex 123))
+            raise? <error>)  ; Invalid arguments.
+    )
   )
 
 
