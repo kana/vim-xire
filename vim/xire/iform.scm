@@ -10,6 +10,7 @@
     convert-key-sequence-conventions
     convert-regexp-conventions
     convert-string-conventions
+    derive-state
     iform-tag
     iform?
     make-begin
@@ -416,6 +417,39 @@
      :init-keyword :lvars
      :init-value '()]))  ; Alist of (original-name . new-name).
 
+(define (derive-state base-state . args)
+  (let1 new-state (make <pass-final/state>)
+    (for-each
+      (lambda (slot-name)
+        (set! (ref new-state slot-name) (ref base-state slot-name)))
+      (map slot-definition-name (class-direct-slots <pass-final/state>)))
+    (let go ([slot-name (car args)]
+             [slot-value (cadr args)]
+             [args (cddr args)])
+      (set! (ref new-state slot-name) slot-value)
+      (unless (null? args)
+        (go (car args)
+            (cadr args)
+            (cddr args))))
+    new-state))
+
+(define (make-tmp-name state)
+  (cond
+    [(ref state 'in-funcp)
+      ; Xire script doesn't provide any way to define function-local
+      ; variables except "let" family.  And it's not usual to access
+      ; function-local variables from other context.  So that it's not
+      ; necessary to take care on name collision.
+      (gensym "L")]
+    [(ref state 'in-scriptp)
+     ; There is a chance of name collision between variables explicitly
+     ; defined with "define" and variables implicitly defined with "let"
+     ; family.  To avoid unexpected name collision, generate variable name
+     ; with a prefix which, probably, users will not use.
+     (gensym "s:__L")]
+    [else
+      (error "Lexical variables are not available in this context.")]))
+
 (define (rename-var name state)
   (let1 orig-name&new-name (or (assq name (ref state 'lvars))
                                (assq name (ref state 'func-args)))
@@ -532,17 +566,21 @@
               (gen expr state)
               "\n")]
       [#('$LET (lvars ...) (exprs ...) stmt)
+        (define new-state
+                (derive-state state
+                  'lvars (append
+                           (map (cut cons <> (make-tmp-name state)) lvars)
+                           (ref state 'lvars))))
         (list (map (lambda (lvar expr)
                      (list "let"
                            " "
-                           (convert-identifier-conventions
-                             (symbol->string lvar))
+                           (rename-var lvar new-state)
                            "="
                            (gen expr state)
                            "\n"))
                    lvars
                    exprs)
-              (gen stmt state))]
+              (gen stmt new-state))]
       [#('$BEGIN (stmts ...))
         (map (cut gen <> state) stmts)]
       [#('$IF cond-expr then-stmt else-stmt)
