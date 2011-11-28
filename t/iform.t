@@ -612,6 +612,32 @@
     (expect (gen (make-ret 1))
             raise? <error>)  ; Non-iform arguments.
     )
+  (it "should generate a valid code from $FUNC"
+    (expect (gen (make-func 'foo-bar
+                            '(a b c)
+                            (make-ret (make-const 1))))
+            equal? "function! foo_bar(a,b,c)\nreturn 1\nendfunction\n")
+    (expect (gen (make-func 'foo-bar
+                            '(a b c)))
+            raise? <error>)  ; Too few arguments.
+    (expect (gen (make-func 'foo-bar
+                            '(a b c)
+                            (make-ret (make-const 1))
+                            0))
+            raise? <error>)  ; Too many arguments.
+    (expect (gen (make-func 0
+                            '(a b c)
+                            (make-ret (make-const 1))))
+            raise? <error>)  ; Non-iform arguments.
+    (expect (gen (make-func 'foo-bar
+                            0
+                            (make-ret (make-const 1))))
+            raise? <error>)  ; Non-iform arguments.
+    (expect (gen (make-func 'foo-bar
+                            '(a b c)
+                            0))
+            raise? <error>)  ; Non-iform arguments.
+    )
   )
 
 

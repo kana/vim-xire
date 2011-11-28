@@ -411,6 +411,21 @@
         '("continue" "\n")]
       [#('$RET expr)
         (list "return" " " (gen expr state) "\n")]
+      [#('$FUNC func-name (arg-names ...) stmt)
+        (list "function!"
+              " "
+              (convert-identifier-conventions (symbol->string func-name))
+              "("
+              (intersperse
+                ","
+                (map
+                  (lambda (arg-name)
+                    (convert-identifier-conventions (symbol->string arg-name)))
+                  arg-names))
+              ")"
+              "\n"
+              (gen stmt state)
+              "endfunction" "\n")]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 
