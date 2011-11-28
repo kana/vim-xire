@@ -527,7 +527,7 @@
       [#('$LSET lvar expr)
         (list "let"
               " "
-              (convert-identifier-conventions (symbol->string lvar))
+              (rename-var lvar state)
               "="
               (gen expr state)
               "\n")]

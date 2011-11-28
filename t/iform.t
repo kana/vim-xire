@@ -555,134 +555,186 @@
             raise? <error>)  ; Non-iform arguments.
     )
   (it "should generate a valid code from $LSET"
-    (expect (gen (make-lset 'foo-bar (make-const 1)))
-            equal? "let foo_bar=1\n")
-    (expect (gen (make-lset 'foo-bar))
+    (define state (make <pass-final/state>
+                        :lvars '((foo-bar . foobar123))))
+    (expect (gen (make-lset 'foo-bar (make-const 1))
+                 state)
+            equal? "let foobar123=1\n")
+    (expect (gen (make-lset 'undefined (make-const 1))
+                 state)
+            raise? <error>)  ; Undefined variable.
+    (expect (gen (make-lset 'foo-bar)
+                 state)
             raise? <error>)  ; Too few arguments.
     (expect (gen (make-lset 'foo-bar (make-const 1)
-                                     (make-const 2)))
+                                     (make-const 2))
+                 state)
             raise? <error>)  ; Too many arguments.
-    (expect (gen (make-lset 'foo-bar 1))
+    (expect (gen (make-lset 'foo-bar 1)
+                 state)
             raise? <error>)  ; Non-iform arguments.
     )
   (it "should generate a valid code from $LET"
+    (define state (make <pass-final/state> :lvars '((foo-bar . foobar123))))
     (expect (gen (make-let '()
                            '()
-                           (make-lset 'foo-bar (make-const 999))))
-            equal? "let foo_bar=999\n")
+                           (make-lset 'foo-bar (make-const 999)))
+                 state)
+            equal? "let foobar123=999\n")
     (expect (gen (make-let '(foo-bar)
                            (list (make-const 1))
-                           (make-lset 'foo-bar (make-const 999))))
-            equal? "let foo_bar=1\nlet foo_bar=999\n")
+                           (make-lset 'foo-bar (make-const 999)))
+                 state)
+            equal? "let foo_bar=1\nlet foobar123=999\n")
     (expect (gen (make-let '(foo-bar a)
                            (list (make-const 1) (make-const 2))
-                           (make-lset 'foo-bar (make-const 999))))
-            equal? "let foo_bar=1\nlet a=2\nlet foo_bar=999\n")
+                           (make-lset 'foo-bar (make-const 999)))
+                 state)
+            equal? "let foo_bar=1\nlet a=2\nlet foobar123=999\n")
     (expect (gen (make-let '()
-                           '()))
+                           '())
+                 state)
             raise? <error>)  ; Too few arguments.
     (expect (gen (make-let '()
                            '()
                            (make-lset 'foo-bar (make-const 999))
-                           '()))
+                           '())
+                 state)
             raise? <error>)  ; Too many arguments.
     (expect (gen (make-let 0
                            '()
-                           (make-lset 'foo-bar (make-const 999))))
+                           (make-lset 'foo-bar (make-const 999)))
+                 state)
             raise? <error>)  ; Invalid arguments.
     (expect (gen (make-let '()
                            0
-                           (make-lset 'foo-bar (make-const 999))))
+                           (make-lset 'foo-bar (make-const 999)))
+                 state)
             raise? <error>)  ; Invalid arguments.
     (expect (gen (make-let '()
                            '()
-                           0))
+                           0)
+                 state)
             raise? <error>)  ; Invalid arguments.
     )
   (it "should generate a valid code from $BEGIN"
-    (expect (gen (make-begin '()))
+    (define state (make <pass-final/state>
+                        :lvars '((foo . FOO)
+                                 (bar . BAR))))
+    (expect (gen (make-begin '())
+                 state)
             equal? "")
-    (expect (gen (make-begin (list (make-lset 'foo (make-const 1)))))
-            equal? "let foo=1\n")
+    (expect (gen (make-begin (list (make-lset 'foo (make-const 1))))
+                 state)
+            equal? "let FOO=1\n")
     (expect (gen (make-begin (list (make-lset 'foo (make-const 1))
-                                   (make-lset 'bar (make-const 2)))))
-            equal? "let foo=1\nlet bar=2\n")
-    (expect (gen (make-begin))
+                                   (make-lset 'bar (make-const 2))))
+                 state)
+            equal? "let FOO=1\nlet BAR=2\n")
+    (expect (gen (make-begin)
+                 state)
             raise? <error>)  ; Too few arguments.
-    (expect (gen (make-begin '() '()))
+    (expect (gen (make-begin '() '())
+                 state)
             raise? <error>)  ; Too many arguments.
-    (expect (gen (make-begin (list 0)))
+    (expect (gen (make-begin (list 0))
+                 state)
             raise? <error>)  ; Non-iform arguments.
-    (expect (gen (make-begin 0))
+    (expect (gen (make-begin 0)
+                 state)
             raise? <error>)  ; Non-iform arguments.
     )
   (it "should generate a valid code from $IF"
+    (define state (make <pass-final/state>
+                        :lvars '((t . T)
+                                 (e . E))))
     (expect (gen (make-if (make-const 0)
                           (make-lset 't (make-const 1))
-                          (make-lset 'e (make-const 2))))
-            equal? "if 0\nlet t=1\nelse\nlet e=2\nendif\n")
+                          (make-lset 'e (make-const 2)))
+                 state)
+            equal? "if 0\nlet T=1\nelse\nlet E=2\nendif\n")
     (expect (gen (make-if (make-const 0)
-                          (make-lset 't (make-const 1))))
+                          (make-lset 't (make-const 1)))
+                 state)
             raise? <error>)  ; Too few arguments.
     (expect (gen (make-if (make-const 0)
                           (make-lset 't (make-const 1))
                           (make-lset 'e (make-const 2))
-                          0))
+                          0)
+                 state)
             raise? <error>)  ; Too many arguments.
     (expect (gen (make-if 0
                           (make-lset 't (make-const 1))
-                          (make-lset 'e (make-const 2))))
+                          (make-lset 'e (make-const 2)))
+                 state)
             raise? <error>)  ; Non-iform arguments.
     (expect (gen (make-if (make-const 0)
                           1
-                          (make-lset 'e (make-const 2))))
+                          (make-lset 'e (make-const 2)))
+                 state)
             raise? <error>)  ; Non-iform arguments.
     (expect (gen (make-if (make-const 0)
                           (make-lset 't (make-const 1))
-                          2))
+                          2)
+                 state)
             raise? <error>)  ; Non-iform arguments.
     )
   (it "should generate a valid code from $WHILE"
+    (define state (make <pass-final/state>
+                        :lvars '((t . T))))
     (expect (gen (make-while (make-const 0)
-                             (make-lset 't (make-const 1))))
-            equal? "while 0\nlet t=1\nendwhile\n")
-    (expect (gen (make-while (make-const 0)))
+                             (make-lset 't (make-const 1)))
+                 state)
+            equal? "while 0\nlet T=1\nendwhile\n")
+    (expect (gen (make-while (make-const 0))
+                 state)
             raise? <error>)  ; Too few arguments.
     (expect (gen (make-while (make-const 0)
                              (make-lset 't (make-const 1))
-                             2))
+                             2)
+                 state)
             raise? <error>)  ; Too many arguments.
     (expect (gen (make-while 0
-                             (make-lset 't (make-const 1))))
+                             (make-lset 't (make-const 1)))
+                 state)
             raise? <error>)  ; Non-iform arguments.
     (expect (gen (make-while (make-const 0)
-                             1))
+                             1)
+                 state)
             raise? <error>)  ; Non-iform arguments.
     )
   (it "should generate a valid code from $FOR"
+    (define state (make <pass-final/state>
+                        :lvars '((i . I))))
     (expect (gen (make-for 'i
                            (make-const 0)
-                           (make-lset 'i (make-const 1))))
-            equal? "for i in 0\nlet i=1\nendfor\n")
+                           (make-lset 'i (make-const 1)))
+                 state)
+            equal? "for i in 0\nlet I=1\nendfor\n")
     (expect (gen (make-for 'i
-                           (make-const 0)))
+                           (make-const 0))
+                 state)
             raise? <error>)  ; Too few arguments.
     (expect (gen (make-for 'i
                            (make-const 0)
                            (make-lset 'i (make-const 1))
-                           0))
+                           0)
+                 state)
             raise? <error>)  ; Too many arguments.
     (expect (gen (make-for 0
                            (make-const 0)
-                           (make-lset 'i (make-const 1))))
+                           (make-lset 'i (make-const 1)))
+                 state)
             raise? <error>)  ; Non-iform arguments.
     (expect (gen (make-for 'i
                            0
-                           (make-lset 'i (make-const 1))))
+                           (make-lset 'i (make-const 1)))
+                 state)
             raise? <error>)  ; Non-iform arguments.
     (expect (gen (make-for 'i
                            (make-const 0)
-                           0))
+                           0)
+                 state)
             raise? <error>)  ; Non-iform arguments.
     )
   (it "should generate a valid code from $BREAK"
