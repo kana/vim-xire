@@ -768,10 +768,21 @@
             raise? <error>)  ; Non-iform arguments.
     )
   (it "should generate a valid code from $FUNC"
-    (expect (gen (make-func 'foo-bar
-                            '(a b c)
-                            (make-ret (make-const 1))))
-            equal? "function! foo_bar(a,b,c)\nreturn 1\nendfunction\n")
+    (expect (gen (make-func
+                   'foo-bar
+                   '(x ...)
+                   (make-let '(x)
+                             (list (make-lref 'x))
+                             (make-ret (make-call 'list
+                                                  (list (make-lref 'x)
+                                                        (make-lref '...)))))))
+            (string->regexp (string-join
+                              '("function! foo_bar\\(x,\\.\\.\\.\\)"
+                                "let (L\\d+)=a:x"
+                                "return \\[\\1,a:000\\]"
+                                "endfunction")
+                              "\n"
+                              'suffix)))
     (expect (gen (make-func 'foo-bar
                             '(a b c)))
             raise? <error>)  ; Too few arguments.
