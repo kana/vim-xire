@@ -409,6 +409,8 @@
         '("break" "\n")]
       [#('$NEXT)
         '("continue" "\n")]
+      [#('$RET expr)
+        (list "return" " " (gen expr state) "\n")]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 

@@ -601,6 +601,17 @@
     (expect (gen (make-next 0))
             raise? <error>)  ; Too many arguments.
     )
+  (it "should generate a valid code from $RET"
+    (expect (gen (make-ret (make-const 1)))
+            equal? "return 1\n")
+    (expect (gen (make-ret))
+            raise? <error>)  ; Too few arguments.
+    (expect (gen (make-ret (make-const 1)
+                           (make-const 2)))
+            raise? <error>)  ; Too many arguments.
+    (expect (gen (make-ret 1))
+            raise? <error>)  ; Non-iform arguments.
+    )
   )
 
 
