@@ -286,10 +286,10 @@
 
 
 (describe "pass-final"
-  (define (gen iform)
+  (define (gen iform . args)
     (call-with-output-string
       (lambda (port)
-        (write-tree (pass-final (list iform)) port))))
+        (write-tree (apply pass-final (list iform) args) port))))
   (it "should reject an object which is not a valid iform"
     (expect (gen '#($FOO)) raise? <error>)
     (expect (gen '#($CONST 1 2)) raise? <error>)
@@ -306,8 +306,12 @@
     (expect (gen (make-gref 'g:foo-bar)) equal? "g:foo_bar")
     )
   (it "should generate a valid code from $LREF"
-    (expect (gen (make-lref 'var)) equal? "var")
-    (expect (gen (make-lref 'foo-bar)) equal? "foo_bar")
+    (define state (make <pass-final/state>
+                        :lvars '((var . var123)
+                                 (foo-bar . foobar123))))
+    (expect (gen (make-lref 'var) state) equal? "var123")
+    (expect (gen (make-lref 'foo-bar) state) equal? "foobar123")
+    (expect (gen (make-lref 'undefined) state) raise? <error>)
     )
   (it "should generate a valid code from $CALL of a function"
     (expect (gen (make-call (make-gref 'changenr)

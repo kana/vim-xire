@@ -4,6 +4,7 @@
     pass-final
 
     ; Not public, but exported to test.
+    <pass-final/state>
     bin-op-table
     convert-identifier-conventions
     convert-key-sequence-conventions
@@ -415,12 +416,19 @@
      :init-keyword :lvars
      :init-value '()]))  ; Alist of (original-name . new-name).
 
+(define (rename-var name state)
+  (let1 orig-name&new-name (or (assq name (ref state 'lvars))
+                               (assq name (ref state 'func-args)))
+    (if orig-name&new-name
+      (cdr orig-name&new-name)
+      (errorf "Variable is not defined: ~s" name))))
+
 
 ;;; Entry point
 ;;; -----------
 
-(define (pass-final iforms)
-  (map (cut pass-final/rec <> (make <pass-final/state>))
+(define (pass-final iforms :optional (state (make <pass-final/state>)))
+  (map (cut pass-final/rec <> state)
        iforms))
 
 (define (pass-final/rec iform state)
@@ -435,7 +443,7 @@
         (convert-identifier-conventions
           (symbol->string gvar))]
       [#('$LREF lvar)
-        (scheme-object->vim-script-notation lvar)]
+        (rename-var lvar state)]
       [#('$CALL (? iform? func-expr) arg-exprs)
         (list (gen func-expr state)
               "("
