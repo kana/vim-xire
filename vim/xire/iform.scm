@@ -594,15 +594,20 @@
               (gen stmt state)
               "endwhile" "\n")]
       [#('$FOR lvar expr stmt)
+        (define new-state
+                (derive-state state
+                  'lvars (cons
+                           (cons lvar (make-tmp-name state))
+                           (ref state 'lvars))))
         (list "for"
               " "
-              (convert-identifier-conventions (symbol->string lvar))
+              (rename-var lvar new-state)
               " "
               "in"
               " "
               (gen expr state)
               "\n"
-              (gen stmt state)
+              (gen stmt new-state)
               "endfor" "\n")]
       [#('$BREAK)
         '("break" "\n")]

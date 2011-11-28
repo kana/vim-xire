@@ -716,12 +716,13 @@
     )
   (it "should generate a valid code from $FOR"
     (define state (make <pass-final/state>
-                        :lvars '((i . I))))
+                        :lvars '((i . I))
+                        :in-funcp #t))
     (expect (gen (make-for 'i
-                           (make-const 0)
-                           (make-lset 'i (make-const 1)))
+                           (make-lref 'i)
+                           (make-lset 'i (make-lref 'i)))
                  state)
-            equal? "for i in 0\nlet I=1\nendfor\n")
+            #/for (L\d+) in I\nlet \1=\1\nendfor\n/)
     (expect (gen (make-for 'i
                            (make-const 0))
                  state)
@@ -732,11 +733,6 @@
                            0)
                  state)
             raise? <error>)  ; Too many arguments.
-    (expect (gen (make-for 0
-                           (make-const 0)
-                           (make-lset 'i (make-const 1)))
-                 state)
-            raise? <error>)  ; Non-iform arguments.
     (expect (gen (make-for 'i
                            0
                            (make-lset 'i (make-const 1)))
