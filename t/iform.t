@@ -10,6 +10,47 @@
 
 
 
+(describe "<lvar>"
+  (define (make-a-lvar)
+    (make <lvar>
+          :src-name 'foo
+          :new-name 'bar
+          :init-expr ($const #f)))
+  (it "should be made with valid initial values"
+    (define lvar (make-a-lvar))
+    (expect (lvar-src-name lvar) eq? 'foo)
+    (expect (lvar-new-name lvar) eq? 'bar)
+    (expect (lvar-init-expr lvar) equal? ($const #f))
+    (expect (lvar-ref-count lvar) eqv? 0)
+    (expect (lvar-set-count lvar) eqv? 0)
+    )
+  (it "should be counted through API"
+    (define lvar (make-a-lvar))
+    (begin
+      (expect (lvar-ref-count lvar) eqv? 0)
+      (expect (lvar-set-count lvar) eqv? 0))
+    (begin
+      (lvar-ref++! lvar)
+      (expect (lvar-ref-count lvar) eqv? 1)
+      (expect (lvar-set-count lvar) eqv? 0))
+    (begin
+      (lvar-set++! lvar)
+      (expect (lvar-ref-count lvar) eqv? 1)
+      (expect (lvar-set-count lvar) eqv? 1))
+    (begin
+      (lvar-ref--! lvar)
+      (expect (lvar-ref-count lvar) eqv? 0)
+      (expect (lvar-set-count lvar) eqv? 1))
+    (begin
+      (lvar-set--! lvar)
+      (expect (lvar-ref-count lvar) eqv? 0)
+      (expect (lvar-set-count lvar) eqv? 0))
+    )
+  )
+
+
+
+
 (describe "iform?"
   (it "should distinguish a valid iform"
     (expect (iform? ($const 0)) eq? #t)
