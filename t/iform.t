@@ -5,6 +5,7 @@
 
 (use test.gasmine)
 (use text.tree)
+(use vim.xire.compiler.pass-final)
 (use vim.xire.iform)
 
 
