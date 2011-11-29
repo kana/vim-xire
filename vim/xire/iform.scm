@@ -1,25 +1,25 @@
 (define-module vim.xire.iform
   (export
     ; Public API.
+    $begin
+    $break
+    $call
+    $const
+    $def
+    $ex
+    $for
+    $func
+    $gref
+    $gset
+    $if
+    $let
+    $lref
+    $lset
+    $next
+    $ret
+    $while
     iform-tag
     iform?
-    make-begin
-    make-break
-    make-call
-    make-const
-    make-def
-    make-ex
-    make-for
-    make-func
-    make-gref
-    make-gset
-    make-if
-    make-let
-    make-lref
-    make-lset
-    make-next
-    make-ret
-    make-while
 
     ; Not public, but exported to test.
     ))
@@ -96,7 +96,7 @@
 ;;;
 ;;; <top-stmt> is a <stmt> or one of the following forms:
 
-(define (make-def gvar expr)
+(define ($def gvar expr)
   ; Define a global variable.
   `#($DEF ,gvar ,expr))
 
@@ -106,53 +106,53 @@
 ;;;
 ;;; <stmt> is one of the following forms:
 
-(define (make-gset gvar expr)
+(define ($gset gvar expr)
   ; Modify a global variable.
   `#($GSET ,gvar ,expr))
 
-(define (make-let lvars exprs stmt)
+(define ($let lvars exprs stmt)
   ; Define local variables.
   `#($LET ,lvars ,exprs ,stmt))
 
-(define (make-lset lvar expr)
+(define ($lset lvar expr)
   ; Modify a local variable.
   `#($LSET ,lvar ,expr))
 
-(define (make-begin stmts)
+(define ($begin stmts)
   ; Execute statements sequentially.
   `#($BEGIN ,stmts))
 
-(define (make-if expr then-stmt else-stmt)
+(define ($if expr then-stmt else-stmt)
   ; Branch execution.
   `#($IF ,expr ,then-stmt ,else-stmt))
 
-(define (make-while expr stmt)
+(define ($while expr stmt)
   ; Loop by a condition.
   `#($WHILE ,expr ,stmt))
 
-(define (make-for lvar expr stmt)
+(define ($for lvar expr stmt)
   ; Loop by a list.
   `#($FOR ,lvar ,expr ,stmt))
 
-(define (make-break)
+(define ($break)
   ; Exit from the most inner loop.
   `#($BREAK))
 
-(define (make-next)
+(define ($next)
   ; Go to the next step of the most inner loop.
   `#($NEXT))
 
-(define (make-ret expr)
+(define ($ret expr)
   ; Exit from the current function.
   `#($RET ,expr))
 
 ; FIXME: Support :try/:catch/:finally in the distant future.
 
-(define (make-func func-name arg-names stmt)
+(define ($func func-name arg-names stmt)
   ; Create a function.
   `#($FUNC ,func-name ,arg-names ,stmt))
 
-(define (make-ex obj-or-iforms)
+(define ($ex obj-or-iforms)
   ; Execute an arbitrary Ex command.
   `#($EX ,obj-or-iforms))
 
@@ -162,19 +162,19 @@
 ;;;
 ;;; <expr> is one of the following forms:
 
-(define (make-const obj)
+(define ($const obj)
   ; Return a literal.
   `#($CONST ,obj))
 
-(define (make-gref gvar)
+(define ($gref gvar)
   ; Reference a global variable.
   `#($GREF ,gvar))
 
-(define (make-lref lvar)
+(define ($lref lvar)
   ; Reference a local variable.
   `#($LREF ,lvar))
 
-(define (make-call func-expr-or-op-name arg-exprs)
+(define ($call func-expr-or-op-name arg-exprs)
   ; Call a function or a built-in operator.
   `#($CALL ,func-expr-or-op-name ,arg-exprs))
 

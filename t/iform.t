@@ -12,7 +12,7 @@
 
 (describe "iform?"
   (it "should distinguish a valid iform"
-    (expect (iform? (make-const 0)) eq? #t)
+    (expect (iform? ($const 0)) eq? #t)
     (expect (iform? '($CONST 0)) eq? #f)
     (expect (iform? '#()) eq? #t)  ; Though it should be #f.
     )
@@ -20,7 +20,7 @@
 
 (describe "iform-tag"
   (it "should extract a tag from a given iform"
-    (expect (iform-tag (make-const 0)) eq? '$CONST)
+    (expect (iform-tag ($const 0)) eq? '$CONST)
     (expect (iform-tag '($CONST 0)) raise? <error>)
     (expect (iform-tag '#()) raise? <error>)
     )
@@ -29,9 +29,9 @@
 
 
 
-(describe "make-def"
+(describe "$def"
   (it "should make a iform for $DEF"
-    (expect (make-def 'g:var (make-const 0))
+    (expect ($def 'g:var ($const 0))
             equal?
             '#($DEF g:var #($CONST 0)))
     )
@@ -40,19 +40,19 @@
 
 
 
-(describe "make-gset"
+(describe "$gset"
   (it "should make a iform for $GSET"
-    (expect (make-gset 'g:var (make-const 0))
+    (expect ($gset 'g:var ($const 0))
             equal?
             '#($GSET g:var #($CONST 0)))
     )
   )
 
-(describe "make-let"
+(describe "$let"
   (it "should make a iform for $LET"
-    (expect (make-let '(var1 var2)
-                      (list (make-const 1) (make-const 2))
-                      (make-gset 'g:var (make-const 0)))
+    (expect ($let '(var1 var2)
+                  (list ($const 1) ($const 2))
+                  ($gset 'g:var ($const 0)))
             equal?
             '#($LET (var1 var2)
                     (#($CONST 1) #($CONST 2))
@@ -60,29 +60,29 @@
     )
   )
 
-(describe "make-lset"
+(describe "$lset"
   (it "should make a iform for $LSET"
-    (expect (make-lset 'var (make-const 0))
+    (expect ($lset 'var ($const 0))
             equal?
             '#($LSET var #($CONST 0)))
     )
   )
 
-(describe "make-begin"
+(describe "$begin"
   (it "should make a iform for $BEGIN"
-    (expect (make-begin (list (make-gset 'g:var1 (make-const 1))
-                              (make-gset 'g:var2 (make-const 2))))
+    (expect ($begin (list ($gset 'g:var1 ($const 1))
+                          ($gset 'g:var2 ($const 2))))
             equal?
             '#($BEGIN (#($GSET g:var1 #($CONST 1))
                        #($GSET g:var2 #($CONST 2)))))
     )
   )
 
-(describe "make-if"
+(describe "$if"
   (it "should make a iform for $IF"
-    (expect (make-if (make-const 0)
-                     (make-gset 'g:var1 (make-const 1))
-                     (make-gset 'g:var2 (make-const 2)))
+    (expect ($if ($const 0)
+                 ($gset 'g:var1 ($const 1))
+                 ($gset 'g:var2 ($const 2)))
             equal?
             '#($IF #($CONST 0)
                    #($GSET g:var1 #($CONST 1))
@@ -90,21 +90,21 @@
     )
   )
 
-(describe "make-while"
+(describe "$while"
   (it "should make a iform for $WHILE"
-    (expect (make-while (make-const 0)
-                        (make-gset 'g:var1 (make-const 1)))
+    (expect ($while ($const 0)
+                    ($gset 'g:var1 ($const 1)))
             equal?
             '#($WHILE #($CONST 0)
                       #($GSET g:var1 #($CONST 1))))
     )
   )
 
-(describe "make-for"
+(describe "$for"
   (it "should make a iform for $FOR"
-    (expect (make-for 'var
-                      (make-const '(0 1 2))
-                      (make-gset 'g:var1 (make-const 1)))
+    (expect ($for 'var
+                  ($const '(0 1 2))
+                  ($gset 'g:var1 ($const 1)))
             equal?
             '#($FOR var
                     #($CONST (0 1 2))
@@ -112,41 +112,41 @@
     )
   )
 
-(describe "make-break"
+(describe "$break"
   (it "should make a iform for $BREAK"
-    (expect (make-break)
+    (expect ($break)
             equal?
             '#($BREAK))
     )
   )
 
-(describe "make-next"
+(describe "$next"
   (it "should make a iform for $NEXT"
-    (expect (make-next)
+    (expect ($next)
             equal?
             '#($NEXT))
     )
   )
 
-(describe "make-ret"
+(describe "$ret"
   (it "should make a iform for $RET"
-    (expect (make-ret (make-const 0))
+    (expect ($ret ($const 0))
             equal?
             '#($RET #($CONST 0)))
     )
   )
 
-(describe "make-func"
+(describe "$func"
   (it "should make a iform for $FUNC"
-    (expect (make-func 'f '(a b c) (make-gset 'g:var (make-const 0)))
+    (expect ($func 'f '(a b c) ($gset 'g:var ($const 0)))
             equal?
             '#($FUNC f (a b c) #($GSET g:var #($CONST 0))))
     )
   )
 
-(describe "make-ex"
+(describe "$ex"
   (it "should make a iform for $EX"
-    (expect (make-ex (list 'foo (make-const 0)))
+    (expect ($ex (list 'foo ($const 0)))
             equal?
             '#($EX (foo #($CONST 0))))
     )
@@ -155,36 +155,36 @@
 
 
 
-(describe "make-const"
+(describe "$const"
   (it "should make a iform for $CONST"
-    (expect (make-const 0)
+    (expect ($const 0)
             equal?
             '#($CONST 0))
     )
   )
 
-(describe "make-gref"
+(describe "$gref"
   (it "should make a iform for $GREF"
-    (expect (make-gref 'g:var)
+    (expect ($gref 'g:var)
             equal?
             '#($GREF g:var))
     )
   )
 
-(describe "make-lref"
+(describe "$lref"
   (it "should make a iform for $LREF"
-    (expect (make-lref 'var)
+    (expect ($lref 'var)
             equal?
             '#($LREF var))
     )
   )
 
-(describe "make-call"
+(describe "$call"
   (it "should make a iform for $CALL"
-    (expect (make-call (make-gref 'bufnr) (list (make-const "$")))
+    (expect ($call ($gref 'bufnr) (list ($const "$")))
             equal?
             '#($CALL #($GREF bufnr) (#($CONST "$"))))
-    (expect (make-call '+ (list (make-const 1) (make-const 2)))
+    (expect ($call '+ (list ($const 1) ($const 2)))
             equal?
             '#($CALL + (#($CONST 1) #($CONST 2))))
     )
