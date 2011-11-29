@@ -8,6 +8,7 @@
 (use vim.xire.compiler)
 (use vim.xire.iform)
 (use vim.xire.ivs)
+(use vim.xire.util)
 
 
 

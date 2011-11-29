@@ -14,6 +14,7 @@
 (use util.list)
 (use util.match)
 (use vim.xire.iform)
+(use vim.xire.util)
 
 
 

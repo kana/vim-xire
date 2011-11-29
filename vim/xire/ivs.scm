@@ -14,6 +14,7 @@
 (use text.tree)
 (use util.list)
 (use vim.xire.iform)  ; FIXME: A temporary stuff for the IVS-IForm migration.
+(use vim.xire.util)  ; FIXME: A temporary stuff for the IVS-IForm migration.
 
 
 
