@@ -4,6 +4,7 @@
     vim.xire.compiler
     vim.xire.iform
     vim.xire.ivs
+    vim.xire.util
     )
   )
 (select-module vim.xire)
