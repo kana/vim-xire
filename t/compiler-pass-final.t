@@ -11,6 +11,15 @@
 
 
 
+(define (make-lvar src-name :optional (new-name (gensym)) init-expr)
+  (make <lvar>
+        :src-name src-name
+        :new-name new-name
+        :init-expr init-expr))
+
+
+
+
 (describe "pass-final"
   (define (gen iform . args)
     (call-with-output-string
@@ -38,6 +47,10 @@
     (expect (gen ($lref 'var) state) equal? "var123")
     (expect (gen ($lref 'foo-bar) state) equal? "foobar123")
     (expect (gen ($lref 'undefined) state) raise? <error>)
+    )
+  (it "should generate a valid code from $LREF~"
+    (expect (gen ($lref~ (make-lvar 'var 'var1))) equal? "var1")
+    (expect (gen ($lref~ (make-lvar 'foo-bar 'foobar1))) equal? "foobar1")
     )
   (it "should generate a valid code from $CALL of a function"
     (expect (gen ($call ($gref 'changenr)

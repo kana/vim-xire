@@ -159,6 +159,8 @@
           (symbol->string gvar))]
       [#('$LREF lvar)
         (rename-var lvar state)]
+      [#('$LREF~ lvar)
+        (lvar-new-name lvar)]
       [#('$CALL (? iform? func-expr) arg-exprs)
         (list (gen func-expr state)
               "("
