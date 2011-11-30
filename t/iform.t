@@ -171,18 +171,6 @@
     )
   )
 
-(describe "$for"
-  (it "should make a iform for $FOR"
-    (expect ($for 'var
-                  ($const '(0 1 2))
-                  ($gset 'g:var1 ($const 1)))
-            equal?
-            '#($FOR var
-                    #($CONST (0 1 2))
-                    #($GSET g:var1 #($CONST 1))))
-    )
-  )
-
 (describe "$for~"
   (it "should make a iform for $FOR~"
     (define lvar (make-lvar 'foo (gensym) ($const 1)))

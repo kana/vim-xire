@@ -492,36 +492,6 @@
                  state)
             raise? <error>)  ; Non-iform arguments.
     )
-  (it "should generate a valid code from $FOR"
-    (define state (make <pass-final/state>
-                        :lvars '((i . I))
-                        :in-funcp #t))
-    (expect (gen ($for 'i
-                       ($lref 'i)
-                       ($lset 'i ($lref 'i)))
-                 state)
-            #/for (L\d+) in I\nlet \1=\1\nendfor\n/)
-    (expect (gen ($for 'i
-                       ($const 0))
-                 state)
-            raise? <error>)  ; Too few arguments.
-    (expect (gen ($for 'i
-                       ($const 0)
-                       ($lset 'i ($const 1))
-                       0)
-                 state)
-            raise? <error>)  ; Too many arguments.
-    (expect (gen ($for 'i
-                       0
-                       ($lset 'i ($const 1)))
-                 state)
-            raise? <error>)  ; Non-iform arguments.
-    (expect (gen ($for 'i
-                       ($const 0)
-                       0)
-                 state)
-            raise? <error>)  ; Non-iform arguments.
-    )
   (it "should generate a valid code from $FOR~"
     (define i (make-lvar 'i 'I))
     (expect (gen ($for~ i

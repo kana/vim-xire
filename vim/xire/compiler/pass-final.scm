@@ -293,22 +293,6 @@
         (list "while" " " (gen expr state) "\n"
               (gen stmt state)
               "endwhile" "\n")]
-      [#('$FOR lvar expr stmt)
-        (define new-state
-                (derive-state state
-                  'lvars (cons
-                           (cons lvar (make-tmp-name state))
-                           (ref state 'lvars))))
-        (list "for"
-              " "
-              (rename-var lvar new-state)
-              " "
-              "in"
-              " "
-              (gen expr state)
-              "\n"
-              (gen stmt new-state)
-              "endfor" "\n")]
       [#('$FOR~ lvar expr stmt)
         (list "for"
               " "

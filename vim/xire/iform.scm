@@ -7,7 +7,6 @@
     $const
     $def
     $ex
-    $for
     $for~
     $func
     $gref
@@ -185,10 +184,6 @@
 (define ($while expr stmt)
   ; Loop by a condition.
   `#($WHILE ,expr ,stmt))
-
-(define ($for lvar expr stmt)
-  ; Loop by a list.
-  `#($FOR ,lvar ,expr ,stmt))
 
 (define ($for~ lvar expr stmt)
   ; FIXME: Replace $FOR.
