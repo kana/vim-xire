@@ -18,8 +18,19 @@
     $next
     $ret
     $while
+    <lvar>
     iform-tag
     iform?
+    lvar-arg-name
+    lvar-init-expr
+    lvar-new-name
+    lvar-ref++!
+    lvar-ref--!
+    lvar-ref-count
+    lvar-set++!
+    lvar-set--!
+    lvar-set-count
+    lvar-src-name
 
     ; Not public, but exported to test.
     ))
@@ -80,8 +91,47 @@
 ;;; stmt                An iform of a statement.
 
 
-;;; Utilities
-;;; ---------
+;;; Local variables
+;;; ---------------
+;;;
+;;; NB: <lvar> mostly represents a local variable, but it also represents an
+;;; argument to a function.
+
+(define-class <lvar> ()
+  ((src-name  ; The original name of this variable in source code.
+     :init-keyword :src-name
+     :getter lvar-src-name)
+   (new-name  ; A new name of this variable for resulting Vim script.
+     :init-keyword :new-name
+     :getter lvar-new-name)
+   (arg-name  ; A name to declare this variable as an argument to a function.
+     :init-keyword :arg-name
+     :getter lvar-arg-name
+     :init-value #f)
+   (init-expr  ; An expression for the initial value of this variable.
+     :init-keyword :init-expr
+     :getter lvar-init-expr)
+   (ref-count  ; The total number of places which refer this variable.
+     :init-keyword :ref-count
+     :accessor lvar-ref-count
+     :init-value 0)
+   (set-count  ; The total number of places which modify this variable.
+     :init-keyword :set-count
+     :accessor lvar-set-count
+     :init-value 0)))
+
+(define (lvar-ref++! lvar)
+  (inc! (lvar-ref-count lvar)))
+(define (lvar-ref--! lvar)
+  (dec! (lvar-ref-count lvar)))
+(define (lvar-set++! lvar)
+  (inc! (lvar-set-count lvar)))
+(define (lvar-set--! lvar)
+  (dec! (lvar-set-count lvar)))
+
+
+;;; Utilities on IForm
+;;; ------------------
 
 (define iform?
   ; All iform objects are represented as vectors.
@@ -110,9 +160,9 @@
   ; Modify a global variable.
   `#($GSET ,gvar ,expr))
 
-(define ($let lvars exprs stmt)
+(define ($let lvars stmt)
   ; Define local variables.
-  `#($LET ,lvars ,exprs ,stmt))
+  `#($LET ,lvars ,stmt))
 
 (define ($lset lvar expr)
   ; Modify a local variable.
@@ -148,9 +198,9 @@
 
 ; FIXME: Support :try/:catch/:finally in the distant future.
 
-(define ($func func-name arg-names stmt)
+(define ($func func-name args stmt)
   ; Create a function.
-  `#($FUNC ,func-name ,arg-names ,stmt))
+  `#($FUNC ,func-name ,args ,stmt))
 
 (define ($ex obj-or-iforms)
   ; Execute an arbitrary Ex command.

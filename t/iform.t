@@ -10,6 +10,57 @@
 
 
 
+(define (make-lvar src-name :optional (new-name (gensym)) init-expr)
+  (make <lvar>
+        :src-name src-name
+        :new-name new-name
+        :init-expr init-expr))
+
+
+
+
+(describe "<lvar>"
+  (define (make-a-lvar)
+    (make <lvar>
+          :src-name 'foo
+          :new-name 'bar
+          :init-expr ($const #f)))
+  (it "should be made with valid initial values"
+    (define lvar (make-a-lvar))
+    (expect (lvar-src-name lvar) eq? 'foo)
+    (expect (lvar-new-name lvar) eq? 'bar)
+    (expect (lvar-arg-name lvar) eq? #f)
+    (expect (lvar-init-expr lvar) equal? ($const #f))
+    (expect (lvar-ref-count lvar) eqv? 0)
+    (expect (lvar-set-count lvar) eqv? 0)
+    )
+  (it "should be counted through API"
+    (define lvar (make-a-lvar))
+    (begin
+      (expect (lvar-ref-count lvar) eqv? 0)
+      (expect (lvar-set-count lvar) eqv? 0))
+    (begin
+      (lvar-ref++! lvar)
+      (expect (lvar-ref-count lvar) eqv? 1)
+      (expect (lvar-set-count lvar) eqv? 0))
+    (begin
+      (lvar-set++! lvar)
+      (expect (lvar-ref-count lvar) eqv? 1)
+      (expect (lvar-set-count lvar) eqv? 1))
+    (begin
+      (lvar-ref--! lvar)
+      (expect (lvar-ref-count lvar) eqv? 0)
+      (expect (lvar-set-count lvar) eqv? 1))
+    (begin
+      (lvar-set--! lvar)
+      (expect (lvar-ref-count lvar) eqv? 0)
+      (expect (lvar-set-count lvar) eqv? 0))
+    )
+  )
+
+
+
+
 (describe "iform?"
   (it "should distinguish a valid iform"
     (expect (iform? ($const 0)) eq? #t)
@@ -50,21 +101,22 @@
 
 (describe "$let"
   (it "should make a iform for $LET"
-    (expect ($let '(var1 var2)
-                  (list ($const 1) ($const 2))
+    (define lvar1 (make-lvar 'foo (gensym) ($const 1)))
+    (define lvar2 (make-lvar 'bar (gensym) ($const 2)))
+    (expect ($let (list lvar1 lvar2)
                   ($gset 'g:var ($const 0)))
             equal?
-            '#($LET (var1 var2)
-                    (#($CONST 1) #($CONST 2))
+            `#($LET (,lvar1 ,lvar2)
                     #($GSET g:var #($CONST 0))))
     )
   )
 
 (describe "$lset"
   (it "should make a iform for $LSET"
-    (expect ($lset 'var ($const 0))
+    (define lvar (make-lvar 'foo (gensym) ($const 1)))
+    (expect ($lset lvar ($const 0))
             equal?
-            '#($LSET var #($CONST 0)))
+            `#($LSET ,lvar #($CONST 0)))
     )
   )
 
@@ -102,12 +154,13 @@
 
 (describe "$for"
   (it "should make a iform for $FOR"
-    (expect ($for 'var
-                  ($const '(0 1 2))
+    (define lvar (make-lvar 'foo (gensym) ($const 1)))
+    (expect ($for lvar
+                  ($const 0)
                   ($gset 'g:var1 ($const 1)))
             equal?
-            '#($FOR var
-                    #($CONST (0 1 2))
+            `#($FOR ,lvar
+                    #($CONST 0)
                     #($GSET g:var1 #($CONST 1))))
     )
   )
@@ -138,9 +191,12 @@
 
 (describe "$func"
   (it "should make a iform for $FUNC"
-    (expect ($func 'f '(a b c) ($gset 'g:var ($const 0)))
+    (define a (make <lvar> :src-name 'a :new-name 'a:A :src-name 'A))
+    (define b (make <lvar> :src-name 'b :new-name 'a:B :src-name 'B))
+    (define c (make <lvar> :src-name 'c :new-name 'a:C :src-name 'C))
+    (expect ($func 'f (list a b c) ($gset 'g:var ($const 0)))
             equal?
-            '#($FUNC f (a b c) #($GSET g:var #($CONST 0))))
+            `#($FUNC f (,a ,b ,c) #($GSET g:var #($CONST 0))))
     )
   )
 
@@ -173,9 +229,10 @@
 
 (describe "$lref"
   (it "should make a iform for $LREF"
-    (expect ($lref 'var)
+    (define lvar (make-lvar 'foo (gensym)))
+    (expect ($lref lvar)
             equal?
-            '#($LREF var))
+            `#($LREF ,lvar))
     )
   )
 
