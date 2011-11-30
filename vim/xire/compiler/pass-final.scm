@@ -293,7 +293,7 @@
         (list "while" " " (gen expr state) "\n"
               (gen stmt state)
               "endwhile" "\n")]
-      [#('$FOR~ lvar expr stmt)
+      [#('$FOR lvar expr stmt)
         (list "for"
               " "
               (lvar-new-name lvar)
