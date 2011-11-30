@@ -223,12 +223,12 @@
     )
   )
 
-(describe "$lref~"
-  (it "should make a iform for $LREF~"
+(describe "$lref"
+  (it "should make a iform for $LREF"
     (define lvar (make-lvar 'foo (gensym)))
-    (expect ($lref~ lvar)
+    (expect ($lref lvar)
             equal?
-            `#($LREF~ ,lvar))
+            `#($LREF ,lvar))
     )
   )
 

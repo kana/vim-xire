@@ -157,7 +157,7 @@
       [#('$GREF gvar)
         (convert-identifier-conventions
           (symbol->string gvar))]
-      [#('$LREF~ lvar)
+      [#('$LREF lvar)
         (lvar-new-name lvar)]
       [#('$CALL (? iform? func-expr) arg-exprs)
         (list (gen func-expr state)
