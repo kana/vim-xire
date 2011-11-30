@@ -248,6 +248,13 @@
               "="
               (gen expr state)
               "\n")]
+      [#('$LSET~ lvar expr)
+        (list "let"
+              " "
+              (lvar-new-name lvar)
+              "="
+              (gen expr state)
+              "\n")]
       [#('$LET (lvars ...) (exprs ...) stmt)
         (define new-state
                 (derive-state state

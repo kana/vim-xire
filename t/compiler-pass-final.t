@@ -313,6 +313,20 @@
                  state)
             raise? <error>)  ; Non-iform arguments.
     )
+  (it "should generate a valid code from $LSET~"
+    (expect (gen ($lset~ (make-lvar 'foo-bar 'foobar123)
+                         ($const 1)))
+            equal? "let foobar123=1\n")
+    (expect (gen ($lset~ (make-lvar 'foo-bar 'foobar123)))
+            raise? <error>)  ; Too few arguments.
+    (expect (gen ($lset~ (make-lvar 'foo-bar 'foobar123)
+                         ($const 1)
+                         ($const 2)))
+            raise? <error>)  ; Too many arguments.
+    (expect (gen ($lset~ (make-lvar 'foo-bar 'foobar123)
+                         1))
+            raise? <error>)  ; Non-iform arguments.
+    )
   (it "should generate a valid code from $LET"
     (define state (make <pass-final/state>
                         :lvars '((x . OUTER_X))))
