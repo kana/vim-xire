@@ -118,6 +118,15 @@
     )
   )
 
+(describe "$lset~"
+  (it "should make a iform for $LSET~"
+    (define lvar (make-lvar 'foo (gensym) ($const 1)))
+    (expect ($lset~ lvar ($const 0))
+            equal?
+            `#($LSET~ ,lvar #($CONST 0)))
+    )
+  )
+
 (describe "$begin"
   (it "should make a iform for $BEGIN"
     (expect ($begin (list ($gset 'g:var1 ($const 1))
