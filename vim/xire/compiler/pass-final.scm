@@ -255,22 +255,6 @@
               "="
               (gen expr state)
               "\n")]
-      [#('$LET (lvars ...) (exprs ...) stmt)
-        (define new-state
-                (derive-state state
-                  'lvars (append
-                           (map (cut cons <> (make-tmp-name state)) lvars)
-                           (ref state 'lvars))))
-        (list (map (lambda (lvar expr)
-                     (list "let"
-                           " "
-                           (rename-var lvar new-state)
-                           "="
-                           (gen expr state)
-                           "\n"))
-                   lvars
-                   exprs)
-              (gen stmt new-state))]
       [#('$LET~ (lvars ...) stmt)
         (list (map (lambda (lvar)
                      (list "let"

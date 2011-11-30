@@ -98,18 +98,6 @@
     )
   )
 
-(describe "$let"
-  (it "should make a iform for $LET"
-    (expect ($let '(var1 var2)
-                  (list ($const 1) ($const 2))
-                  ($gset 'g:var ($const 0)))
-            equal?
-            '#($LET (var1 var2)
-                    (#($CONST 1) #($CONST 2))
-                    #($GSET g:var #($CONST 0))))
-    )
-  )
-
 (describe "$let~"
   (it "should make a iform for $LET~"
     (define lvar1 (make-lvar 'foo (gensym) ($const 1)))

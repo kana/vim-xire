@@ -327,60 +327,6 @@
                          1))
             raise? <error>)  ; Non-iform arguments.
     )
-  (it "should generate a valid code from $LET"
-    (define state (make <pass-final/state>
-                        :lvars '((x . OUTER_X))))
-    (expect (gen ($let '()
-                       '()
-                       ($lset 'x ($const 999)))
-                 state)
-            equal? "let OUTER_X=999\n")
-    (expect (gen ($let '(x)
-                       (list ($lref 'x))
-                       ($lset 'x ($lref 'x)))
-                 state)
-            #/let (s:__L\d+)=OUTER_X\nlet \1=\1\n/)
-    (expect (gen ($let '(x y)
-                       (list ($const 1) ($const 2))
-                       ($lset 'x ($const 999)))
-                 state)
-            #/let (s:__L\d+)=1\nlet (s:__L\d+)=2\nlet \1=999\n/)
-    (expect (gen ($let '(x)
-                       (list ($lref 'x))
-                       ($lset 'x ($lref 'x)))
-                 (derive-state state 'in-funcp #t))
-            #/let (L\d+)=OUTER_X\nlet \1=\1\n/)
-    (expect (gen ($let '(x)
-                       (list ($lref 'x))
-                       ($lset 'x ($lref 'x)))
-                 (derive-state state 'in-scriptp #f))
-            raise? <error>)  ; Invalid context to use $LET.
-    (expect (gen ($let '()
-                       '())
-                 state)
-            raise? <error>)  ; Too few arguments.
-    (expect (gen ($let '()
-                       '()
-                       ($lset 'foo-bar ($const 999))
-                       '())
-                 state)
-            raise? <error>)  ; Too many arguments.
-    (expect (gen ($let 0
-                       '()
-                       ($lset 'foo-bar ($const 999)))
-                 state)
-            raise? <error>)  ; Invalid arguments.
-    (expect (gen ($let '()
-                       0
-                       ($lset 'foo-bar ($const 999)))
-                 state)
-            raise? <error>)  ; Invalid arguments.
-    (expect (gen ($let '()
-                       '()
-                       0)
-                 state)
-            raise? <error>)  ; Invalid arguments.
-    )
   (it "should generate a valid code from $LET~"
     (define inner-x (make-lvar 'x 'INNER_X ($const 123)))
     (define outer-x (make-lvar 'x 'OUTER_X ($const 456)))
