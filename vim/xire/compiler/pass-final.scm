@@ -271,6 +271,16 @@
                    lvars
                    exprs)
               (gen stmt new-state))]
+      [#('$LET~ (lvars ...) stmt)
+        (list (map (lambda (lvar)
+                     (list "let"
+                           " "
+                           (lvar-new-name lvar)
+                           "="
+                           (gen (lvar-init-expr lvar) state)
+                           "\n"))
+                   lvars)
+              (gen stmt state))]
       [#('$BEGIN (stmts ...))
         (map (cut gen <> state) stmts)]
       [#('$IF cond-expr then-stmt else-stmt)

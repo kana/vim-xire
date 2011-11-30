@@ -381,6 +381,31 @@
                  state)
             raise? <error>)  ; Invalid arguments.
     )
+  (it "should generate a valid code from $LET~"
+    (define inner-x (make-lvar 'x 'INNER_X ($const 123)))
+    (define outer-x (make-lvar 'x 'OUTER_X ($const 456)))
+    (expect (gen ($let~ ()
+                        ($lset~ outer-x ($const 999))))
+            equal? "let OUTER_X=999\n")
+    (expect (gen ($let~ (list inner-x)
+                        ($lset~ outer-x ($lref~ inner-x))))
+            equal? "let INNER_X=123\nlet OUTER_X=INNER_X\n")
+    (expect (gen ($let~ (list inner-x outer-x)
+                        ($lset~ inner-x ($lref~ outer-x))))
+            equal? "let INNER_X=123\nlet OUTER_X=456\nlet INNER_X=OUTER_X\n")
+    (expect (gen ($let~ '()))
+            raise? <error>)  ; Too few arguments.
+    (expect (gen ($let~ '()
+                        ($lset~ inner-x ($const 999))
+                        '()))
+            raise? <error>)  ; Too many arguments.
+    (expect (gen ($let~ 0
+                        ($lset~ inner-x ($const 999))))
+            raise? <error>)  ; Invalid arguments.
+    (expect (gen ($let~ '()
+                        0))
+            raise? <error>)  ; Invalid arguments.
+    )
   (it "should generate a valid code from $BEGIN"
     (define state (make <pass-final/state>
                         :lvars '((foo . FOO)
