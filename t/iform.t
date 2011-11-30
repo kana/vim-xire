@@ -98,15 +98,15 @@
     )
   )
 
-(describe "$let~"
-  (it "should make a iform for $LET~"
+(describe "$let"
+  (it "should make a iform for $LET"
     (define lvar1 (make-lvar 'foo (gensym) ($const 1)))
     (define lvar2 (make-lvar 'bar (gensym) ($const 2)))
-    (expect ($let~ (list lvar1 lvar2)
-                   ($gset 'g:var ($const 0)))
+    (expect ($let (list lvar1 lvar2)
+                  ($gset 'g:var ($const 0)))
             equal?
-            `#($LET~ (,lvar1 ,lvar2)
-                     #($GSET g:var #($CONST 0))))
+            `#($LET (,lvar1 ,lvar2)
+                    #($GSET g:var #($CONST 0))))
     )
   )
 

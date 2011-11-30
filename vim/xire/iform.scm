@@ -12,7 +12,7 @@
     $gref
     $gset
     $if
-    $let~
+    $let
     $lref
     $lref~
     $lset
@@ -154,10 +154,9 @@
   ; Modify a global variable.
   `#($GSET ,gvar ,expr))
 
-(define ($let~ lvars stmt)
-  ; FIXME: Replace $LET.
+(define ($let lvars stmt)
   ; Define local variables.
-  `#($LET~ ,lvars ,stmt))
+  `#($LET ,lvars ,stmt))
 
 (define ($lset lvar expr)
   ; Modify a local variable.

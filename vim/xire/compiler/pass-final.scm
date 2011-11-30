@@ -255,7 +255,7 @@
               "="
               (gen expr state)
               "\n")]
-      [#('$LET~ (lvars ...) stmt)
+      [#('$LET (lvars ...) stmt)
         (list (map (lambda (lvar)
                      (list "let"
                            " "
