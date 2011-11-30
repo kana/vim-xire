@@ -285,31 +285,6 @@
         '("continue" "\n")]
       [#('$RET expr)
         (list "return" " " (gen expr state) "\n")]
-      [#('$FUNC func-name (arg-names ...) stmt)
-        (define (rename arg-name)
-          (if (eq? arg-name '...)
-            "a:000"
-            (string->symbol #`"a:,arg-name")))
-        (define new-state
-                (derive-state state
-                  'in-funcp #t
-                  'func-args (append
-                               (map (^n (cons n (rename n))) arg-names)
-                               (ref state 'func-args))))
-        (list "function!"
-              " "
-              (convert-identifier-conventions (symbol->string func-name))
-              "("
-              (intersperse
-                ","
-                (map
-                  (lambda (arg-name)
-                    (convert-identifier-conventions (symbol->string arg-name)))
-                  arg-names))
-              ")"
-              "\n"
-              (gen stmt new-state)
-              "endfunction" "\n")]
       [#('$FUNC~ func-name (args ...) stmt)
         (list "function!"
               " "

@@ -440,46 +440,6 @@
     (expect (gen ($ret 1))
             raise? <error>)  ; Non-iform arguments.
     )
-  (it "should generate a valid code from $FUNC"
-    (define ax (make-lvar 'x 'a:x))
-    (define a... (make-lvar 'x 'a:000))
-    (define lx (make-lvar 'x 'LX ($lref ax)))
-    (expect (gen ($func
-                   'foo-bar
-                   '(x ...)
-                   ($let (list lx)
-                         ($ret ($call 'list
-                                      (list ($lref lx)
-                                            ($lref a...)))))))
-            equal?
-            (string-join
-              '("function! foo_bar(x,...)"
-                "let LX=a:x"
-                "return [LX,a:000]"
-                "endfunction")
-              "\n"
-              'suffix))
-    (expect (gen ($func 'foo-bar
-                        '(a b c)))
-            raise? <error>)  ; Too few arguments.
-    (expect (gen ($func 'foo-bar
-                        '(a b c)
-                        ($ret ($const 1))
-                        0))
-            raise? <error>)  ; Too many arguments.
-    (expect (gen ($func 0
-                        '(a b c)
-                        ($ret ($const 1))))
-            raise? <error>)  ; Non-iform arguments.
-    (expect (gen ($func 'foo-bar
-                        0
-                        ($ret ($const 1))))
-            raise? <error>)  ; Non-iform arguments.
-    (expect (gen ($func 'foo-bar
-                        '(a b c)
-                        0))
-            raise? <error>)  ; Non-iform arguments.
-    )
   (it "should generate a valid code from $FUNC~"
     (define ax (make <lvar> :src-name 'x :new-name 'a:X :arg-name 'X))
     (define a... (make <lvar> :src-name '... :new-name 'a:000 :arg-name '...))

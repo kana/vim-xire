@@ -8,7 +8,6 @@
     $def
     $ex
     $for
-    $func
     $func~
     $gref
     $gset
@@ -198,10 +197,6 @@
   `#($RET ,expr))
 
 ; FIXME: Support :try/:catch/:finally in the distant future.
-
-(define ($func func-name arg-names stmt)
-  ; Create a function.
-  `#($FUNC ,func-name ,arg-names ,stmt))
 
 (define ($func~ func-name args stmt)
   ; FIXME: Replace $FUNC.

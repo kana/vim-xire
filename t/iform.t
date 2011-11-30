@@ -189,14 +189,6 @@
     )
   )
 
-(describe "$func"
-  (it "should make a iform for $FUNC"
-    (expect ($func 'f '(a b c) ($gset 'g:var ($const 0)))
-            equal?
-            '#($FUNC f (a b c) #($GSET g:var #($CONST 0))))
-    )
-  )
-
 (describe "$func~"
   (it "should make a iform for $FUNC~"
     (define a (make <lvar> :src-name 'a :new-name 'a:A :src-name 'A))
