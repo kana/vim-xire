@@ -10,6 +10,15 @@
 
 
 
+(define (make-lvar src-name :optional (new-name (gensym)) init-expr)
+  (make <lvar>
+        :src-name src-name
+        :new-name new-name
+        :init-expr init-expr))
+
+
+
+
 (describe "<lvar>"
   (define (make-a-lvar)
     (make <lvar>
@@ -217,6 +226,15 @@
     (expect ($lref 'var)
             equal?
             '#($LREF var))
+    )
+  )
+
+(describe "$lref~"
+  (it "should make a iform for $LREF~"
+    (define lvar (make-lvar 'foo (gensym)))
+    (expect ($lref~ lvar)
+            equal?
+            `#($LREF~ ,lvar))
     )
   )
 
