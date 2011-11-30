@@ -353,89 +353,69 @@
             raise? <error>)  ; Invalid arguments.
     )
   (it "should generate a valid code from $BEGIN"
-    (define state (make <pass-final/state>
-                        :lvars '((foo . FOO)
-                                 (bar . BAR))))
-    (expect (gen ($begin '())
-                 state)
+    (define foo (make-lvar 'foo 'FOO))
+    (define bar (make-lvar 'bar 'BAR))
+    (expect (gen ($begin '()))
             equal? "")
-    (expect (gen ($begin (list ($lset 'foo ($const 1))))
-                 state)
+    (expect (gen ($begin (list ($lset~ foo ($const 1)))))
             equal? "let FOO=1\n")
-    (expect (gen ($begin (list ($lset 'foo ($const 1))
-                               ($lset 'bar ($const 2))))
-                 state)
+    (expect (gen ($begin (list ($lset~ foo ($const 1))
+                               ($lset~ bar ($const 2)))))
             equal? "let FOO=1\nlet BAR=2\n")
-    (expect (gen ($begin)
-                 state)
+    (expect (gen ($begin))
             raise? <error>)  ; Too few arguments.
-    (expect (gen ($begin '() '())
-                 state)
+    (expect (gen ($begin '()
+                         '()))
             raise? <error>)  ; Too many arguments.
-    (expect (gen ($begin (list 0))
-                 state)
+    (expect (gen ($begin (list 0)))
             raise? <error>)  ; Non-iform arguments.
-    (expect (gen ($begin 0)
-                 state)
+    (expect (gen ($begin 0))
             raise? <error>)  ; Non-iform arguments.
     )
   (it "should generate a valid code from $IF"
-    (define state (make <pass-final/state>
-                        :lvars '((t . T)
-                                 (e . E))))
+    (define t (make-lvar 't 'T))
+    (define e (make-lvar 'e 'E))
     (expect (gen ($if ($const 0)
-                      ($lset 't ($const 1))
-                      ($lset 'e ($const 2)))
-                 state)
+                      ($lset~ t ($const 1))
+                      ($lset~ e ($const 2))))
             equal? "if 0\nlet T=1\nelse\nlet E=2\nendif\n")
     (expect (gen ($if ($const 0)
-                      ($lset 't ($const 1)))
-                 state)
+                      ($lset~ t ($const 1))))
             raise? <error>)  ; Too few arguments.
     (expect (gen ($if ($const 0)
-                      ($lset 't ($const 1))
-                      ($lset 'e ($const 2))
-                      0)
-                 state)
+                      ($lset~ t ($const 1))
+                      ($lset~ e ($const 2))
+                      0))
             raise? <error>)  ; Too many arguments.
     (expect (gen ($if 0
-                      ($lset 't ($const 1))
-                      ($lset 'e ($const 2)))
-                 state)
+                      ($lset~ t ($const 1))
+                      ($lset~ e ($const 2))))
             raise? <error>)  ; Non-iform arguments.
     (expect (gen ($if ($const 0)
                       1
-                      ($lset 'e ($const 2)))
-                 state)
+                      ($lset~ e ($const 2))))
             raise? <error>)  ; Non-iform arguments.
     (expect (gen ($if ($const 0)
-                      ($lset 't ($const 1))
-                      2)
-                 state)
+                      ($lset~ t ($const 1))
+                      2))
             raise? <error>)  ; Non-iform arguments.
     )
   (it "should generate a valid code from $WHILE"
-    (define state (make <pass-final/state>
-                        :lvars '((t . T))))
+    (define t (make-lvar 't 'T))
     (expect (gen ($while ($const 0)
-                         ($lset 't ($const 1)))
-                 state)
+                         ($lset~ t ($const 1))))
             equal? "while 0\nlet T=1\nendwhile\n")
-    (expect (gen ($while ($const 0))
-                 state)
+    (expect (gen ($while ($const 0)))
             raise? <error>)  ; Too few arguments.
     (expect (gen ($while ($const 0)
-                         ($lset 't ($const 1))
-                         2)
-                 state)
+                         ($lset~ t ($const 1))
+                         2))
             raise? <error>)  ; Too many arguments.
     (expect (gen ($while 0
-                         ($lset 't ($const 1)))
-                 state)
+                         ($lset~ t ($const 1))))
             raise? <error>)  ; Non-iform arguments.
     (expect (gen ($while ($const 0)
-                         1)
-                 state)
+                         1))
             raise? <error>)  ; Non-iform arguments.
     )
   (it "should generate a valid code from $FOR"
