@@ -285,7 +285,7 @@
         '("continue" "\n")]
       [#('$RET expr)
         (list "return" " " (gen expr state) "\n")]
-      [#('$FUNC~ func-name (args ...) stmt)
+      [#('$FUNC func-name (args ...) stmt)
         (list "function!"
               " "
               (convert-identifier-conventions (symbol->string func-name))

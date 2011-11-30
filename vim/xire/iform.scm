@@ -8,7 +8,7 @@
     $def
     $ex
     $for
-    $func~
+    $func
     $gref
     $gset
     $if
@@ -198,10 +198,9 @@
 
 ; FIXME: Support :try/:catch/:finally in the distant future.
 
-(define ($func~ func-name args stmt)
-  ; FIXME: Replace $FUNC.
+(define ($func func-name args stmt)
   ; Create a function.
-  `#($FUNC~ ,func-name ,args ,stmt))
+  `#($FUNC ,func-name ,args ,stmt))
 
 (define ($ex obj-or-iforms)
   ; Execute an arbitrary Ex command.
