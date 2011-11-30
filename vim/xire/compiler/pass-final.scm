@@ -310,6 +310,16 @@
               "\n"
               (gen stmt new-state)
               "endfunction" "\n")]
+      [#('$FUNC~ func-name (args ...) stmt)
+        (list "function!"
+              " "
+              (convert-identifier-conventions (symbol->string func-name))
+              "("
+              (intersperse "," (map lvar-arg-name args))
+              ")"
+              "\n"
+              (gen stmt state)
+              "endfunction" "\n")]
       [#('$EX (obj-or-iforms ...))
         (letrec ([zap (lambda (x)
                         (cond

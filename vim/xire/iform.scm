@@ -9,6 +9,7 @@
     $ex
     $for
     $func
+    $func~
     $gref
     $gset
     $if
@@ -201,6 +202,11 @@
 (define ($func func-name arg-names stmt)
   ; Create a function.
   `#($FUNC ,func-name ,arg-names ,stmt))
+
+(define ($func~ func-name args stmt)
+  ; FIXME: Replace $FUNC.
+  ; Create a function.
+  `#($FUNC~ ,func-name ,args ,stmt))
 
 (define ($ex obj-or-iforms)
   ; Execute an arbitrary Ex command.
