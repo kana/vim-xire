@@ -293,40 +293,40 @@
     (expect (gen ($gset 'foo-bar 1))
             raise? <error>)  ; Non-iform arguments.
     )
-  (it "should generate a valid code from $LSET~"
-    (expect (gen ($lset~ (make-lvar 'foo-bar 'foobar123)
-                         ($const 1)))
+  (it "should generate a valid code from $LSET"
+    (expect (gen ($lset (make-lvar 'foo-bar 'foobar123)
+                        ($const 1)))
             equal? "let foobar123=1\n")
-    (expect (gen ($lset~ (make-lvar 'foo-bar 'foobar123)))
+    (expect (gen ($lset (make-lvar 'foo-bar 'foobar123)))
             raise? <error>)  ; Too few arguments.
-    (expect (gen ($lset~ (make-lvar 'foo-bar 'foobar123)
-                         ($const 1)
-                         ($const 2)))
+    (expect (gen ($lset (make-lvar 'foo-bar 'foobar123)
+                        ($const 1)
+                        ($const 2)))
             raise? <error>)  ; Too many arguments.
-    (expect (gen ($lset~ (make-lvar 'foo-bar 'foobar123)
-                         1))
+    (expect (gen ($lset (make-lvar 'foo-bar 'foobar123)
+                        1))
             raise? <error>)  ; Non-iform arguments.
     )
   (it "should generate a valid code from $LET"
     (define inner-x (make-lvar 'x 'INNER_X ($const 123)))
     (define outer-x (make-lvar 'x 'OUTER_X ($const 456)))
     (expect (gen ($let ()
-                       ($lset~ outer-x ($const 999))))
+                       ($lset outer-x ($const 999))))
             equal? "let OUTER_X=999\n")
     (expect (gen ($let (list inner-x)
-                       ($lset~ outer-x ($lref~ inner-x))))
+                       ($lset outer-x ($lref~ inner-x))))
             equal? "let INNER_X=123\nlet OUTER_X=INNER_X\n")
     (expect (gen ($let (list inner-x outer-x)
-                       ($lset~ inner-x ($lref~ outer-x))))
+                       ($lset inner-x ($lref~ outer-x))))
             equal? "let INNER_X=123\nlet OUTER_X=456\nlet INNER_X=OUTER_X\n")
     (expect (gen ($let '()))
             raise? <error>)  ; Too few arguments.
     (expect (gen ($let '()
-                       ($lset~ inner-x ($const 999))
+                       ($lset inner-x ($const 999))
                        '()))
             raise? <error>)  ; Too many arguments.
     (expect (gen ($let 0
-                       ($lset~ inner-x ($const 999))))
+                       ($lset inner-x ($const 999))))
             raise? <error>)  ; Invalid arguments.
     (expect (gen ($let '()
                        0))
@@ -337,10 +337,10 @@
     (define bar (make-lvar 'bar 'BAR))
     (expect (gen ($begin '()))
             equal? "")
-    (expect (gen ($begin (list ($lset~ foo ($const 1)))))
+    (expect (gen ($begin (list ($lset foo ($const 1)))))
             equal? "let FOO=1\n")
-    (expect (gen ($begin (list ($lset~ foo ($const 1))
-                               ($lset~ bar ($const 2)))))
+    (expect (gen ($begin (list ($lset foo ($const 1))
+                               ($lset bar ($const 2)))))
             equal? "let FOO=1\nlet BAR=2\n")
     (expect (gen ($begin))
             raise? <error>)  ; Too few arguments.
@@ -356,43 +356,43 @@
     (define t (make-lvar 't 'T))
     (define e (make-lvar 'e 'E))
     (expect (gen ($if ($const 0)
-                      ($lset~ t ($const 1))
-                      ($lset~ e ($const 2))))
+                      ($lset t ($const 1))
+                      ($lset e ($const 2))))
             equal? "if 0\nlet T=1\nelse\nlet E=2\nendif\n")
     (expect (gen ($if ($const 0)
-                      ($lset~ t ($const 1))))
+                      ($lset t ($const 1))))
             raise? <error>)  ; Too few arguments.
     (expect (gen ($if ($const 0)
-                      ($lset~ t ($const 1))
-                      ($lset~ e ($const 2))
+                      ($lset t ($const 1))
+                      ($lset e ($const 2))
                       0))
             raise? <error>)  ; Too many arguments.
     (expect (gen ($if 0
-                      ($lset~ t ($const 1))
-                      ($lset~ e ($const 2))))
+                      ($lset t ($const 1))
+                      ($lset e ($const 2))))
             raise? <error>)  ; Non-iform arguments.
     (expect (gen ($if ($const 0)
                       1
-                      ($lset~ e ($const 2))))
+                      ($lset e ($const 2))))
             raise? <error>)  ; Non-iform arguments.
     (expect (gen ($if ($const 0)
-                      ($lset~ t ($const 1))
+                      ($lset t ($const 1))
                       2))
             raise? <error>)  ; Non-iform arguments.
     )
   (it "should generate a valid code from $WHILE"
     (define t (make-lvar 't 'T))
     (expect (gen ($while ($const 0)
-                         ($lset~ t ($const 1))))
+                         ($lset t ($const 1))))
             equal? "while 0\nlet T=1\nendwhile\n")
     (expect (gen ($while ($const 0)))
             raise? <error>)  ; Too few arguments.
     (expect (gen ($while ($const 0)
-                         ($lset~ t ($const 1))
+                         ($lset t ($const 1))
                          2))
             raise? <error>)  ; Too many arguments.
     (expect (gen ($while 0
-                         ($lset~ t ($const 1))))
+                         ($lset t ($const 1))))
             raise? <error>)  ; Non-iform arguments.
     (expect (gen ($while ($const 0)
                          1))
@@ -402,23 +402,23 @@
     (define i (make-lvar 'i 'I))
     (expect (gen ($for i
                        ($const 0)
-                       ($lset~ i ($lref~ i))))
+                       ($lset i ($lref~ i))))
             equal? "for I in 0\nlet I=I\nendfor\n")
     (expect (gen ($for i
                        ($const 0)))
             raise? <error>)  ; Too few arguments.
     (expect (gen ($for i
                        ($const 0)
-                       ($lset~ i ($lref~ i))
+                       ($lset i ($lref~ i))
                        0))
             raise? <error>)  ; Too many arguments.
     (expect (gen ($for '___
                        ($const 0)
-                       ($lset~ i ($lref~ i))))
+                       ($lset i ($lref~ i))))
             raise? <error>)  ; Invalid arguments.
     (expect (gen ($for i
                        '___
-                       ($lset~ i ($lref~ i))))
+                       ($lset i ($lref~ i))))
             raise? <error>)  ; Invalid arguments.
     (expect (gen ($for i
                        ($const 0)

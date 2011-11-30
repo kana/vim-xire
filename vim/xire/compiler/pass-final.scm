@@ -241,7 +241,7 @@
               "="
               (gen expr state)
               "\n")]
-      [#('$LSET~ lvar expr)
+      [#('$LSET lvar expr)
         (list "let"
               " "
               (lvar-new-name lvar)

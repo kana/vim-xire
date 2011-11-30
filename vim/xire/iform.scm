@@ -15,7 +15,7 @@
     $let
     $lref
     $lref~
-    $lset~
+    $lset
     $next
     $ret
     $while
@@ -157,10 +157,9 @@
   ; Define local variables.
   `#($LET ,lvars ,stmt))
 
-(define ($lset~ lvar expr)
-  ; FIXME: Replace $LSET.
+(define ($lset lvar expr)
   ; Modify a local variable.
-  `#($LSET~ ,lvar ,expr))
+  `#($LSET ,lvar ,expr))
 
 (define ($begin stmts)
   ; Execute statements sequentially.
