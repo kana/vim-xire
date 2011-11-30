@@ -29,6 +29,7 @@
     (define lvar (make-a-lvar))
     (expect (lvar-src-name lvar) eq? 'foo)
     (expect (lvar-new-name lvar) eq? 'bar)
+    (expect (lvar-arg-name lvar) eq? #f)
     (expect (lvar-init-expr lvar) equal? ($const #f))
     (expect (lvar-ref-count lvar) eqv? 0)
     (expect (lvar-set-count lvar) eqv? 0)
