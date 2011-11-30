@@ -13,7 +13,6 @@
     $gset
     $if
     $let
-    $lref
     $lref~
     $lset
     $next
@@ -212,10 +211,6 @@
 (define ($gref gvar)
   ; Reference a global variable.
   `#($GREF ,gvar))
-
-(define ($lref lvar)
-  ; Reference a local variable.
-  `#($LREF ,lvar))
 
 (define ($lref~ lvar)
   ; FIXME: Replace $LREF.

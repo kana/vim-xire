@@ -40,14 +40,6 @@
     (expect (gen ($gref 'g:var)) equal? "g:var")
     (expect (gen ($gref 'g:foo-bar)) equal? "g:foo_bar")
     )
-  (it "should generate a valid code from $LREF"
-    (define state (make <pass-final/state>
-                        :lvars '((var . var123)
-                                 (foo-bar . foobar123))))
-    (expect (gen ($lref 'var) state) equal? "var123")
-    (expect (gen ($lref 'foo-bar) state) equal? "foobar123")
-    (expect (gen ($lref 'undefined) state) raise? <error>)
-    )
   (it "should generate a valid code from $LREF~"
     (expect (gen ($lref~ (make-lvar 'var 'var1))) equal? "var1")
     (expect (gen ($lref~ (make-lvar 'foo-bar 'foobar1))) equal? "foobar1")
