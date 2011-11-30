@@ -241,13 +241,6 @@
               "="
               (gen expr state)
               "\n")]
-      [#('$LSET lvar expr)
-        (list "let"
-              " "
-              (rename-var lvar state)
-              "="
-              (gen expr state)
-              "\n")]
       [#('$LSET~ lvar expr)
         (list "let"
               " "

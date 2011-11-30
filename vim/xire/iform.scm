@@ -15,7 +15,6 @@
     $let
     $lref
     $lref~
-    $lset
     $lset~
     $next
     $ret
@@ -157,10 +156,6 @@
 (define ($let lvars stmt)
   ; Define local variables.
   `#($LET ,lvars ,stmt))
-
-(define ($lset lvar expr)
-  ; Modify a local variable.
-  `#($LSET ,lvar ,expr))
 
 (define ($lset~ lvar expr)
   ; FIXME: Replace $LSET.
