@@ -13,6 +13,7 @@
     $gset
     $if
     $let
+    $let~
     $lref
     $lref~
     $lset
@@ -157,6 +158,11 @@
 (define ($let lvars exprs stmt)
   ; Define local variables.
   `#($LET ,lvars ,exprs ,stmt))
+
+(define ($let~ lvars stmt)
+  ; FIXME: Replace $LET.
+  ; Define local variables.
+  `#($LET~ ,lvars ,stmt))
 
 (define ($lset lvar expr)
   ; Modify a local variable.
