@@ -309,6 +309,17 @@
               "\n"
               (gen stmt new-state)
               "endfor" "\n")]
+      [#('$FOR~ lvar expr stmt)
+        (list "for"
+              " "
+              (lvar-new-name lvar)
+              " "
+              "in"
+              " "
+              (gen expr state)
+              "\n"
+              (gen stmt state)
+              "endfor" "\n")]
       [#('$BREAK)
         '("break" "\n")]
       [#('$NEXT)

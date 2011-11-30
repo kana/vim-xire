@@ -522,6 +522,33 @@
                  state)
             raise? <error>)  ; Non-iform arguments.
     )
+  (it "should generate a valid code from $FOR~"
+    (define i (make-lvar 'i 'I))
+    (expect (gen ($for~ i
+                        ($const 0)
+                        ($lset~ i ($lref~ i))))
+            equal? "for I in 0\nlet I=I\nendfor\n")
+    (expect (gen ($for~ i
+                        ($const 0)))
+            raise? <error>)  ; Too few arguments.
+    (expect (gen ($for~ i
+                        ($const 0)
+                        ($lset~ i ($lref~ i))
+                        0))
+            raise? <error>)  ; Too many arguments.
+    (expect (gen ($for~ '___
+                        ($const 0)
+                        ($lset~ i ($lref~ i))))
+            raise? <error>)  ; Invalid arguments.
+    (expect (gen ($for~ i
+                        '___
+                        ($lset~ i ($lref~ i))))
+            raise? <error>)  ; Invalid arguments.
+    (expect (gen ($for~ i
+                        ($const 0)
+                        '___))
+            raise? <error>)  ; Invalid arguments.
+    )
   (it "should generate a valid code from $BREAK"
     (expect (gen ($break))
             equal? "break\n")
