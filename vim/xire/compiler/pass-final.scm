@@ -4,9 +4,7 @@
     pass-final
 
     ; Not public, but exported to test.
-    <pass-final/state>
     bin-op-table
-    derive-state
     un-op-table
     ))
 (select-module vim.xire.compiler.pass-final)
@@ -76,79 +74,17 @@
 (define (bin-op-info op-name)
   (assq op-name bin-op-table))
 
-(define (make-tmp-name state)
-  (cond
-    [(ref state 'in-funcp)
-      ; Xire script doesn't provide any way to define function-local
-      ; variables except "let" family.  And it's not usual to access
-      ; function-local variables from other context.  So that it's not
-      ; necessary to take care on name collision.
-      (gensym "L")]
-    [(ref state 'in-scriptp)
-     ; There is a chance of name collision between variables explicitly
-     ; defined with "define" and variables implicitly defined with "let"
-     ; family.  To avoid unexpected name collision, generate variable name
-     ; with a prefix which, probably, users will not use.
-     (gensym "s:__L")]
-    [else
-      (error "Lexical variables are not available in this context.")]))
-
-(define (rename-var name state)
-  (let1 orig-name&new-name (or (assq name (ref state 'lvars))
-                               (assq name (ref state 'func-args)))
-    (if orig-name&new-name
-      (cdr orig-name&new-name)
-      (errorf "Variable is not defined: ~s" name))))
-
-
-
-
-;;; State for code generation
-;;; =========================
-
-(define-class <pass-final/state> ()
-  ([in-scriptp
-     :init-keyword :in-scriptp
-     :init-value #t]
-   [in-funcp
-     :init-keyword :in-funcp
-     :init-value #f]
-   [func-args
-     :init-keyword :func-args
-     :init-value '()]  ; Alist of (original-name . new-name).
-   [lvars
-     :init-keyword :lvars
-     :init-value '()]))  ; Alist of (original-name . new-name).
-
-(define (derive-state base-state . args)
-  (let1 new-state (make <pass-final/state>)
-    (for-each
-      (lambda (slot-name)
-        (set! (ref new-state slot-name) (ref base-state slot-name)))
-      (map slot-definition-name (class-direct-slots <pass-final/state>)))
-    (let go ([slot-name (car args)]
-             [slot-value (cadr args)]
-             [args (cddr args)])
-      (set! (ref new-state slot-name) slot-value)
-      (unless (null? args)
-        (go (car args)
-            (cadr args)
-            (cddr args))))
-    new-state))
-
 
 
 
 ;;; Entry point
 ;;; ===========
 
-(define (pass-final iforms :optional (state (make <pass-final/state>)))
-  (map (cut pass-final/rec <> state)
-       iforms))
+(define (pass-final iforms)
+  (map pass-final/rec iforms))
 
-(define (pass-final/rec iform state)
-  (let gen ([iform iform]
-            [state state])
+(define (pass-final/rec iform)
+  (let gen ([iform iform])
     (match iform
       [#('$CONST obj)
         (if (or (boolean? obj) (number? obj) (regexp? obj) (string? obj))
@@ -160,28 +96,28 @@
       [#('$LREF lvar)
         (lvar-new-name lvar)]
       [#('$CALL (? iform? func-expr) arg-exprs)
-        (list (gen func-expr state)
+        (list (gen func-expr)
               "("
-              (intersperse "," (map (cut gen <> state) arg-exprs))
+              (intersperse "," (map gen arg-exprs))
               ")")]
       [#('$CALL 'if (cond-expr then-expr else-expr))
         (list "("
-              (gen cond-expr state)
+              (gen cond-expr)
               " ? "
-              (gen then-expr state)
+              (gen then-expr)
               " : "  ; To parse r?s:t as (r)?(s):(t) not (r)?(s:t).
-              (gen else-expr state)
+              (gen else-expr)
               ")")]
       [#('$CALL (= bin-op-info op) (left-expr right-expr))
         (=> next)
         (unless op
           (next))
         (list "("
-              (gen left-expr state)
+              (gen left-expr)
               " "
               (cdr op)
               " "
-              (gen right-expr state)
+              (gen right-expr)
               ")")]
       [#('$CALL (= un-op-info op) (expr))
         (=> next)
@@ -189,46 +125,46 @@
           (next))
         (list "("
               (cdr op)
-              (gen expr state)
+              (gen expr)
               ")")]
       [#('$CALL 'ref (collection-expr index-expr))
         (list "("
-              (gen collection-expr state)
+              (gen collection-expr)
               "["
-              (gen index-expr state)
+              (gen index-expr)
               "]"
               ")")]
       [#('$CALL 'slice (collection-expr from-expr until-expr))
         (list "("
-              (gen collection-expr state)
+              (gen collection-expr)
               "["
               (if from-expr
-                (gen from-expr state)
+                (gen from-expr)
                 '())
               " : "  ; To parse l[s:x] as l[(s):x] not l[(s:x)].
               (if until-expr
-                (gen until-expr state)
+                (gen until-expr)
                 '())
               "]"
               ")")]
       [#('$CALL '-> (dict-expr name))
         (list "("
-              (gen dict-expr state)
+              (gen dict-expr)
               "."
               name
               ")")]
       [#('$CALL 'list (exprs ...))
         (list "["
-              (intersperse "," (map (cut gen <> state) exprs))
+              (intersperse "," (map gen exprs))
               "]")]
       [#('$CALL 'dict ((key-exprs ...) (val-exprs ...)))
         (list "{"
               (intersperse
                 ","
                 (map (lambda (key-expr val-expr)
-                       (list (gen key-expr state)
+                       (list (gen key-expr)
                              " : "  ; To parse {s:x} as {(s):x} not {(s:x)}.
-                             (gen val-expr state)))
+                             (gen val-expr)))
                      key-exprs
                      val-exprs))
               "}")]
@@ -237,14 +173,14 @@
               " "
               (convert-identifier-conventions (symbol->string gvar))
               "="
-              (gen expr state)
+              (gen expr)
               "\n")]
       [#('$LSET lvar expr)
         (list "let"
               " "
               (lvar-new-name lvar)
               "="
-              (gen expr state)
+              (gen expr)
               "\n")]
       [#('$LET (lvars ...) stmt)
         (list (map (lambda (lvar)
@@ -252,21 +188,21 @@
                            " "
                            (lvar-new-name lvar)
                            "="
-                           (gen (lvar-init-expr lvar) state)
+                           (gen (lvar-init-expr lvar))
                            "\n"))
                    lvars)
-              (gen stmt state))]
+              (gen stmt))]
       [#('$BEGIN (stmts ...))
-        (map (cut gen <> state) stmts)]
+        (map gen stmts)]
       [#('$IF cond-expr then-stmt else-stmt)
-        (list "if" " " (gen cond-expr state) "\n"
-              (gen then-stmt state)
+        (list "if" " " (gen cond-expr) "\n"
+              (gen then-stmt)
               "else" "\n"
-              (gen else-stmt state)
+              (gen else-stmt)
               "endif" "\n")]
       [#('$WHILE expr stmt)
-        (list "while" " " (gen expr state) "\n"
-              (gen stmt state)
+        (list "while" " " (gen expr) "\n"
+              (gen stmt)
               "endwhile" "\n")]
       [#('$FOR lvar expr stmt)
         (list "for"
@@ -275,16 +211,16 @@
               " "
               "in"
               " "
-              (gen expr state)
+              (gen expr)
               "\n"
-              (gen stmt state)
+              (gen stmt)
               "endfor" "\n")]
       [#('$BREAK)
         '("break" "\n")]
       [#('$NEXT)
         '("continue" "\n")]
       [#('$RET expr)
-        (list "return" " " (gen expr state) "\n")]
+        (list "return" " " (gen expr) "\n")]
       [#('$FUNC func-name (args ...) stmt)
         (list "function!"
               " "
@@ -293,13 +229,13 @@
               (intersperse "," (map lvar-arg-name args))
               ")"
               "\n"
-              (gen stmt state)
+              (gen stmt)
               "endfunction" "\n")]
       [#('$EX (obj-or-iforms ...))
         (letrec ([zap (lambda (x)
                         (cond
                           [(iform? x)
-                           (gen x state)]
+                           (gen x)]
                           [(pair? x)
                            (cons (zap (car x))
                                  (zap (cdr x)))]
