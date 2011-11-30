@@ -183,6 +183,19 @@
     )
   )
 
+(describe "$for~"
+  (it "should make a iform for $FOR~"
+    (define lvar (make-lvar 'foo (gensym) ($const 1)))
+    (expect ($for~ lvar
+                   ($const 0)
+                   ($gset 'g:var1 ($const 1)))
+            equal?
+            `#($FOR~ ,lvar
+                     #($CONST 0)
+                     #($GSET g:var1 #($CONST 1))))
+    )
+  )
+
 (describe "$break"
   (it "should make a iform for $BREAK"
     (expect ($break)

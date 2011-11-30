@@ -8,6 +8,7 @@
     $def
     $ex
     $for
+    $for~
     $func
     $gref
     $gset
@@ -188,6 +189,11 @@
 (define ($for lvar expr stmt)
   ; Loop by a list.
   `#($FOR ,lvar ,expr ,stmt))
+
+(define ($for~ lvar expr stmt)
+  ; FIXME: Replace $FOR.
+  ; Loop by a list.
+  `#($FOR~ ,lvar ,expr ,stmt))
 
 (define ($break)
   ; Exit from the most inner loop.
