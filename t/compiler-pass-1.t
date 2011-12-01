@@ -3,8 +3,10 @@
 (add-load-path ".")
 (add-load-path "./gauche-test-gasmine")
 
+(use gauche.parameter)
 (use test.gasmine)
 (use text.tree)
+(use util.match)
 (use vim.xire.compiler.pass-1)
 (use vim.xire.iform)
 (use vim.xire.util)
@@ -114,6 +116,18 @@
     (expect (pass-1 '(a b c) root-ctx)
             raise-error-like?
             (format "Invalid Xire form: ~s" '(a b c)))
+    )
+  (it "should generate an iform for an implicit function call"
+    (parameterize ([xire-env (copy-env)])
+      (defstmt nop
+        [(_)
+         ($begin '())])
+      (defstmt nop2
+        [(_)
+         '(nop)])
+      (expect (pass-1 '(nop2) root-ctx)
+              equal? ($begin '()))
+      )
     )
   )
 

@@ -26,6 +26,8 @@
   (define (report-syntax-error)
     (errorf "Invalid Xire form: ~s" form))
   (match form
+    [(? iform? form)  ; Already compiled?
+     form]
     [(? boolean? b)
      (ensure-expr-ctx form ctx)
      ($const b)]
@@ -48,6 +50,9 @@
          ($gref name)])]
     [((? symbol? name) . args)
      (cond
+       [(xire-lookup-macro name ctx)
+        => (lambda (expander)
+             (pass-1 (expander form ctx) ctx))]
        [else
          ; Treat "(foo ...)" form in an expression context as a function call,
          ; where foo is not known as a Xire macro.  This convention is to
