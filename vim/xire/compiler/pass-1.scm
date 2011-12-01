@@ -46,6 +46,17 @@
         => (.$ $lref cdr)]
        [else
          ($gref name)])]
+    [((? symbol? name) . args)
+     (cond
+       [else
+         ; Treat "(foo ...)" form in an expression context as a function call,
+         ; where foo is not known as a Xire macro.  This convention is to
+         ; simplify the compiler implementation.
+         (if (expr-ctx? ctx)
+           ($call
+             (pass-1 name ctx)
+             (map (cut pass-1 <> ctx) args))
+           (report-syntax-error))])]
     [_
       (report-syntax-error)]))
 

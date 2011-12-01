@@ -108,6 +108,13 @@
             raise-error-like?
             (format "Invalid form in an expression context: ~s" 'foo))
     )
+  (it "should generate an iform for an implicit function call"
+    (expect (pass-1 '(a b c) expr-ctx)
+            equal? ($call ($gref 'a) (list ($gref 'b) ($gref 'c))))
+    (expect (pass-1 '(a b c) root-ctx)
+            raise-error-like?
+            (format "Invalid Xire form: ~s" '(a b c)))
+    )
   )
 
 
