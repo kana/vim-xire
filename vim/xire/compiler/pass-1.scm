@@ -26,6 +26,9 @@
   (define (report-syntax-error)
     (errorf "Invalid Xire form: ~s" form))
   (match form
+    [(? boolean? b)
+     (ensure-expr-ctx form ctx)
+     ($const b)]
     [_
       (report-syntax-error)]))
 
