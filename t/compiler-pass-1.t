@@ -42,6 +42,12 @@
             raise-error-like?
             (format "Invalid form in an expression context: ~s" #f))
     )
+  (it "should generate an iform from a number"
+    (expect (pass-1 123 expr-ctx) equal? ($const 123))
+    (expect (pass-1 123 root-ctx)
+            raise-error-like?
+            (format "Invalid form in an expression context: ~s" 123))
+    )
   )
 
 

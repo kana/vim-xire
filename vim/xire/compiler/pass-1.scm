@@ -29,6 +29,9 @@
     [(? boolean? b)
      (ensure-expr-ctx form ctx)
      ($const b)]
+    [(? number? n)
+     (ensure-expr-ctx form ctx)
+     ($const n)]
     [_
       (report-syntax-error)]))
 
