@@ -38,6 +38,14 @@
     [(? string? s)
      (ensure-expr-ctx form ctx)
      ($const s)]
+    [(? symbol? name)
+     (ensure-expr-ctx form ctx)
+     (cond
+       [(or (assq name (ref ctx 'locals))
+            (assq name (ref ctx 'func-args)))
+        => (.$ $lref cdr)]
+       [else
+         ($gref name)])]
     [_
       (report-syntax-error)]))
 

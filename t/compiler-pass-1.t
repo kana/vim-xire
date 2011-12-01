@@ -60,6 +60,54 @@
             raise-error-like?
             (format "Invalid form in an expression context: ~s" "foo"))
     )
+  (it "should generate an iform from a symbol as a local variable reference"
+    (define expr-ctx (make-expr-ctx root-ctx))
+    (define foo1 (make <lvar>
+                       :src-name 'foo1
+                       :new-name (gensym)))
+    (define foo2 (make <lvar>
+                       :src-name 'foo2
+                       :new-name (gensym)))
+    (set! (ref expr-ctx 'locals)
+          (list (cons 'foo foo1)
+                (cons 'foo foo2)))
+    (expect (pass-1 'foo expr-ctx) equal? ($lref foo1))
+    (expect (pass-1 'foo root-ctx)
+            raise-error-like?
+            (format "Invalid form in an expression context: ~s" 'foo))
+    )
+  (it "should generate an iform from a symbol as a function argument reference"
+    (define expr-ctx (make-expr-ctx root-ctx))
+    (define foo1 (make <lvar>
+                       :src-name 'foo1
+                       :new-name 'a:foo1
+                       :arg-name 'foo1))
+    (set! (ref expr-ctx 'func-args)
+          (list (cons 'foo foo1)))
+    (expect (pass-1 'foo expr-ctx) equal? ($lref foo1))
+    (expect (pass-1 'foo root-ctx)
+            raise-error-like?
+            (format "Invalid form in an expression context: ~s" 'foo))
+    )
+  (it "should prefer local variables to function arguments"
+    (define expr-ctx (make-expr-ctx root-ctx))
+    (define foo-l (make <lvar>
+                        :src-name 'foo
+                        :new-name (gensym)))
+    (define foo-a (make <lvar>
+                        :src-name 'foo
+                        :new-name 'a:foo
+                        :arg-name 'foo))
+    (set! (ref expr-ctx 'locals) (list (cons 'foo foo-l)))
+    (set! (ref expr-ctx 'func-args) (list (cons 'foo foo-a)))
+    (expect (pass-1 'foo expr-ctx) equal? ($lref foo-l))
+    )
+  (it "should generate an iform from a symbol as a global variable reference"
+    (expect (pass-1 'foo expr-ctx) equal? ($gref 'foo))
+    (expect (pass-1 'foo root-ctx)
+            raise-error-like?
+            (format "Invalid form in an expression context: ~s" 'foo))
+    )
   )
 
 
