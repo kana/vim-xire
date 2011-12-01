@@ -35,6 +35,9 @@
     [(? regexp? r)
      (ensure-expr-ctx form ctx)
      ($const r)]
+    [(? string? s)
+     (ensure-expr-ctx form ctx)
+     ($const s)]
     [_
       (report-syntax-error)]))
 
