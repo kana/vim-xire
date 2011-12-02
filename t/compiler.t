@@ -9,6 +9,9 @@
 (use util.list)
 (use util.match)
 (use vim.xire)
+(use vim.xire.compiler.pass-1)
+(use vim.xire.compiler.pass-final)
+(use vim.xire.iform)
 
 
 
@@ -92,6 +95,15 @@
     )
   (it "should handle a compiled form"
     SKIP "There is no readable external representation of compiled forms."
+    )
+  (it "should handle a compiled form in IForm"
+    (expect
+      (translate (format "~s" (pass-1 123 expr-ctx)))
+      equal?
+      (with-output-to-string
+        (lambda ()
+          (write-tree
+            (pass-final (list (pass-1 123 expr-ctx)))))))
     )
   )
 

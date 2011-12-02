@@ -21,6 +21,8 @@
 (use text.tree)
 (use util.list)
 (use util.match)
+(use vim.xire.compiler.pass-final)
+(use vim.xire.iform)
 (use vim.xire.ivs)
 (use vim.xire.util)
 
@@ -58,7 +60,12 @@
          (eval `(begin ,@scheme-exprs) scheme-env)
          (loop)]
         [(and (name . _) form)
-         (push! compiled-vim-script-tree (xire-compile form ctx))
+         (push! compiled-vim-script-tree
+                (pass-final (list (xire-compile form ctx))))
+         (loop)]
+        [(? iform? form)
+         (push! compiled-vim-script-tree
+                (pass-final (list form)))
          (loop)]))))
 
 ;; Compile a Xire script FORM then return a resulting Vim script in IVS.
@@ -85,6 +92,8 @@
     [(_ . _)  ; FORM is already compiled.
      form]
     [(? (cut is-a? <> <ivs>) form)  ; FORM is already compiled.
+     form]
+    [(? iform? form)  ; FORM is already compiled.
      form]
     [_
       (ensure-expr-ctx form ctx)
