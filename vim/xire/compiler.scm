@@ -97,9 +97,12 @@
      form]
     [_
       (ensure-expr-ctx form ctx)
-      (IVS (E (if (symbol? form)
-                (rename-local-bindings form ctx)
-                form)))]))
+      (if (symbol? form)
+        (if-let1 name&lvar (or (assq form (ref ctx 'locals))
+                               (assq form (ref ctx 'func-args)))
+          ($lref (cdr name&lvar))
+          ($gref form))
+        (IVS (E form)))]))
 
 ;; Compile a Xire script EXPR then return a resulting Vim script in IVS.
 ;; This is an abbreviated form of xire-compile for typical use.
@@ -156,7 +159,7 @@
       [(eq? type 'sym)
        (when (not (symbol? form))
          (fail "invalid form for this type"))
-       (IVS (E form))]
+       (xire-compile-expr form upper-ctx)]
       [else
         (fail "invalid type")]))
   (if manyp

@@ -31,6 +31,7 @@
     lvar-set--!
     lvar-set-count
     lvar-src-name
+    make-func-ctx~
 
     ; Not public, but exported to test.
     ))
@@ -128,6 +129,29 @@
   (inc! (lvar-set-count lvar)))
 (define (lvar-set--! lvar)
   (dec! (lvar-set-count lvar)))
+
+(define (make-func-ctx~ ctx names)
+  ; FIXME: Replace make-func-ctx.
+  ; NB: Though :function can be written in the body of a :function,
+  ;     Vim script does not have lexical scope.  So that nested function
+  ;     definition is equivalent to independent function definitions.
+  ;     Therefore the compiler does not care about nested functions.
+  (define new-ctx (copy-ctx ctx))
+  (set! (ref new-ctx 'in-funcp) #t)
+  (set! (ref new-ctx 'func-args)
+        (map (lambda (n)
+               (define n% (string->symbol
+                            (convert-identifier-conventions
+                              (symbol->string n))))
+               (cons n
+                     (make <lvar>
+                           :src-name n
+                           :new-name (if (eq? n '...)
+                                       'a:000
+                                       (string->symbol #`"a:,n%"))
+                           :arg-name n%)))
+             names))
+  new-ctx)
 
 
 ;;; Utilities on IForm

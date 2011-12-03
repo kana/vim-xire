@@ -161,10 +161,10 @@
   (define stmt-ctx (make-stmt-ctx root-ctx))
   (define expr-ctx (make-expr-ctx root-ctx))
   (it "should compile an expression in expression context"
-    (expect (compile 'foo expr-ctx) equal? "foo")
+    (expect (compile 'foo expr-ctx) equal? (x->string ($gref 'foo)))
     )
   (it "should compile an expression even if a statement context is given"
-    (expect (compile 'foo stmt-ctx) equal? "foo")
+    (expect (compile 'foo stmt-ctx) equal? (x->string ($gref 'foo)))
     )
   )
 
