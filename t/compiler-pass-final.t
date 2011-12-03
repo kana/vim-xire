@@ -222,6 +222,23 @@
                               'name)))
             raise? <error>)  ; Non-iform arguments.
     )
+  (it "should generate a valid code from $CALL of the built-in 'kbd'"
+    (expect (gen ($call 'kbd
+                        (list "foo")))
+            equal? "\"foo\"")
+    (expect (gen ($call 'kbd
+                        (list "\"*p")))
+            equal? "\"\\\"*p\"")
+    (expect (gen ($call 'kbd
+                        (list "bar<BS>z")))
+            equal? "\"bar\\<BS>z\"")
+    (expect (gen ($call 'kbd
+                        (list 1)))
+            raise? <error>)  ; Invalid argument.
+    (expect (gen ($call 'kbd
+                        1))
+            raise? <error>)  ; Invalid argument.
+    )
   (it "should generate a valid code from $CALL of the built-in 'list'"
     (expect (gen ($call 'list
                         (list)))

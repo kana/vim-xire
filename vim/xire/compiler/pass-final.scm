@@ -153,6 +153,8 @@
               "."
               name
               ")")]
+      [#('$CALL 'kbd (expr))
+        (convert-key-sequence-conventions expr)]
       [#('$CALL 'list (exprs ...))
         (list "["
               (intersperse "," (map gen exprs))
