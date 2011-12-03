@@ -147,13 +147,7 @@
 
 (defexpr slice-until
   [(_ $container:expr $index-to:expr)
-   (IVS (E (Q "(")
-           $container
-           (Q "[")
-           (Q ":")
-           $index-to
-           (Q "]")
-           (Q ")")))]
+   ($call 'slice (list $container #f $index-to))]
   )
 
 (defexpr slice-from
