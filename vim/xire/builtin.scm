@@ -184,10 +184,8 @@
   )
 
 (defexpr list
-  [(_ $val:expr ...)
-   (IVS (E (Q "[")
-           (apply E (intersperse (Q ",") $val))
-           (Q "]")))]
+  [(_ $vals:expr ...)
+   ($call 'list $vals)]
   )
 
 (defexpr dict
