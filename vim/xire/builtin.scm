@@ -377,9 +377,11 @@
 
 (defstmt while
   [(_ $cond:expr $body:stmt)
-   (IVS (S 'while $cond)
-        $body
-        (S 'endwhile))]
+   ($begin
+     (list
+       ($ex (list 'while $cond))
+       $body
+       ($ex (list 'endwhile))))]
   [(_ $cond:qexpr $body:qstmt ...)
    `(while ,$cond (begin ,@$body))]
   )
