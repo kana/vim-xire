@@ -311,9 +311,7 @@
 
 (defstmt if
   [(_ $cond:expr $then:stmt)
-   (IVS (S 'if $cond)
-        $then
-        (S 'endif))]
+   ($if $cond $then ($begin '()))]
   [(_ $cond:expr $then:stmt $else:stmt)
    ($if $cond $then $else)]
   )
