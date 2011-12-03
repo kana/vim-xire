@@ -19,18 +19,14 @@
 ;;; Helpers
 ;;; -------
 
-(define-macro (define-binary-operator name op :optional default-val)
+(define-macro (define-binary-operator name :optional default-val)
   `(defexpr ,name
      [(_ $val1:qexpr)
       (when (undefined? ,default-val)
         (errorf "Operator ~s takes two or more arguments" ',name))
       `(,',name ,',default-val ,$val1)]
      [(_ $val1:expr $val2:expr)
-      (IVS (E (Q "(")
-              $val1
-              (Q ,op)
-              $val2
-              (Q ")")))]
+      ($call ',name (list $val1 $val2))]
      [(_ $val1:qexpr $val2:qexpr $valN:qexpr ...)
       `(,',name (,',name ,$val1 ,$val2)
                 ,@$valN)]
@@ -67,12 +63,12 @@
 ;;; expr2
 ;;; -----
 
-(define-binary-operator or "||")
+(define-binary-operator or)
 
 ;;; expr3
 ;;; -----
 
-(define-binary-operator and "&&")
+(define-binary-operator and)
 
 ;;; expr4
 ;;; -----
@@ -111,16 +107,16 @@
 ;;; expr5
 ;;; -----
 
-(define-binary-operator + "+" 0)
-(define-binary-operator - "-" 0)
-(define-binary-operator .. ".")
+(define-binary-operator + 0)
+(define-binary-operator - 0)
+(define-binary-operator ..)
 
 ;;; expr6
 ;;; -----
 
-(define-binary-operator * "*")
-(define-binary-operator / "/")
-(define-binary-operator % "%")
+(define-binary-operator *)
+(define-binary-operator /)
+(define-binary-operator %)
 
 ;;; expr7
 ;;; -----
