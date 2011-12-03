@@ -127,10 +127,7 @@
 
 (defexpr not
   [(_ $val:expr)
-   (IVS (E (Q "(")
-           (Q "!")
-           $val
-           (Q ")")))]
+   ($call 'not (list $val))]
   )
 ; Macro "-" supports both unary and binary usage.
 ; Macro "+" supports both unary and binary usage.
