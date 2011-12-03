@@ -283,8 +283,8 @@
   )
 
 (defstmt echo
-  [(_ $val:expr ...)
-   (IVS (apply S 'echo $val))]
+  [(_ $vals:expr ...)
+   ($ex (list* 'echo $vals))]
   )
 
 (defstmt function
