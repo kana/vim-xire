@@ -46,14 +46,7 @@
 
 (defexpr if
   [(_ $cond:expr $then:expr $else:expr)
-   (IVS (E (Q "(")
-           $cond
-           (Q "?")
-           $then
-           (Q " ")  ; To parse r?s:t as (r)?(s):(t) not (r)?(s:t).
-           (Q ":")
-           $else
-           (Q ")")))]
+   ($call 'if (list $cond $then $else))]
   )
 
 ;;; expr2
