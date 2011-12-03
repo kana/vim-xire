@@ -191,30 +191,24 @@
 (defexpr dict
   [(_ ($keys:expr $vals:expr) ...)
    ($call 'dict (list $keys $vals))]
-  [(_ $x:expr ...)
-   (define (adjust-key x x:expr)
-     (if (keyword? x:expr)
-       (keyword->string x:expr)
+  [(_ $xs:qexpr ...)
+   (define (adjust-key x)
+     (if (keyword? x)
+       (keyword->string x)
        x))
-   (define (go result xs xs:expr)
+   (define (go keys vals xs)
      (cond
        [(null? xs)
-        (reverse result)]
+        (values
+          (reverse keys)
+          (reverse vals))]
        [(and (pair? xs) (pair? (cdr xs)))
-        (go
-          (cons (E (adjust-key (car xs) (car xs:expr))
-                   (Q " ")  ; To parse {s:x} as {(s):x} not {(s:x)}.
-                   (Q ":")
-                   (cadr xs)
-                   (Q ","))
-                result)
-          (cddr xs)
-          (cddr xs:expr))]
+        (go  (cons (transform-value (adjust-key (car xs)) #f 'expr ctx) keys)
+             (cons (transform-value (cadr xs) #f 'expr ctx) vals)
+             (cddr xs))]
        [else
          (errorf "Invalid key-value list for dict: ~s" form)]))
-   (IVS (E (Q "{")
-           (apply IVS (go '() $x $x:expr))
-           (Q "}")))]
+   ($call 'dict (call-with-values (lambda () (go '() '() $xs)) list))]
   )
 
 ; &option is treated the same as a variable.
