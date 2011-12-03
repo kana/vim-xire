@@ -5,6 +5,8 @@
 
 (use test.gasmine)
 (use text.tree)
+(use vim.xire.compiler.pass-final)
+(use vim.xire.iform)
 (use vim.xire.ivs)
 
 
@@ -86,12 +88,14 @@
   (it "should be translated without any addition"
       (expect (translate (IVS (S 'if (E #t))
                               (S 'echo (E 'then))
-                              (S 'endif)))
+                              (S 'endif)
+                              ($const 1)))
               equal?
             (string-append
               (translate (S 'if (E #t)))
               (translate (S 'echo (E 'then)))
-              (translate (S 'endif))))
+              (translate (S 'endif))
+              (translate (pass-final (list ($const 1))))))
     )
   (it "should be equal? to other node if both contents are equal?"
     (expect (IVS (Q (list 1 2 3)))
@@ -103,6 +107,7 @@
     (expect (IVS (E)) not raise?)
     (expect (IVS (S)) not raise?)
     (expect (IVS (IVS (S))) not raise?)
+    (expect (IVS ($const 1)) not raise?)
     (expect (IVS "non-IVS objects") raise?)
     )
   )

@@ -13,6 +13,7 @@
 
 (use text.tree)
 (use util.list)
+(use vim.xire.compiler.pass-final)  ; FIXME: For IVS-IForm migration.
 (use vim.xire.iform)  ; FIXME: A temporary stuff for the IVS-IForm migration.
 (use vim.xire.util)  ; FIXME: A temporary stuff for the IVS-IForm migration.
 
@@ -40,7 +41,7 @@
 
 
 (define (IVS . nodes)
-  (unless (every (cut is-a? <> <ivs>) nodes)
+  (unless (every (^n (or (is-a? n <ivs>) (iform? n))) nodes)
     (errorf "IVS takes only IVS objects, but given: ~s" nodes))
   (make <ivs>
         :nodes nodes
@@ -82,6 +83,8 @@
        (display x out)]
       [(is-a? x <ivs>)
        (write-tree x out)]
+      [(iform? x)
+       (write-tree (pass-final (list x)) out)]
       [else
        (display (scheme-object->vim-script-notation x) out)]))
   (map (cut writer <> out)
