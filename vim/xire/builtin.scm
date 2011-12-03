@@ -244,7 +244,7 @@
 
 (defstmt call
   [(_ $application:expr)
-   (IVS (S 'call $application))]
+   ($ex (list 'call $application))]
   )
 
 (defstmt cond
