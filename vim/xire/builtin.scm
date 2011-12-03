@@ -157,11 +157,7 @@
 
 (defexpr ->
   [(_ $dict:expr $name:sym)
-   (IVS (E (Q "(")
-           $dict
-           (Q ".")
-           $name
-           (Q ")")))]
+   ($call '-> (list $dict $name))]
   )
 
 ; expr8(expr1, ...) is processed by Xire-script-to-IVS layer, not macros.
