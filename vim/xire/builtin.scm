@@ -189,18 +189,8 @@
   )
 
 (defexpr dict
-  [(_ ($key:expr $val:expr) ...)
-   (IVS (E (Q "{")
-           (apply IVS
-                  (map (cut E
-                            <>
-                            (Q " ")  ; To parse {s:x} as {(s):x} not {(s:x)}.
-                            (Q ":")
-                            <>
-                            (Q ","))
-                       $key
-                       $val))
-           (Q "}")))]
+  [(_ ($keys:expr $vals:expr) ...)
+   ($call 'dict (list $keys $vals))]
   [(_ $x:expr ...)
    (define (adjust-key x x:expr)
      (if (keyword? x:expr)
