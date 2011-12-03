@@ -355,7 +355,7 @@
 
 (defstmt return
   [(_ $val:expr)
-   (IVS (S 'return $val))]
+   ($ret $val)]
   )
 
 (defstmt set!
