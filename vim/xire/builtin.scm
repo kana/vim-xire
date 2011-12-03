@@ -142,15 +142,7 @@
 
 (defexpr slice
   [(_ $container:expr $index-from:expr $index-to:expr)
-   (IVS (E (Q "(")
-           $container
-           (Q "[")
-           $index-from
-           (Q " ")  ; To parse l[s:x] as l[(s):x] not l[(s:x)].
-           (Q ":")
-           $index-to
-           (Q "]")
-           (Q ")")))]
+   ($call 'slice (list $container $index-from $index-to))]
   )
 
 (defexpr slice-until
