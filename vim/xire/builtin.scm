@@ -233,29 +233,29 @@
   )
 
 (defstmt cond
-  [(_ [$cond:expr $then:stmt] ...)
-   (let go ([cond:exprs $cond:expr]
-            [conds $cond]
-            [thens $then]
-            [result '()])
+  [(_ [$conds:expr $thens:stmt] ...)
+   (let go ([conds:expr $conds:expr]
+            [conds $conds]
+            [thens $thens]
+            [stmts '()])
      (cond
-       [(null? cond:exprs)
-        (if (null? result)
-          (IVS)
-          (apply IVS (reverse (cons (S 'endif) result))))]
+       [(null? conds:expr)
+        (if (null? stmts)
+          ($begin '())
+          ($begin (reverse (cons ($ex '(endif)) stmts))))]
        [else
-         (go (cdr cond:exprs)
+         (go (cdr conds:expr)
              (cdr conds)
              (cdr thens)
              (cons (car thens)
-                   (cons (S (if (null? result)
-                              'if
-                              'elseif)
-                            (if (and (null? (cdr cond:exprs))
-                                  (eq? (car cond:exprs) 'else))
-                              (E #t)
-                              (car conds)))
-                         result)))]))]
+                   (cons ($ex (list (if (null? stmts)
+                                      'if
+                                      'elseif)
+                                    (if (and (null? (cdr conds:expr))
+                                             (eq? (car conds:expr) 'else))
+                                      ($const #t)
+                                      (car conds))))
+                         stmts)))]))]
   )
 
 (defstmt define
