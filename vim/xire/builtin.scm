@@ -315,11 +315,7 @@
         $then
         (S 'endif))]
   [(_ $cond:expr $then:stmt $else:stmt)
-   (IVS (S 'if $cond)
-        $then
-        (S 'else)
-        $else
-        (S 'endif))]
+   ($if $cond $then $else)]
   )
 
 (defstmt let
