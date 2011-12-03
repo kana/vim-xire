@@ -7,6 +7,7 @@
 (use text.tree)
 (use vim.xire.compiler.pass-final)
 (use vim.xire.iform)
+(use vim.xire.ivs)
 
 
 
@@ -501,6 +502,10 @@
             raise? <error>)  ; Too many arguments.
     (expect (gen ($ex 123))
             raise? <error>)  ; Invalid arguments.
+    )
+  (it "should generate a valid code from IVS"
+    (expect (gen (IVS (S 'foo 'bar 'baz)))
+            equal? "foo bar baz\n")
     )
   )
 
