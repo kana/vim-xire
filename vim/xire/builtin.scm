@@ -213,7 +213,8 @@
 ; Supplimental notation for strings to describe key sequences.
 (defexpr kbd
   [(_ $string:qexpr)
-   (IVS (E (Q (convert-key-sequence-conventions $string))))])
+   ($call 'kbd (list $string))]
+  )
 
 (defexpr list
   [(_ $val:expr ...)
