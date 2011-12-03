@@ -239,7 +239,7 @@
 
 (defstmt begin
   [(_ $body:stmt ...)
-   (apply IVS $body)]
+   ($begin $body)]
   )
 
 (defstmt call
