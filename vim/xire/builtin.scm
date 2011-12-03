@@ -137,12 +137,7 @@
 
 (defexpr ref
   [(_ $container:expr $index:expr)
-   (IVS (E (Q "(")
-           $container
-           (Q "[")
-           $index
-           (Q "]")
-           (Q ")")))]
+   ($call 'ref (list $container $index))]
   )
 
 (defexpr slice
