@@ -275,13 +275,11 @@
 (defstmt function
   ; FIXME: Support !.
   ; FIXME: Support range, abort and dict.
-  ; FIXME: Check values on $name and $arg.
-  [(_ ($name:qsym $arg:sym ...) $body:qstmt ...)
-   (IVS
-     (S 'function $name (Q "(") (apply E (intersperse (Q ",") $arg)) (Q ")"))
-     (apply IVS (xire-compile-forms $body (make-func-ctx ctx $arg:sym)))
-     (S 'endfunction)
-     )]
+  [(_ ($func-name:qsym $arg-names:qsym ...) $body:qstmt ...)
+   (let* ([new-ctx (make-func-ctx~ ctx $arg-names)])
+     ($func $func-name
+            (map cdr (ref new-ctx 'func-args))
+            (transform-value `(begin ,@$body) #f 'stmt new-ctx)))]
   )
 
 (defstmt for
