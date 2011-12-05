@@ -333,8 +333,15 @@
   )
 
 (defstmt set!
-  [(_ $lval:expr $rval:expr)
-   (IVS (S 'let $lval (Q '=) $rval))]
+  ; FIXME: Support ``:let l[i] = v'', etc.
+  [(_ $name:qsym $rval:expr)
+   (cond
+     [(or (assq $name (ref ctx 'locals))
+          (assq $name (ref ctx 'func-args)))
+      => (lambda (name&lvar)
+           ($lset (cdr name&lvar) $rval))]
+     [else
+       ($gset $name $rval)])]
   )
 
 (defstmt until
