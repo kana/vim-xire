@@ -8,6 +8,7 @@
 (use text.tree)
 (use util.match)
 (use vim.xire)
+(use vim.xire.compiler.pass-final)
 
 
 
@@ -15,7 +16,7 @@
 (define (compile form ctx)
   (with-output-to-string
     (lambda ()
-      (write-tree (xire-compile form ctx)))))
+      (write-tree (pass-final (list (xire-compile form ctx)))))))
 
 
 

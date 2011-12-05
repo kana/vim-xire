@@ -456,12 +456,12 @@
     [(_ name cmd-name)
      (defstmt name
        [(_)
-        (IVS (S (Q 'cmd-name)))])]
+        ($ex '(cmd-name))])]
     ; Shorthand for simple command like :break.
     [(_ name)
      (defstmt name
        [(_)
-        (IVS (S (Q 'name)))])]
+        ($ex '(name))])]
     ))
 
 
