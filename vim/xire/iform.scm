@@ -32,6 +32,8 @@
     lvar-set-count
     lvar-src-name
     make-func-ctx~
+    make-local-ctx~
+    make-lvars
 
     ; Not public, but exported to test.
     ))
@@ -152,6 +154,40 @@
                            :arg-name n%)))
              names))
   new-ctx)
+(define (make-lvars names vals ctx)
+  ; FIXME: Replace make-local-ctx with make-lvars and make-local-ctx~.
+  (define (generate-new-name ctx)
+    (cond  ; The order of clauses is important.
+      [(func-ctx? ctx)
+       ; Xire script doesn't provide any way to define function-local
+       ; variables except "let" family.  And it's not usual to access
+       ; function-local variables from other context.  So that it's not
+       ; necessary to take care on name collision.
+       (gensym "L")]
+      [(script-ctx? ctx)
+       ; There is a chance of name collision between variables explicitly
+       ; defined with "define" and variables implicitly defined with "let"
+       ; family.  To avoid unexpected name collision, generate variable name
+       ; with a prefix which, probably, users will not use.
+       (gensym "s:__L")]
+      [else
+        (error "Lexical variables are not available in this context.")]))
+  (map (lambda (n v)
+         (make <lvar>
+               :src-name n
+               :new-name (generate-new-name ctx)
+               :init-expr v))
+       names
+       vals))
+(define (make-local-ctx~ ctx lvars)
+  ; FIXME: Replace make-local-ctx with make-lvars and make-local-ctx~.
+  (rlet1 new-ctx (copy-ctx ctx)
+    (set! (ref new-ctx 'locals)
+      (append (map (lambda (v)
+                     (cons (lvar-src-name v) v))
+                   lvars)
+              (ref new-ctx 'locals)))
+    ))
 
 
 ;;; Utilities on IForm

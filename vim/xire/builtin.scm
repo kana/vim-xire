@@ -303,23 +303,12 @@
 
 (defstmt let
   ; FIXME: Add tests on failure cases.
-  [(_ (($var:qsym $val:qexpr) ...) $body:qstmt ...)
-   (let ([old-ctx ctx]
-         [new-ctx (make-local-ctx ctx $var)])
-     `(begin
-        ,@(let go ([vars $var]
-                   [vals $val]
-                   [forms '()])
-            (if (null? vars)
-              (reverse forms)
-              (go (cdr vars)
-                  (cdr vals)
-                  (cons `(set! ,(transform-value (car vars) #f 'expr new-ctx)
-                           ,(transform-value (car vals) #f 'expr old-ctx))
-                        forms))))
-        ,@(transform-value $body #t 'stmt new-ctx)
-        )
-     )]
+  [(_ (($names:qsym $vals:expr) ...) $body:qstmt ...)
+   (let* ([old-ctx ctx]
+          [lvars (make-lvars $names $vals old-ctx)]
+          [new-ctx (make-local-ctx~ ctx lvars)])
+     ($let lvars
+           (transform-value `(begin ,@$body) #f 'stmt new-ctx)))]
   )
 
 (defstmt let*
