@@ -174,7 +174,9 @@
     (parameterize ([xire-env env])
       (with-output-to-string
         (lambda ()
-          (write-tree (xire-compile-forms forms ctx))))))
+          (write-tree (map (lambda (result)
+                             (pass-final (list result)))
+                           (xire-compile-forms forms ctx)))))))
   (define root-ctx (make-root-ctx))
   (define stmt-ctx (make-stmt-ctx root-ctx))
   (define expr-ctx (make-expr-ctx root-ctx))

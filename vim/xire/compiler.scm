@@ -102,7 +102,7 @@
                                (assq form (ref ctx 'func-args)))
           ($lref (cdr name&lvar))
           ($gref form))
-        (IVS (E form)))]))
+        ($const form))]))
 
 ;; Compile a Xire script EXPR then return a resulting Vim script in IVS.
 ;; This is an abbreviated form of xire-compile for typical use.
