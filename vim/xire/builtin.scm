@@ -285,11 +285,13 @@
   )
 
 (defstmt for
-  [(_ $var:qsym $list:expr $body:qstmt)
-   (let1 local-ctx (make-local-ctx ctx (list $var))
-     (IVS (S 'for (xire-compile-expr $var local-ctx) 'in $list)
-          (xire-compile $body local-ctx)
-          (S 'endfor)))]
+  [(_ $name:qsym $list:expr $body:qstmt)
+   (let* ([old-ctx ctx]
+          [lvars (make-lvars (list $name) (list (undefined)) old-ctx)]
+          [new-ctx (make-local-ctx~ ctx lvars)])
+     ($for (car lvars)
+           $list
+           (transform-value $body #f 'stmt new-ctx)))]
   [(_ $var:qsym $list:qexpr $body:qstmt ...)
    `(for ,$var ,$list (begin ,@$body))]
   )
