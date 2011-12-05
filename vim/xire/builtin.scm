@@ -141,7 +141,7 @@
   )
 
 (defexpr ->
-  [(_ $dict:expr $name:sym)
+  [(_ $dict:expr $name:qsym)
    ($call '-> (list $dict $name))]
   )
 

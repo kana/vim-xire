@@ -151,7 +151,7 @@
         (list "("
               (gen dict-expr)
               "."
-              name
+              (convert-identifier-conventions (symbol->string name))
               ")")]
       [#('$CALL 'kbd (expr))
         (convert-key-sequence-conventions expr)]
