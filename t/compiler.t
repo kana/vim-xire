@@ -113,7 +113,7 @@
     (parameterize ([xire-env env])
       (with-output-to-string
         (lambda ()
-          (write-tree (xire-compile form ctx))))))
+          (write-tree (pass-final (list (xire-compile form ctx))))))))
   (define root-ctx (make-root-ctx))
   (define stmt-ctx (make-stmt-ctx root-ctx))
   (define expr-ctx (make-expr-ctx root-ctx))
