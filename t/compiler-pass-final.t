@@ -7,6 +7,7 @@
 (use text.tree)
 (use vim.xire.compiler.pass-final)
 (use vim.xire.iform)
+(use vim.xire.util)
 
 
 

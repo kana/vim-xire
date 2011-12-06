@@ -10,6 +10,7 @@
     scheme-object->vim-script-notation
 
     ; Semi-public API for advanced usage.
+    <lvar>
     <xire-ctx>
     <xire-env>
     copy-ctx
@@ -19,9 +20,22 @@
     ensure-stmt-ctx
     expr-ctx?
     func-ctx?
+    lvar-arg-name
+    lvar-init-expr
+    lvar-new-name
+    lvar-ref++!
+    lvar-ref--!
+    lvar-ref-count
+    lvar-set++!
+    lvar-set--!
+    lvar-set-count
+    lvar-src-name
     make-expr-ctx
     make-func-ctx
+    make-func-ctx~
     make-local-ctx
+    make-local-ctx~
+    make-lvars
     make-root-ctx
     make-stmt-ctx
     script-ctx?
@@ -193,6 +207,47 @@
 
 
 
+;;; Local variables
+;;; ===============
+;;;
+;;; NB: <lvar> mostly represents a local variable, but it also represents an
+;;; argument to a function.
+
+(define-class <lvar> ()
+  ((src-name  ; The original name of this variable in source code.
+     :init-keyword :src-name
+     :getter lvar-src-name)
+   (new-name  ; A new name of this variable for resulting Vim script.
+     :init-keyword :new-name
+     :getter lvar-new-name)
+   (arg-name  ; A name to declare this variable as an argument to a function.
+     :init-keyword :arg-name
+     :getter lvar-arg-name
+     :init-value #f)
+   (init-expr  ; An expression for the initial value of this variable.
+     :init-keyword :init-expr
+     :getter lvar-init-expr)
+   (ref-count  ; The total number of places which refer this variable.
+     :init-keyword :ref-count
+     :accessor lvar-ref-count
+     :init-value 0)
+   (set-count  ; The total number of places which modify this variable.
+     :init-keyword :set-count
+     :accessor lvar-set-count
+     :init-value 0)))
+
+(define (lvar-ref++! lvar)
+  (inc! (lvar-ref-count lvar)))
+(define (lvar-ref--! lvar)
+  (dec! (lvar-ref-count lvar)))
+(define (lvar-set++! lvar)
+  (inc! (lvar-set-count lvar)))
+(define (lvar-set--! lvar)
+  (dec! (lvar-set-count lvar)))
+
+
+
+
 ;;; Environment
 ;;; ===========
 
@@ -305,6 +360,62 @@
       (map (cut cons <> (generate-new-name)) vars)
       (ref new-ctx 'locals)))
   new-ctx)
+(define (make-func-ctx~ ctx names)
+  ; FIXME: Replace make-func-ctx.
+  ; NB: Though :function can be written in the body of a :function,
+  ;     Vim script does not have lexical scope.  So that nested function
+  ;     definition is equivalent to independent function definitions.
+  ;     Therefore the compiler does not care about nested functions.
+  (define new-ctx (copy-ctx ctx))
+  (set! (ref new-ctx 'in-funcp) #t)
+  (set! (ref new-ctx 'func-args)
+        (map (lambda (n)
+               (define n% (string->symbol
+                            (convert-identifier-conventions
+                              (symbol->string n))))
+               (cons n
+                     (make <lvar>
+                           :src-name n
+                           :new-name (if (eq? n '...)
+                                       'a:000
+                                       (string->symbol #`"a:,n%"))
+                           :arg-name n%)))
+             names))
+  new-ctx)
+(define (make-lvars names vals ctx)
+  ; FIXME: Replace make-local-ctx with make-lvars and make-local-ctx~.
+  (define (generate-new-name ctx)
+    (cond  ; The order of clauses is important.
+      [(func-ctx? ctx)
+       ; Xire script doesn't provide any way to define function-local
+       ; variables except "let" family.  And it's not usual to access
+       ; function-local variables from other context.  So that it's not
+       ; necessary to take care on name collision.
+       (gensym "L")]
+      [(script-ctx? ctx)
+       ; There is a chance of name collision between variables explicitly
+       ; defined with "define" and variables implicitly defined with "let"
+       ; family.  To avoid unexpected name collision, generate variable name
+       ; with a prefix which, probably, users will not use.
+       (gensym "s:__L")]
+      [else
+        (error "Lexical variables are not available in this context.")]))
+  (map (lambda (n v)
+         (make <lvar>
+               :src-name n
+               :new-name (generate-new-name ctx)
+               :init-expr v))
+       names
+       vals))
+(define (make-local-ctx~ ctx lvars)
+  ; FIXME: Replace make-local-ctx with make-lvars and make-local-ctx~.
+  (rlet1 new-ctx (copy-ctx ctx)
+    (set! (ref new-ctx 'locals)
+      (append (map (lambda (v)
+                     (cons (lvar-src-name v) v))
+                   lvars)
+              (ref new-ctx 'locals)))
+    ))
 
 (define (stmt-ctx? ctx)
   (eq? (ref ctx 'type) 'stmt))
