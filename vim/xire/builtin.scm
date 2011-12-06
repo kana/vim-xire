@@ -275,7 +275,7 @@
   ; FIXME: Support !.
   ; FIXME: Support range, abort and dict.
   [(_ ($func-name:qsym $arg-names:qsym ...) $body:qstmt ...)
-   (let* ([new-ctx (make-func-ctx~ ctx $arg-names)])
+   (let* ([new-ctx (make-func-ctx ctx $arg-names)])
      ($func $func-name
             (map cdr (ref new-ctx 'func-args))
             (transform-value `(begin ,@$body) #f 'stmt new-ctx)))]

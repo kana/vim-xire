@@ -93,7 +93,23 @@
     (expect (ref c1 'in-funcp) eq? #f)
     (expect (ref c2 'in-funcp) eq? #t)
     (expect (ref c1 'func-args) equal? '())
-    (expect (ref c2 'func-args) equal? '(a b c))
+    (expect (ref c2 'func-args)
+            equal?
+            (list (cons 'a
+                        (make <lvar>
+                              :src-name 'a
+                              :new-name 'a:a
+                              :arg-name 'a))
+                  (cons 'b
+                        (make <lvar>
+                              :src-name 'b
+                              :new-name 'a:b
+                              :arg-name 'b))
+                  (cons 'c
+                        (make <lvar>
+                              :src-name 'c
+                              :new-name 'a:c
+                              :arg-name 'c))))
     (check c3 c2)
     (expect (ref c2 'in-funcp) eq? (ref c3 'in-funcp))
     (expect (ref c2 'func-args) equal? (ref c3 'func-args))

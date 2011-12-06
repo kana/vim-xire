@@ -32,7 +32,6 @@
     lvar-src-name
     make-expr-ctx
     make-func-ctx
-    make-func-ctx~
     make-local-ctx
     make-local-ctx~
     make-lvars
@@ -236,6 +235,20 @@
      :accessor lvar-set-count
      :init-value 0)))
 
+(define-method object-equal? ((v1 <lvar>) (v2 <lvar>))
+  (every (lambda (slot)
+           (let1 name (slot-definition-name slot)
+             (cond
+               [(and (slot-bound? v1 name)
+                     (slot-bound? v2 name))
+                (equal?
+                  (ref v1 name)
+                  (ref v2 name))]
+               [else
+                 (and (not (slot-bound? v1 name))
+                      (not (slot-bound? v2 name)))])))
+         (class-slots <lvar>)))
+
 (define (lvar-ref++! lvar)
   (inc! (lvar-ref-count lvar)))
 (define (lvar-ref--! lvar)
@@ -328,15 +341,6 @@
   (define new-ctx (copy-ctx ctx))
   (set! (ref new-ctx 'type) 'expr)
   new-ctx)
-(define (make-func-ctx ctx func-args)
-  ; NB: Though :function can be written in the body of a :function,
-  ;     Vim script does not have lexical scope.  So that nested function
-  ;     definition is equivalent to independent function definitions.
-  ;     Therefore the compiler does not care about nested functions.
-  (define new-ctx (copy-ctx ctx))
-  (set! (ref new-ctx 'in-funcp) #t)
-  (set! (ref new-ctx 'func-args) func-args)
-  new-ctx)
 (define (make-local-ctx ctx vars)
   (define new-ctx (copy-ctx ctx))
   (define (generate-new-name)
@@ -360,8 +364,7 @@
       (map (cut cons <> (generate-new-name)) vars)
       (ref new-ctx 'locals)))
   new-ctx)
-(define (make-func-ctx~ ctx names)
-  ; FIXME: Replace make-func-ctx.
+(define (make-func-ctx ctx names)
   ; NB: Though :function can be written in the body of a :function,
   ;     Vim script does not have lexical scope.  So that nested function
   ;     definition is equivalent to independent function definitions.

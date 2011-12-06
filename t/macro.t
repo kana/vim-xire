@@ -230,7 +230,7 @@
             eq? form-b)
     )
   (it "should transform give value into equivalent 'sym'"
-    (define func-ctx (make-func-ctx~ (make-root-ctx) '(foo->bar)))
+    (define func-ctx (make-func-ctx (make-root-ctx) '(foo->bar)))
     (expect (transform-value 'foo->bar #f 'sym stmt-ctx)
             equal? ($gref 'foo->bar))
     (expect (transform-value 'foo->bar #f 'sym expr-ctx)
