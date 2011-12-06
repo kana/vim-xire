@@ -10,7 +10,6 @@
     xire-compile-forms
 
     ; Not public, but exported to test.
-    rename-local-bindings
 
     ; Not public, but exported to avoid some problems.
     match  ; See [MATCHQ].
@@ -113,20 +112,6 @@
 ;; IForm.  This is an abbreviated form of xire-compile for typical use.
 (define (xire-compile-forms forms ctx)
   (map (cut xire-compile <> ctx) forms))
-
-;; Rename a variable reference in FORM according to CTX, if necessary.
-(define (rename-local-bindings form ctx)
-  (cond
-    [(not (symbol? form))
-     (errorf "Error: rename-local-bindings with non-symbol value: ~s" form)]
-    [(assq form (ref ctx 'locals))
-     => cdr]
-    [(memq form (ref ctx 'func-args))
-     (if (eq? form '...)
-       'a:000
-       (string->symbol #`"a:,form"))]
-    [else
-      form]))
 
 (define (transform-value form-or-forms manyp type upper-ctx)
   (define (fail detail)
