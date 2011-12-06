@@ -245,8 +245,6 @@
                             x]))])
               (list (intersperse " " (map zap obj-or-iforms))
                     "\n"))]
-      [(? (^x (eq? (ref (class-of x) 'name) '<ivs>)) ivs)
-        ivs]
       [else
         (errorf "This iform is not valid: ~s" iform)])))
 

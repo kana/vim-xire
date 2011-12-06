@@ -23,7 +23,6 @@
 (use util.match)
 (use vim.xire.compiler.pass-final)
 (use vim.xire.iform)
-(use vim.xire.ivs)
 (use vim.xire.util)
 
 
@@ -68,7 +67,7 @@
                 (pass-final (list form)))
          (loop)]))))
 
-;; Compile a Xire script FORM then return a resulting Vim script in IVS.
+;; Compile a Xire script FORM then return a resulting Vim script in IForm.
 (define (xire-compile form ctx)
   (define (report-syntax-error)
     (errorf "Invalid Xire form: ~s" form))
@@ -91,8 +90,6 @@
            (report-syntax-error))])]
     [(_ . _)  ; FORM is already compiled.
      form]
-    [(? (cut is-a? <> <ivs>) form)  ; FORM is already compiled.
-     form]
     [(? iform? form)  ; FORM is already compiled.
      form]
     [_
@@ -104,7 +101,7 @@
           ($gref form))
         ($const form))]))
 
-;; Compile a Xire script EXPR then return a resulting Vim script in IVS.
+;; Compile a Xire script EXPR then return a resulting Vim script in IForm.
 ;; This is an abbreviated form of xire-compile for typical use.
 (define (xire-compile-expr expr ctx)
   (xire-compile expr
@@ -113,7 +110,7 @@
                   (make-expr-ctx ctx))))
 
 ;; Compile a list of Xire script FORMS then return a resulting Vim script in
-;; IVS.  This is an abbreviated form of xire-compile for typical use.
+;; IForm.  This is an abbreviated form of xire-compile for typical use.
 (define (xire-compile-forms forms ctx)
   (map (cut xire-compile <> ctx) forms))
 

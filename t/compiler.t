@@ -27,9 +27,7 @@
   (xire-register-macro!
     'macro
     (lambda (form ctx)
-      (IVS (Q "<")
-           (apply Q (intersperse " " form))
-           (Q ">")))
+      ($gref (string->symbol (format "<~a>" form))))
     'stmt
     env)
   (it "should output nothing if given script is empty"
@@ -89,9 +87,9 @@
       )
     )
   (it "should handle use of Xire macro"
-    (expect (translate "(macro)") equal? "<macro>")
-    (expect (translate "(macro use)") equal? "<macro use>")
-    (expect (translate "(macro use test)") equal? "<macro use test>")
+    (expect (translate "(macro)") equal? "<(macro)>")
+    (expect (translate "(macro use)") equal? "<(macro use)>")
+    (expect (translate "(macro use test)") equal? "<(macro use test)>")
     )
   (it "should handle a compiled form"
     SKIP "There is no readable external representation of compiled forms."
@@ -124,23 +122,23 @@
         [(m xs)
          `(,m ,xs ())]
         [(m () ys)
-         (IVS (apply Q `("<" ,@(intersperse " " ys) ">")))]
+         ($gref (string->symbol (format "<~a>" ys)))]
         [(m (x . xs) ys)
          `(,m ,xs ,(cons x ys))]))
     'stmt
     env)
   (it "should compile Xire macros recursively"
-    (expect (compile '(macro ()) stmt-ctx) equal? "<>")
-    (expect (compile '(macro (x)) stmt-ctx) equal? "<x>")
-    (expect (compile '(macro (x y)) stmt-ctx) equal? "<y x>")
-    (expect (compile '(macro (x y z)) stmt-ctx) equal? "<z y x>")
+    (expect (compile '(macro ()) stmt-ctx) equal? "<()>")
+    (expect (compile '(macro (x)) stmt-ctx) equal? "<(x)>")
+    (expect (compile '(macro (x y)) stmt-ctx) equal? "<(y x)>")
+    (expect (compile '(macro (x y z)) stmt-ctx) equal? "<(z y x)>")
     )
   (it "should compile use of undefined macro in expr-ctx as function call"
     (expect (compile '(MyFunc) expr-ctx) equal? "MyFunc()")
     (expect (compile '(MyFunc 1 2 3) expr-ctx) equal? "MyFunc(1,2,3)")
     )
   (it "should return form as is if it is already compiled"
-    (define compiled-form (IVS (Q 1 2 3)))
+    (define compiled-form ($const "<1 2 3>"))
     (expect (xire-compile compiled-form expr-ctx) eq? compiled-form)
     )
   (it "should compile a Scheme object in expression context"
@@ -183,7 +181,7 @@
   (xire-register-macro!
     'macro
     (lambda (form ctx)
-      (IVS (apply Q `("<" ,@(intersperse " " form) ">"))))
+      ($gref (string->symbol (format "<~a>" form))))
     'stmt
     env)
   (it "should compile list of forms in expression context"
@@ -192,7 +190,7 @@
   (it "should compile list of forms in statement context"
     (expect (compile '((macro 1) (macro 2) (macro 3)) stmt-ctx)
             equal?
-            "<macro 1><macro 2><macro 3>")
+            "<(macro 1)><(macro 2)><(macro 3)>")
     )
   )
 

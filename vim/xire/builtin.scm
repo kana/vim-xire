@@ -7,7 +7,6 @@
 (use util.list)
 (use vim.xire.compiler)
 (use vim.xire.iform)
-(use vim.xire.ivs)
 (use vim.xire.util)
 
 
@@ -145,14 +144,14 @@
    ($call '-> (list $dict $name))]
   )
 
-; expr8(expr1, ...) is processed by Xire-script-to-IVS layer, not macros.
+; expr8(expr1, ...) is processed by Xire-script-to-IForm layer, not macros.
 
 ;;; expr9
 ;;; -----
 
-; Number literal is processed by IVS-to-Vim-script layer.
+; Number literal is processed by IForm-to-Vim-script layer.
 
-; "String literal" is processed by IVS-to-Vim-script layer.
+; "String literal" is processed by IForm-to-Vim-script layer.
 
 ; 'String literal' is not supported.
 ;
@@ -200,7 +199,7 @@
 
 ; (expr1) is implicitly supported by Xire script syntax.
 
-; Variable is processed by IVS-to-Vim-script layer, not macros.
+; Variable is processed by IForm-to-Vim-script layer, not macros.
 
 ; Var{ia}ble is not supported.
 ;
@@ -212,7 +211,7 @@
 
 ; @r (register content) is treated the same as a variable.
 
-; function(call) is processed by Xire-script-to-IVS layer, not macros.
+; function(call) is processed by Xire-script-to-IForm layer, not macros.
 
 ; fun{ct}ion(call) is not supported as var{ia}ble is not supported.
 
