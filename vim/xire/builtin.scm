@@ -7,7 +7,6 @@
 (use util.list)
 (use vim.xire.compiler)
 (use vim.xire.iform)
-(use vim.xire.ivs)
 (use vim.xire.util)
 
 
@@ -19,31 +18,23 @@
 ;;; Helpers
 ;;; -------
 
-(define-macro (define-binary-operator name op :optional default-val)
+(define-macro (define-binary-operator name :optional default-val)
   `(defexpr ,name
      [(_ $val1:qexpr)
       (when (undefined? ,default-val)
         (errorf "Operator ~s takes two or more arguments" ',name))
       `(,',name ,',default-val ,$val1)]
      [(_ $val1:expr $val2:expr)
-      (IVS (E (Q "(")
-              $val1
-              (Q ,op)
-              $val2
-              (Q ")")))]
+      ($call ',name (list $val1 $val2))]
      [(_ $val1:qexpr $val2:qexpr $valN:qexpr ...)
       `(,',name (,',name ,$val1 ,$val2)
                 ,@$valN)]
      ))
 
-(define-macro (define-comparison-operator name op)
+(define-macro (define-comparison-operator name)
   `(defexpr ,name
      [(_ $val1:expr $val2:expr)
-      (IVS (E (Q "(")
-              $val1
-              (Q ,op)
-              $val2
-              (Q ")")))]
+      ($call ',name (list $val1 $val2))]
      [(_ $val1:qexpr $val2:qexpr $valN:qexpr ...)
       `(and (,',name ,$val1 ,$val2)
             (,',name ,$val2 ,@$valN))]
@@ -54,83 +45,73 @@
 
 (defexpr if
   [(_ $cond:expr $then:expr $else:expr)
-   (IVS (E (Q "(")
-           $cond
-           (Q "?")
-           $then
-           (Q " ")  ; To parse r?s:t as (r)?(s):(t) not (r)?(s:t).
-           (Q ":")
-           $else
-           (Q ")")))]
+   ($call 'if (list $cond $then $else))]
   )
 
 ;;; expr2
 ;;; -----
 
-(define-binary-operator or "||")
+(define-binary-operator or)
 
 ;;; expr3
 ;;; -----
 
-(define-binary-operator and "&&")
+(define-binary-operator and)
 
 ;;; expr4
 ;;; -----
 
-(define-comparison-operator != "!=")
-(define-comparison-operator !=# "!=#")
-(define-comparison-operator !=? "!=?")
-(define-comparison-operator !~ "!~")
-(define-comparison-operator !~# "!~#")
-(define-comparison-operator !~? "!~?")
-(define-comparison-operator < "<")
-(define-comparison-operator <# "<#")
-(define-comparison-operator <= "<=")
-(define-comparison-operator <=# "<=#")
-(define-comparison-operator <=? "<=?")
-(define-comparison-operator <? "<?")
-(define-comparison-operator == "==")
-(define-comparison-operator ==# "==#")
-(define-comparison-operator ==? "==?")
-(define-comparison-operator =~ "=~")
-(define-comparison-operator =~# "=~#")
-(define-comparison-operator =~? "=~?")
-(define-comparison-operator > ">")
-(define-comparison-operator ># ">#")
-(define-comparison-operator >= ">=")
-(define-comparison-operator >=# ">=#")
-(define-comparison-operator >=? ">=?")
-(define-comparison-operator >? ">?")
-(define-comparison-operator is " is ")
-(define-comparison-operator is# " is# ")
-(define-comparison-operator is? " is? ")
-(define-comparison-operator isnot " isnot ")
-(define-comparison-operator isnot# " isnot# ")
-(define-comparison-operator isnot? " isnot? ")
+(define-comparison-operator !=)
+(define-comparison-operator !=#)
+(define-comparison-operator !=?)
+(define-comparison-operator !~)
+(define-comparison-operator !~#)
+(define-comparison-operator !~?)
+(define-comparison-operator <)
+(define-comparison-operator <#)
+(define-comparison-operator <=)
+(define-comparison-operator <=#)
+(define-comparison-operator <=?)
+(define-comparison-operator <?)
+(define-comparison-operator ==)
+(define-comparison-operator ==#)
+(define-comparison-operator ==?)
+(define-comparison-operator =~)
+(define-comparison-operator =~#)
+(define-comparison-operator =~?)
+(define-comparison-operator >)
+(define-comparison-operator >#)
+(define-comparison-operator >=)
+(define-comparison-operator >=#)
+(define-comparison-operator >=?)
+(define-comparison-operator >?)
+(define-comparison-operator is)
+(define-comparison-operator is#)
+(define-comparison-operator is?)
+(define-comparison-operator isnot)
+(define-comparison-operator isnot#)
+(define-comparison-operator isnot?)
 
 ;;; expr5
 ;;; -----
 
-(define-binary-operator + "+" 0)
-(define-binary-operator - "-" 0)
-(define-binary-operator .. ".")
+(define-binary-operator + 0)
+(define-binary-operator - 0)
+(define-binary-operator ..)
 
 ;;; expr6
 ;;; -----
 
-(define-binary-operator * "*")
-(define-binary-operator / "/")
-(define-binary-operator % "%")
+(define-binary-operator *)
+(define-binary-operator /)
+(define-binary-operator %)
 
 ;;; expr7
 ;;; -----
 
 (defexpr not
   [(_ $val:expr)
-   (IVS (E (Q "(")
-           (Q "!")
-           $val
-           (Q ")")))]
+   ($call 'not (list $val))]
   )
 ; Macro "-" supports both unary and binary usage.
 ; Macro "+" supports both unary and binary usage.
@@ -140,67 +121,37 @@
 
 (defexpr ref
   [(_ $container:expr $index:expr)
-   (IVS (E (Q "(")
-           $container
-           (Q "[")
-           $index
-           (Q "]")
-           (Q ")")))]
+   ($call 'ref (list $container $index))]
   )
 
 (defexpr slice
   [(_ $container:expr $index-from:expr $index-to:expr)
-   (IVS (E (Q "(")
-           $container
-           (Q "[")
-           $index-from
-           (Q " ")  ; To parse l[s:x] as l[(s):x] not l[(s:x)].
-           (Q ":")
-           $index-to
-           (Q "]")
-           (Q ")")))]
+   ($call 'slice (list $container $index-from $index-to))]
   )
 
 (defexpr slice-until
   [(_ $container:expr $index-to:expr)
-   (IVS (E (Q "(")
-           $container
-           (Q "[")
-           (Q ":")
-           $index-to
-           (Q "]")
-           (Q ")")))]
+   ($call 'slice (list $container #f $index-to))]
   )
 
 (defexpr slice-from
   [(_ $container:expr $index-from:expr)
-   (IVS (E (Q "(")
-           $container
-           (Q "[")
-           $index-from
-           (Q " ")  ; To parse l[s:] as l[(s):] not l[(s:)].
-           (Q ":")
-           (Q "]")
-           (Q ")")))]
+   ($call 'slice (list $container $index-from #f))]
   )
 
 (defexpr ->
-  [(_ $dict:expr $name:sym)
-   (IVS (E (Q "(")
-           $dict
-           (Q ".")
-           $name
-           (Q ")")))]
+  [(_ $dict:expr $name:qsym)
+   ($call '-> (list $dict $name))]
   )
 
-; expr8(expr1, ...) is processed by Xire-script-to-IVS layer, not macros.
+; expr8(expr1, ...) is processed by Xire-script-to-IForm layer, not macros.
 
 ;;; expr9
 ;;; -----
 
-; Number literal is processed by IVS-to-Vim-script layer.
+; Number literal is processed by IForm-to-Vim-script layer.
 
-; "String literal" is processed by IVS-to-Vim-script layer.
+; "String literal" is processed by IForm-to-Vim-script layer.
 
 ; 'String literal' is not supported.
 ;
@@ -213,59 +164,42 @@
 ; Supplimental notation for strings to describe key sequences.
 (defexpr kbd
   [(_ $string:qexpr)
-   (IVS (E (Q (convert-key-sequence-conventions $string))))])
+   ($call 'kbd (list $string))]
+  )
 
 (defexpr list
-  [(_ $val:expr ...)
-   (IVS (E (Q "[")
-           (apply E (intersperse (Q ",") $val))
-           (Q "]")))]
+  [(_ $vals:expr ...)
+   ($call 'list $vals)]
   )
 
 (defexpr dict
-  [(_ ($key:expr $val:expr) ...)
-   (IVS (E (Q "{")
-           (apply IVS
-                  (map (cut E
-                            <>
-                            (Q " ")  ; To parse {s:x} as {(s):x} not {(s:x)}.
-                            (Q ":")
-                            <>
-                            (Q ","))
-                       $key
-                       $val))
-           (Q "}")))]
-  [(_ $x:expr ...)
-   (define (adjust-key x x:expr)
-     (if (keyword? x:expr)
-       (keyword->string x:expr)
+  [(_ ($keys:expr $vals:expr) ...)
+   ($call 'dict (list $keys $vals))]
+  [(_ $xs:qexpr ...)
+   (define (adjust-key x)
+     (if (keyword? x)
+       (keyword->string x)
        x))
-   (define (go result xs xs:expr)
+   (define (go keys vals xs)
      (cond
        [(null? xs)
-        (reverse result)]
+        (values
+          (reverse keys)
+          (reverse vals))]
        [(and (pair? xs) (pair? (cdr xs)))
-        (go
-          (cons (E (adjust-key (car xs) (car xs:expr))
-                   (Q " ")  ; To parse {s:x} as {(s):x} not {(s:x)}.
-                   (Q ":")
-                   (cadr xs)
-                   (Q ","))
-                result)
-          (cddr xs)
-          (cddr xs:expr))]
+        (go  (cons (transform-value (adjust-key (car xs)) #f 'expr ctx) keys)
+             (cons (transform-value (cadr xs) #f 'expr ctx) vals)
+             (cddr xs))]
        [else
          (errorf "Invalid key-value list for dict: ~s" form)]))
-   (IVS (E (Q "{")
-           (apply IVS (go '() $x $x:expr))
-           (Q "}")))]
+   ($call 'dict (call-with-values (lambda () (go '() '() $xs)) list))]
   )
 
 ; &option is treated the same as a variable.
 
 ; (expr1) is implicitly supported by Xire script syntax.
 
-; Variable is processed by IVS-to-Vim-script layer, not macros.
+; Variable is processed by IForm-to-Vim-script layer, not macros.
 
 ; Var{ia}ble is not supported.
 ;
@@ -277,7 +211,7 @@
 
 ; @r (register content) is treated the same as a variable.
 
-; function(call) is processed by Xire-script-to-IVS layer, not macros.
+; function(call) is processed by Xire-script-to-IForm layer, not macros.
 
 ; fun{ct}ion(call) is not supported as var{ia}ble is not supported.
 
@@ -289,108 +223,91 @@
 
 (defstmt begin
   [(_ $body:stmt ...)
-   (apply IVS $body)]
+   ($begin $body)]
   )
 
 (defstmt call
   [(_ $application:expr)
-   (IVS (S 'call $application))]
+   ($ex (list 'call $application))]
   )
 
 (defstmt cond
-  [(_ [$cond:expr $then:stmt] ...)
-   (let go ([cond:exprs $cond:expr]
-            [conds $cond]
-            [thens $then]
-            [result '()])
+  [(_ [$conds:expr $thens:stmt] ...)
+   (let go ([conds:expr $conds:expr]
+            [conds $conds]
+            [thens $thens]
+            [stmts '()])
      (cond
-       [(null? cond:exprs)
-        (if (null? result)
-          (IVS)
-          (apply IVS (reverse (cons (S 'endif) result))))]
+       [(null? conds:expr)
+        (if (null? stmts)
+          ($begin '())
+          ($begin (reverse (cons ($ex '(endif)) stmts))))]
        [else
-         (go (cdr cond:exprs)
+         (go (cdr conds:expr)
              (cdr conds)
              (cdr thens)
              (cons (car thens)
-                   (cons (S (if (null? result)
-                              'if
-                              'elseif)
-                            (if (and (null? (cdr cond:exprs))
-                                  (eq? (car cond:exprs) 'else))
-                              (E #t)
-                              (car conds)))
-                         result)))]))]
+                   (cons ($ex (list (if (null? stmts)
+                                      'if
+                                      'elseif)
+                                    (if (and (null? (cdr conds:expr))
+                                             (eq? (car conds:expr) 'else))
+                                      ($const #t)
+                                      (car conds))))
+                         stmts)))]))]
   )
 
 (defstmt define
   ; FIXME: Add tests on failure cases.
   ; FIXME: Detect reassignment.  (run-time? or compile-time?)
-  [(_ $var:sym $val:expr)
+  [(_ $var:qsym $val:expr)
    (unless (not (func-ctx? ctx))
      (errorf "\"define\" is available only in top-level: ~s" form))
-   (IVS (S 'let $var (Q '=) $val))]
+   ($def $var $val)]
   )
 
 (defstmt echo
-  [(_ $val:expr ...)
-   (IVS (apply S 'echo $val))]
+  [(_ $vals:expr ...)
+   ($ex (list* 'echo $vals))]
   )
 
 (defstmt function
   ; FIXME: Support !.
   ; FIXME: Support range, abort and dict.
-  ; FIXME: Check values on $name and $arg.
-  [(_ ($name:qsym $arg:sym ...) $body:qstmt ...)
-   (IVS
-     (S 'function $name (Q "(") (apply E (intersperse (Q ",") $arg)) (Q ")"))
-     (apply IVS (xire-compile-forms $body (make-func-ctx ctx $arg:sym)))
-     (S 'endfunction)
-     )]
+  [(_ ($func-name:qsym $arg-names:qsym ...) $body:qstmt ...)
+   (let* ([new-ctx (make-func-ctx ctx $arg-names)])
+     ($func $func-name
+            (map cdr (ref new-ctx 'func-args))
+            (transform-value `(begin ,@$body) #f 'stmt new-ctx)))]
   )
 
 (defstmt for
-  [(_ $var:qsym $list:expr $body:qstmt)
-   (let1 local-ctx (make-local-ctx ctx (list $var))
-     (IVS (S 'for (xire-compile-expr $var local-ctx) 'in $list)
-          (xire-compile $body local-ctx)
-          (S 'endfor)))]
+  [(_ $name:qsym $list:expr $body:qstmt)
+   (let* ([old-ctx ctx]
+          [lvars (make-lvars (list $name) (list (undefined)) old-ctx)]
+          [new-ctx (make-local-ctx ctx lvars)])
+     ($for (car lvars)
+           $list
+           (transform-value $body #f 'stmt new-ctx)))]
   [(_ $var:qsym $list:qexpr $body:qstmt ...)
    `(for ,$var ,$list (begin ,@$body))]
   )
 
 (defstmt if
   [(_ $cond:expr $then:stmt)
-   (IVS (S 'if $cond)
-        $then
-        (S 'endif))]
+   ($if $cond $then ($begin '()))]
   [(_ $cond:expr $then:stmt $else:stmt)
-   (IVS (S 'if $cond)
-        $then
-        (S 'else)
-        $else
-        (S 'endif))]
+   ($if $cond $then $else)]
   )
 
 (defstmt let
   ; FIXME: Add tests on failure cases.
-  [(_ (($var:qsym $val:qexpr) ...) $body:qstmt ...)
-   (let ([old-ctx ctx]
-         [new-ctx (make-local-ctx ctx $var)])
-     `(begin
-        ,@(let go ([vars $var]
-                   [vals $val]
-                   [forms '()])
-            (if (null? vars)
-              (reverse forms)
-              (go (cdr vars)
-                  (cdr vals)
-                  (cons `(set! ,(transform-value (car vars) #f 'expr new-ctx)
-                           ,(transform-value (car vals) #f 'expr old-ctx))
-                        forms))))
-        ,@(transform-value $body #t 'stmt new-ctx)
-        )
-     )]
+  [(_ (($names:qsym $vals:expr) ...) $body:qstmt ...)
+   (let* ([old-ctx ctx]
+          [lvars (make-lvars $names $vals old-ctx)]
+          [new-ctx (make-local-ctx ctx lvars)])
+     ($let lvars
+           (transform-value `(begin ,@$body) #f 'stmt new-ctx)))]
   )
 
 (defstmt let*
@@ -411,12 +328,19 @@
 
 (defstmt return
   [(_ $val:expr)
-   (IVS (S 'return $val))]
+   ($ret $val)]
   )
 
 (defstmt set!
-  [(_ $lval:expr $rval:expr)
-   (IVS (S 'let $lval (Q '=) $rval))]
+  ; FIXME: Support ``:let l[i] = v'', etc.
+  [(_ $name:qsym $rval:expr)
+   (cond
+     [(or (assq $name (ref ctx 'locals))
+          (assq $name (ref ctx 'func-args)))
+      => (lambda (name&lvar)
+           ($lset (cdr name&lvar) $rval))]
+     [else
+       ($gset $name $rval)])]
   )
 
 (defstmt until
@@ -433,9 +357,11 @@
 
 (defstmt while
   [(_ $cond:expr $body:stmt)
-   (IVS (S 'while $cond)
-        $body
-        (S 'endwhile))]
+   ($begin
+     (list
+       ($ex (list 'while $cond))
+       $body
+       ($ex (list 'endwhile))))]
   [(_ $cond:qexpr $body:qstmt ...)
    `(while ,$cond (begin ,@$body))]
   )

@@ -10,7 +10,6 @@
     xire-compile-forms
 
     ; Not public, but exported to test.
-    rename-local-bindings
 
     ; Not public, but exported to avoid some problems.
     match  ; See [MATCHQ].
@@ -21,7 +20,8 @@
 (use text.tree)
 (use util.list)
 (use util.match)
-(use vim.xire.ivs)
+(use vim.xire.compiler.pass-final)
+(use vim.xire.iform)
 (use vim.xire.util)
 
 
@@ -58,10 +58,15 @@
          (eval `(begin ,@scheme-exprs) scheme-env)
          (loop)]
         [(and (name . _) form)
-         (push! compiled-vim-script-tree (xire-compile form ctx))
+         (push! compiled-vim-script-tree
+                (pass-final (list (xire-compile form ctx))))
+         (loop)]
+        [(? iform? form)
+         (push! compiled-vim-script-tree
+                (pass-final (list form)))
          (loop)]))))
 
-;; Compile a Xire script FORM then return a resulting Vim script in IVS.
+;; Compile a Xire script FORM then return a resulting Vim script in IForm.
 (define (xire-compile form ctx)
   (define (report-syntax-error)
     (errorf "Invalid Xire form: ~s" form))
@@ -76,23 +81,26 @@
          ; where foo is not known as a Xire macro.  This convention is to
          ; simplify the compiler implementation.
          (if (expr-ctx? ctx)
-           (IVS (E (rename-local-bindings name ctx)
-                   (Q "(")
-                   (apply E (intersperse (Q ",")
-                                         (xire-compile-forms args ctx)))
-                   (Q ")")))
+           (let1 func (if-let1 name&lvar (or (assq name (ref ctx 'locals))
+                                             (assq name (ref ctx 'func-args)))
+                        ($lref (cdr name&lvar))
+                        ($gref name))
+             ($call func (xire-compile-forms args ctx)))
            (report-syntax-error))])]
     [(_ . _)  ; FORM is already compiled.
      form]
-    [(? (cut is-a? <> <ivs>) form)  ; FORM is already compiled.
+    [(? iform? form)  ; FORM is already compiled.
      form]
     [_
       (ensure-expr-ctx form ctx)
-      (IVS (E (if (symbol? form)
-                (rename-local-bindings form ctx)
-                form)))]))
+      (if (symbol? form)
+        (if-let1 name&lvar (or (assq form (ref ctx 'locals))
+                               (assq form (ref ctx 'func-args)))
+          ($lref (cdr name&lvar))
+          ($gref form))
+        ($const form))]))
 
-;; Compile a Xire script EXPR then return a resulting Vim script in IVS.
+;; Compile a Xire script EXPR then return a resulting Vim script in IForm.
 ;; This is an abbreviated form of xire-compile for typical use.
 (define (xire-compile-expr expr ctx)
   (xire-compile expr
@@ -101,23 +109,9 @@
                   (make-expr-ctx ctx))))
 
 ;; Compile a list of Xire script FORMS then return a resulting Vim script in
-;; IVS.  This is an abbreviated form of xire-compile for typical use.
+;; IForm.  This is an abbreviated form of xire-compile for typical use.
 (define (xire-compile-forms forms ctx)
   (map (cut xire-compile <> ctx) forms))
-
-;; Rename a variable reference in FORM according to CTX, if necessary.
-(define (rename-local-bindings form ctx)
-  (cond
-    [(not (symbol? form))
-     (errorf "Error: rename-local-bindings with non-symbol value: ~s" form)]
-    [(assq form (ref ctx 'locals))
-     => cdr]
-    [(memq form (ref ctx 'func-args))
-     (if (eq? form '...)
-       'a:000
-       (string->symbol #`"a:,form"))]
-    [else
-      form]))
 
 (define (transform-value form-or-forms manyp type upper-ctx)
   (define (fail detail)
@@ -147,7 +141,7 @@
       [(eq? type 'sym)
        (when (not (symbol? form))
          (fail "invalid form for this type"))
-       (IVS (E form))]
+       (xire-compile-expr form upper-ctx)]
       [else
         (fail "invalid type")]))
   (if manyp

@@ -132,16 +132,10 @@ expanded into `:if` statement in Vim script can be defined as follows:
 [[example_if]]
 ----
 (defstmt if
-  [(_ $cond:expr $then:stmt)
-   (IVS (S 'if $cond)
-        $then
-        (S 'endif))]
+  [(_ $cond:qexpr $then:qstmt)
+   `(if ,$cond ,$then (begin))]
   [(_ $cond:expr $then:stmt $else:stmt)
-   (IVS (S 'if $cond)
-        $then
-        (S 'else)
-        $else
-        (S 'endif))])
+   ($if $cond $then $else)])
 ----
 
 Macros consist of one or more *clauses*.  Macro definitions are mostly
@@ -258,7 +252,7 @@ For example, suppose that the form `(if c t e)` is expanded with
 
 
 
-[[ivs]]
+[[iform]]
 Intermediate format of Vim script
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -268,68 +262,76 @@ that Xire script is compiled into code in *an intermediate format* of
 Vim script, then resulting code in the intermediate format is finally
 compiled into Vim script.
 
-The intermediate format is called *IVS*.
-IVS is written in S expression, and IVS is a list of *nodes*.
-The details of IVS are as follows:
+The intermediate format is called *IForm*.
+An IForm object represents a statement or an expression.
+There are the following functions to create an IForm object:
+
+FIXME: Add details about naming convensions.
+See `vim.xire.compiler-pass1` at the moment.
 
 
 
-==== Node
+==== Statements
 
-A node expresses a logical part of Vim script.
-The following functions are available to create a node:
+`($def gvar expr)`::
+    Represents a statement to define a global variable.
 
-`(S node-or-atom ...)`::
-    Creates a node to express a statement in Vim script.
-    For example, `(S 'help 42)` creates a node which corresponds to
-    `:help 42` in Vim script.
+`($gset gvar expr)`::
+    Represents a statement to modify a global variable.
 
-`(E node-or-atom ...)`::
-    Creates a node to express an expression in Vim script.
-    For example, `(E Answer (Q "(") (E 42) (Q ")"))` creates a node which
-    corresponds to `Answer(42)` in Vim script.
+`($let lvars stmt)`::
+    Represents a statement to define local variables.
 
-`(Q atom ...)`::
-    Creates a node to express tokens in Vim script.
-    Unlike other functions,
-    `Q` is to embed ++atom++s into resulting Vim script.
-    Therefore ++atom++s are not converted
-    and they are ++display++ed into resulting Vim script.
+`($lset lvar expr)`::
+    Represents a statement to modify a local variable.
+
+`($begin stmts)`::
+    Groups zero or more statements as a single statement.
+
+`($if expr then-stmt else-stmt)`::
+    Equivalent to `:if`.
+
+`($while expr stmt)`::
+    Equivalent to `:while`.
+
+`($for lvar expr stmt)`::
+    Roughly equivalent to `:for`.
+
+`($break)`::
+    Equivalent to `:break`.
+
+`($next)`::
+    Equivalent to `:continue`.
+
+`($ret expr)`::
+    Equivalent to `:return`.
+
+`($func func-name args stmt)`::
+    Roughly equivalent to `:function`.
+
+`($ex obj-or-iforms)`::
+    Represents an arbitrary statement.
 
 
 
-==== Atom
+==== Expressions
 
-An atom is roughly corresponding to a "token" in Vim script.
-For example, numbers, strings, variable names and so on.
-Available atoms are as follows:
+`($const obj)`::
+    Represents a constant expression.
+    `obj` can be a boolean, a number, a regular expression or a string.
 
-`<boolean>` objects::
-    Correspond to boolean values in Vim script.
+`($gref gvar)`::
+    Represents a global variable reference.
 
-`<number>` objects::
-    Correspond to number values in Vim script.  Only
-    exact integers are valid.  It is an error to use inexact numbers and
-    non-integer numbers such as real numbers, though real numbers should
-    be supported later.  Note that numbers in Vim script are limited in
-    a range, and the range depends on how Vim executable is compiled.
-    So that Xire does not check whether a given number is also valid as
-    Vim script or not.
+`($lref lvar)`::
+    Represents a global variable reference.
 
-`<regexp>` objects::
-    Correspond to equivalent string values in Vim script (because
-    there is no literal notation for regular expressions in Vim script).
+`($call subr-name arg-exprs)`::
+    Represents a compound expression using an operator such as `+`.
+    See also `vim.xire.compiler.pass-final`.
 
-`<string>` objects::
-    Correspond to string values in Vim script.  See also
-    <<_conventions_of_string_values, conventions of string values>>.
-
-`<symbol>` objects::
-    Correspond to Ex command names (such as `:map`), variable names
-    (such as `v:servername`), and other keywords in Vim script.  When
-    Vim script is generated from IVS, the names of symbols are
-    normalized, then <<_normalization_of_variable_names,normalized
-    names>> are embedded into resulting Vim script.
+`($call func-expr arg-exprs)`::
+    Represents a function call.
 
 
 
@@ -401,10 +403,10 @@ in Xire script:
 While various characters such as `$`, `!` and `%` can be used as
 variable names in Scheme, variable names in Vim script must match to
 `#/^[A-Za-z_][A-Za-z_0-9]*$/`.  So that it is generally an error to use
-such characters for symbols in <<ivs,IVS>>.
+such characters for symbols in <<iform,IForm>>.
 
 But, for convenience, several characters (more precisely, patterns) can
-be used for symbols in IVS.
+be used for symbols in IForm.
 
 [options='header']
 |==================================================================
@@ -465,7 +467,7 @@ There are also the following shorthands for `defstmt`:
 
     (defstmt <name>
       [(_)
-       (IVS (S '<ex-command-name>))])  ; <ex-command-name> must be a symbol.
+       ($ex '(<ex-command-name>))])  ; <ex-command-name> must be a symbol.
 
 
 
@@ -488,7 +490,7 @@ The following Scheme API is available to define advanced Xire macros:
 ==== `(scheme-object->vim-script-notation x)`
 
 A function which converts a given Scheme object into the corresponding
-Vim script notation.  See also <<ivs,IVS>>.
+Vim script notation.  See also <<iform,IForm>>.
 
 
 
@@ -504,9 +506,9 @@ according to other arguments:
 `manyp`::
     A boolean value which specifies the format of `form-or-forms`.
     If this value is `#f`, `form-or-forms` is treated as a form,
-    and this function returns a resulting Vim script in IVS.
+    and this function returns a resulting Vim script in IForm.
     Otherwise, `form-or-forms` is treated as a list of forms,
-    and this function returns a list of resulting Vim script in IVS.
+    and this function returns a list of resulting Vim script in IForm.
 
 `type`::
     A symbol which specifies the type of `form`.  If this value is:
@@ -543,7 +545,8 @@ according to other arguments:
 Built-in macros
 ~~~~~~~~~~~~~~~
 
-FIXME: Write about details of macros.
+See `vim.xire.builtin` at the moment.
+FIXME: Write about details of built-in macros.
 
 
 

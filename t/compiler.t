@@ -9,6 +9,9 @@
 (use util.list)
 (use util.match)
 (use vim.xire)
+(use vim.xire.compiler.pass-1)
+(use vim.xire.compiler.pass-final)
+(use vim.xire.iform)
 
 
 
@@ -24,9 +27,7 @@
   (xire-register-macro!
     'macro
     (lambda (form ctx)
-      (IVS (Q "<")
-           (apply Q (intersperse " " form))
-           (Q ">")))
+      ($gref (string->symbol (format "<~a>" form))))
     'stmt
     env)
   (it "should output nothing if given script is empty"
@@ -86,12 +87,21 @@
       )
     )
   (it "should handle use of Xire macro"
-    (expect (translate "(macro)") equal? "<macro>")
-    (expect (translate "(macro use)") equal? "<macro use>")
-    (expect (translate "(macro use test)") equal? "<macro use test>")
+    (expect (translate "(macro)") equal? "<(macro)>")
+    (expect (translate "(macro use)") equal? "<(macro use)>")
+    (expect (translate "(macro use test)") equal? "<(macro use test)>")
     )
   (it "should handle a compiled form"
     SKIP "There is no readable external representation of compiled forms."
+    )
+  (it "should handle a compiled form in IForm"
+    (expect
+      (translate (format "~s" (pass-1 123 expr-ctx)))
+      equal?
+      (with-output-to-string
+        (lambda ()
+          (write-tree
+            (pass-final (list (pass-1 123 expr-ctx)))))))
     )
   )
 
@@ -101,7 +111,7 @@
     (parameterize ([xire-env env])
       (with-output-to-string
         (lambda ()
-          (write-tree (xire-compile form ctx))))))
+          (write-tree (pass-final (list (xire-compile form ctx))))))))
   (define root-ctx (make-root-ctx))
   (define stmt-ctx (make-stmt-ctx root-ctx))
   (define expr-ctx (make-expr-ctx root-ctx))
@@ -112,23 +122,23 @@
         [(m xs)
          `(,m ,xs ())]
         [(m () ys)
-         (IVS (apply Q `("<" ,@(intersperse " " ys) ">")))]
+         ($gref (string->symbol (format "<~a>" ys)))]
         [(m (x . xs) ys)
          `(,m ,xs ,(cons x ys))]))
     'stmt
     env)
   (it "should compile Xire macros recursively"
-    (expect (compile '(macro ()) stmt-ctx) equal? "<>")
-    (expect (compile '(macro (x)) stmt-ctx) equal? "<x>")
-    (expect (compile '(macro (x y)) stmt-ctx) equal? "<y x>")
-    (expect (compile '(macro (x y z)) stmt-ctx) equal? "<z y x>")
+    (expect (compile '(macro ()) stmt-ctx) equal? "<()>")
+    (expect (compile '(macro (x)) stmt-ctx) equal? "<(x)>")
+    (expect (compile '(macro (x y)) stmt-ctx) equal? "<(y x)>")
+    (expect (compile '(macro (x y z)) stmt-ctx) equal? "<(z y x)>")
     )
   (it "should compile use of undefined macro in expr-ctx as function call"
     (expect (compile '(MyFunc) expr-ctx) equal? "MyFunc()")
     (expect (compile '(MyFunc 1 2 3) expr-ctx) equal? "MyFunc(1,2,3)")
     )
   (it "should return form as is if it is already compiled"
-    (define compiled-form (IVS (Q 1 2 3)))
+    (define compiled-form ($const "<1 2 3>"))
     (expect (xire-compile compiled-form expr-ctx) eq? compiled-form)
     )
   (it "should compile a Scheme object in expression context"
@@ -149,10 +159,10 @@
   (define stmt-ctx (make-stmt-ctx root-ctx))
   (define expr-ctx (make-expr-ctx root-ctx))
   (it "should compile an expression in expression context"
-    (expect (compile 'foo expr-ctx) equal? "foo")
+    (expect (compile 'foo expr-ctx) equal? (x->string ($gref 'foo)))
     )
   (it "should compile an expression even if a statement context is given"
-    (expect (compile 'foo stmt-ctx) equal? "foo")
+    (expect (compile 'foo stmt-ctx) equal? (x->string ($gref 'foo)))
     )
   )
 
@@ -162,14 +172,16 @@
     (parameterize ([xire-env env])
       (with-output-to-string
         (lambda ()
-          (write-tree (xire-compile-forms forms ctx))))))
+          (write-tree (map (lambda (result)
+                             (pass-final (list result)))
+                           (xire-compile-forms forms ctx)))))))
   (define root-ctx (make-root-ctx))
   (define stmt-ctx (make-stmt-ctx root-ctx))
   (define expr-ctx (make-expr-ctx root-ctx))
   (xire-register-macro!
     'macro
     (lambda (form ctx)
-      (IVS (apply Q `("<" ,@(intersperse " " form) ">"))))
+      ($gref (string->symbol (format "<~a>" form))))
     'stmt
     env)
   (it "should compile list of forms in expression context"
@@ -178,86 +190,7 @@
   (it "should compile list of forms in statement context"
     (expect (compile '((macro 1) (macro 2) (macro 3)) stmt-ctx)
             equal?
-            "<macro 1><macro 2><macro 3>")
-    )
-  )
-
-(describe "rename-local-bindings"
-  (it "should fail if form is not a variable reference"
-    (define ctx (make-func-ctx (make-root-ctx) '(a b c)))
-    (expect (rename-local-bindings #f ctx) raise? <error>)
-    (expect (rename-local-bindings #f ctx) raise? <error>)
-    (expect (rename-local-bindings #t ctx) raise? <error>)
-    (expect (rename-local-bindings 123 ctx) raise? <error>)
-    (expect (rename-local-bindings "foo" ctx) raise? <error>)
-    (expect (rename-local-bindings #/bar/ ctx) raise? <error>)
-    (expect (rename-local-bindings '(func arg) ctx) raise? <error>)
-    )
-  (it "should leave form as is if it is not in any local context"
-    (define ctx (make-root-ctx))
-    (expect (rename-local-bindings 'a ctx) eq? 'a)
-    (expect (rename-local-bindings 'b ctx) eq? 'b)
-    (expect (rename-local-bindings 'c ctx) eq? 'c)
-    (expect (rename-local-bindings 'd ctx) eq? 'd)
-    )
-  (it "should rename form if it is in a local but not function context"
-    (define ctx (make-local-ctx (make-root-ctx) '(x y z)))
-    (expect (rename-local-bindings 'x ctx) not eq? 'x)
-    (expect (rename-local-bindings 'y ctx) not eq? 'y)
-    (expect (rename-local-bindings 'z ctx) not eq? 'z)
-    (expect (rename-local-bindings 'g ctx) eq? 'g)
-    )
-  (it "should rename form if it is a reference to a function parameter"
-    (define ctx (make-func-ctx (make-root-ctx) '(a b c ...)))
-    (expect (rename-local-bindings 'a ctx) eq? 'a:a)
-    (expect (rename-local-bindings 'b ctx) eq? 'a:b)
-    (expect (rename-local-bindings 'c ctx) eq? 'a:c)
-    (expect (rename-local-bindings '... ctx) eq? 'a:000)
-    (expect (rename-local-bindings 'd ctx) eq? 'd)
-    )
-  (it "should rename form if it is a reference to a function local variable"
-    (define ctx (make-local-ctx (make-func-ctx (make-root-ctx) '(a b c))
-                                '(x y z)))
-    (expect (rename-local-bindings 'a ctx) eq? 'a:a)
-    (expect (rename-local-bindings 'b ctx) eq? 'a:b)
-    (expect (rename-local-bindings 'c ctx) eq? 'a:c)
-    (expect (rename-local-bindings 'x ctx) not eq? 'x)
-    (expect (rename-local-bindings 'y ctx) not eq? 'y)
-    (expect (rename-local-bindings 'z ctx) not eq? 'z)
-    (expect (rename-local-bindings 'g ctx) eq? 'g)
-    )
-  (it "should rename a local variable from outer context if necessary"
-    ; (define (_)
-    ;   ; ctx0
-    ;   (let ([x 3]
-    ;         [y 2])
-    ;     ; ctx1
-    ;     (let ([x (* x y)])
-    ;       ; ctx2
-    ;       ...)))
-    (define ctx0 (make-func-ctx (make-root-ctx) '()))
-    (define ctx1 (make-local-ctx ctx0 '(x y)))
-    (define ctx2 (make-local-ctx ctx1 '(x)))
-    (expect (rename-local-bindings 'x ctx0) eq? 'x)
-    (expect (rename-local-bindings 'y ctx0) eq? 'y)
-    (expect (rename-local-bindings 'x ctx1) not eq? 'x)
-    (expect (rename-local-bindings 'y ctx1) not eq? 'y)
-    (expect (rename-local-bindings 'x ctx2) not eq? 'x)
-    (expect (rename-local-bindings 'y ctx2) not eq? 'y)
-    (expect (rename-local-bindings 'x ctx1)
-            not eq? (rename-local-bindings 'x ctx2))
-    (expect (rename-local-bindings 'y ctx1)
-            eq? (rename-local-bindings 'y ctx2))
-    )
-  (it "should rename a function-local variable with 'L' prefix"
-    (define ctx (make-local-ctx (make-func-ctx (make-root-ctx) '()) '(x)))
-    (expect (symbol->string (rename-local-bindings 'x ctx)) #/^L\d+$/)
-    )
-  (it "should rename a script-local variable with 's:__L' prefix"
-    (define ctx (make-local-ctx (make-root-ctx) '(x)))
-    (expect (script-ctx? ctx) eq? #t)
-    (expect (func-ctx? ctx) eq? #f)
-    (expect (symbol->string (rename-local-bindings 'x ctx)) #/^s:__L\d+$/)
+            "<(macro 1)><(macro 2)><(macro 3)>")
     )
   )
 

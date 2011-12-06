@@ -8,6 +8,7 @@
 (use text.tree)
 (use util.match)
 (use vim.xire)
+(use vim.xire.compiler.pass-final)
 
 
 
@@ -15,7 +16,7 @@
 (define (compile form ctx)
   (with-output-to-string
     (lambda ()
-      (write-tree (xire-compile form ctx)))))
+      (write-tree (pass-final (list (xire-compile form ctx)))))))
 
 
 
@@ -115,36 +116,28 @@
 (describe "generate-match-body"
   (it "should generate body with 0 slots"
     (expect (generate-match-body '(syntax clear)
-                                 '((IVS (S 'syntax 'clear))
-                                   (IVS (S 'echo "..."))))
+                                 '((ex syntax clear)
+                                   (ex echo "...")))
             equal?
             '(let ()
-               (IVS (S 'syntax 'clear))
-               (IVS (S 'echo "..."))))
+               (ex syntax clear)
+               (ex echo "...")))
     )
   (it "should generate body with 1 or more slots"
     (expect (generate-match-body '(if $cond:expr $then:stmt)
-                                 '((IVS (S 'if $cond)
-                                        $then
-                                        (S 'endif))))
+                                 '(($if $cond $then ($begin '()))))
             equal?
             '(let ([$cond (transform-value $cond:expr #f 'expr ctx)]
                    [$then (transform-value $then:stmt #f 'stmt ctx)])
-               (IVS (S 'if $cond)
-                    $then
-                    (S 'endif))))
+               ($if $cond $then ($begin '()))))
     )
   (it "should generate body with 1 or more ellipses"
     (expect (generate-match-body '(when $cond:expr $then:stmt ...)
-                                 '((IVS (S 'if $cond)
-                                        (apply IVS $then)
-                                        (S 'endif))))
+                                 '(($if $cond $then ($begin '()))))
             equal?
             '(let ([$cond (transform-value $cond:expr #f 'expr ctx)]
                    [$then (transform-value $then:stmt #t 'stmt ctx)])
-               (IVS (S 'if $cond)
-                    (apply IVS $then)
-                    (S 'endif))))
+               ($if $cond $then ($begin '()))))
     )
   (it "should generate body with let-like pattern"
     (expect (generate-match-body '(my-let ($var:expr $value:stmt) ...)
@@ -163,15 +156,9 @@
         'if
         'stmt
         '[(if $cond:expr $then:stmt)
-          (IVS (S 'if $cond)
-               $then
-               (S 'endif))]
+          ($if $cond $then ($begin '()))]
         '[(if $cond:expr $then:stmt $else:stmt)
-          (IVS (S 'if $cond)
-               $then
-               (S 'else)
-               $else
-               (S 'endif))])
+          ($if $cond $then $else)])
       equal?
       '(defmacro stmt (if form ctx)
          (ensure-stmt-ctx form ctx)
@@ -179,18 +166,12 @@
            [('if $cond:expr $then:stmt)
             (let ([$cond (transform-value $cond:expr #f 'expr ctx)]
                   [$then (transform-value $then:stmt #f 'stmt ctx)])
-              (IVS (S 'if $cond)
-                   $then
-                   (S 'endif)))]
+              ($if $cond $then ($begin '())))]
            [('if $cond:expr $then:stmt $else:stmt)
             (let ([$cond (transform-value $cond:expr #f 'expr ctx)]
                   [$then (transform-value $then:stmt #f 'stmt ctx)]
                   [$else (transform-value $else:stmt #f 'stmt ctx)])
-              (IVS (S 'if $cond)
-                   $then
-                   (S 'else)
-                   $else
-                   (S 'endif)))])))
+              ($if $cond $then $else))])))
     )
   (it "shouold raise error for invalid context type"
     (expect
@@ -198,15 +179,9 @@
         'if
         'stmttttt
         '[(if $cond:expr $then:stmt)
-          (IVS (S 'if $cond)
-               $then
-               (S 'endif))]
+          ($if $cond $then ($begin '()))]
         '[(if $cond:expr $then:stmt $else:stmt)
-          (IVS (S 'if $cond)
-               $then
-               (S 'else)
-               $else
-               (S 'endif))])
+          ($if $cond $then $else)])
       raise?)
     )
   )
@@ -257,13 +232,11 @@
   (it "should transform give value into equivalent 'sym'"
     (define func-ctx (make-func-ctx (make-root-ctx) '(foo->bar)))
     (expect (transform-value 'foo->bar #f 'sym stmt-ctx)
-            equal? (xire-compile-expr 'foo->bar stmt-ctx))
+            equal? ($gref 'foo->bar))
     (expect (transform-value 'foo->bar #f 'sym expr-ctx)
-            equal? (xire-compile-expr 'foo->bar expr-ctx))
+            equal? ($gref 'foo->bar))
     (expect (transform-value 'foo->bar #f 'sym func-ctx)
-            not equal? (xire-compile-expr 'foo->bar func-ctx))
-    (expect (transform-value 'foo->bar #f 'sym func-ctx)
-            equal? (xire-compile-expr 'foo->bar expr-ctx))
+            equal? (xire-compile-expr 'foo->bar func-ctx))
     )
   (it "should raise error for invalid form with 'sym'"
     (expect (transform-value '(x) #f 'sym expr-ctx)
@@ -297,13 +270,17 @@
       (expect (xire-lookup-macro 'if expr-ctx (xire-env)) eq? #f)
       (defexpr if
         [(if $cond:expr $then:expr $else:expr)
-         (IVS $cond (Q "?") $then (Q ":") $else)])
+         ($const (format "~a?~a:~a" $cond $then $else))])
       (expect (xire-lookup-macro 'if stmt-ctx (xire-env)) eq? #f)
       (expect (xire-lookup-macro 'if expr-ctx (xire-env)) procedure?)
       (expect (compile '(if co-nd th-en el-se) stmt-ctx) raise?)
       (expect (compile '(if co-nd th-en el-se) expr-ctx)
               equal?
-              "co_nd?th_en:el_se")
+              (compile ($const (format "~a?~a:~a"
+                                       ($gref 'co-nd)
+                                       ($gref 'th-en)
+                                       ($gref 'el-se)))
+                       expr-ctx))
       )
     )
   )
@@ -321,15 +298,9 @@
       (defstmt return)
       (defstmt if
         [(if $cond:expr $then:stmt)
-         (IVS (S 'if $cond)
-              $then
-              (S 'endif))]
+         ($const (format "~a?~a" $cond $then))]
         [(if $cond:expr $then:stmt $else:stmt)
-         (IVS (S 'if $cond)
-              $then
-              (S 'else)
-              $else
-              (S 'endif))])
+         ($const (format "~a?~a:~a" $cond $then $else))])
       (expect (xire-lookup-macro 'if stmt-ctx (xire-env)) procedure?)
       (expect (xire-lookup-macro 'if expr-ctx (xire-env)) eq? #f)
       (expect (compile '(break) stmt-ctx) equal? "break\n")
@@ -337,16 +308,17 @@
       (expect (compile '(if 3) expr-ctx) equal? "if(3)")
       (expect (compile '(if co-nd (break)) stmt-ctx)
               equal?
-              (lines "if co_nd"
-                     "break"
-                     "endif"))
+              (compile ($const (format "~a?~a"
+                                       ($gref 'co-nd)
+                                       ($ex '(break))))
+                       stmt-ctx))
       (expect (compile '(if co-nd (break) (return)) stmt-ctx)
               equal?
-              (lines "if co_nd"
-                     "break"
-                     "else"
-                     "return"
-                     "endif"))
+              (compile ($const (format "~a?~a:~a"
+                                       ($gref 'co-nd)
+                                       ($ex '(break))
+                                       ($ex '(return))))
+                       stmt-ctx))
       )
     )
   )
