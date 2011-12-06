@@ -285,7 +285,7 @@
   [(_ $name:qsym $list:expr $body:qstmt)
    (let* ([old-ctx ctx]
           [lvars (make-lvars (list $name) (list (undefined)) old-ctx)]
-          [new-ctx (make-local-ctx~ ctx lvars)])
+          [new-ctx (make-local-ctx ctx lvars)])
      ($for (car lvars)
            $list
            (transform-value $body #f 'stmt new-ctx)))]
@@ -305,7 +305,7 @@
   [(_ (($names:qsym $vals:expr) ...) $body:qstmt ...)
    (let* ([old-ctx ctx]
           [lvars (make-lvars $names $vals old-ctx)]
-          [new-ctx (make-local-ctx~ ctx lvars)])
+          [new-ctx (make-local-ctx ctx lvars)])
      ($let lvars
            (transform-value `(begin ,@$body) #f 'stmt new-ctx)))]
   )

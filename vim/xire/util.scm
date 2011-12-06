@@ -33,7 +33,6 @@
     make-expr-ctx
     make-func-ctx
     make-local-ctx
-    make-local-ctx~
     make-lvars
     make-root-ctx
     make-stmt-ctx
@@ -341,29 +340,6 @@
   (define new-ctx (copy-ctx ctx))
   (set! (ref new-ctx 'type) 'expr)
   new-ctx)
-(define (make-local-ctx ctx vars)
-  (define new-ctx (copy-ctx ctx))
-  (define (generate-new-name)
-    (cond  ; The order of clauses is important.
-      [(func-ctx? new-ctx)
-       ; Xire script doesn't provide any way to define function-local
-       ; variables except "let" family.  And it's not usual to access
-       ; function-local variables from other context.  So that it's not
-       ; necessary to take care on name collision.
-       (gensym "L")]
-      [(script-ctx? new-ctx)
-       ; There is a chance of name collision between variables explicitly
-       ; defined with "define" and variables implicitly defined with "let"
-       ; family.  To avoid unexpected name collision, generate variable name
-       ; with a prefix which, probably, users will not use.
-       (gensym "s:__L")]
-      [else
-        (error "Lexical variables are not available in this context.")]))
-  (set! (ref new-ctx 'locals)
-    (append
-      (map (cut cons <> (generate-new-name)) vars)
-      (ref new-ctx 'locals)))
-  new-ctx)
 (define (make-func-ctx ctx names)
   ; NB: Though :function can be written in the body of a :function,
   ;     Vim script does not have lexical scope.  So that nested function
@@ -386,7 +362,6 @@
              names))
   new-ctx)
 (define (make-lvars names vals ctx)
-  ; FIXME: Replace make-local-ctx with make-lvars and make-local-ctx~.
   (define (generate-new-name ctx)
     (cond  ; The order of clauses is important.
       [(func-ctx? ctx)
@@ -410,8 +385,7 @@
                :init-expr v))
        names
        vals))
-(define (make-local-ctx~ ctx lvars)
-  ; FIXME: Replace make-local-ctx with make-lvars and make-local-ctx~.
+(define (make-local-ctx ctx lvars)
   (rlet1 new-ctx (copy-ctx ctx)
     (set! (ref new-ctx 'locals)
       (append (map (lambda (v)

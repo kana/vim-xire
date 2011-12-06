@@ -119,8 +119,19 @@
 (describe "make-local-ctx"
   (it "should make a local binding context from a given context"
     (define c1 (make-stmt-ctx (make-root-ctx)))
-    (define c2 (make-local-ctx c1 '(a b c)))
+    (define lvars2 (make-lvars '(a b c)
+                               (list ($const "a")
+                                     ($const "b")
+                                     ($const "c"))
+                               c1))
+    (define c2 (make-local-ctx c1 lvars2))
     (define c3 (make-stmt-ctx c2))
+    (define lvars4 (make-lvars '(d e f)
+                               (list ($const "d")
+                                     ($const "e")
+                                     ($const "f"))
+                               c3))
+    (define c4 (make-local-ctx c3 lvars4))
     (define (check %c1 %c2)
       (define different-slot-names '(locals))
       (for-each
@@ -130,12 +141,28 @@
           (lambda (slot-name)
             (not (memq slot-name different-slot-names)))
           (map slot-definition-name (class-direct-slots <xire-ctx>)))))
+    (expect (ref c1 'locals)
+            equal?
+            '())
     (check c2 c1)
-    (expect (ref c1 'locals) equal? '())
-    (expect (map (lambda (p) (cons (car p) '_)) (ref c2 'locals))
-            equal? '((a . _) (b . _) (c . _)))
+    (expect (ref c2 'locals)
+            equal?
+            (map (lambda (v)
+                   (cons (lvar-src-name v) v))
+                 lvars2))
     (check c3 c2)
-    (expect (ref c2 'locals) equal? (ref c3 'locals))
+    (expect (ref c3 'locals)
+            eq?
+            (ref c2 'locals))
+    (check c4 c3)
+    (expect (ref c4 'locals)
+            not equal?
+            (ref c3 'locals))
+    (expect (ref c4 'locals)
+            equal?
+            (map (lambda (v)
+                   (cons (lvar-src-name v) v))
+                 (append lvars4 lvars2)))
     )
   (it "should fail to 'inherit' from non-function and non-script context"
     (expect (make-local-ctx (make-root-ctx :in-scriptp #f) '(x))
