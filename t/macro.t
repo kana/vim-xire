@@ -16,7 +16,7 @@
 (define (compile form ctx)
   (with-output-to-string
     (lambda ()
-      (write-tree (pass-final (list (xire-compile form ctx)))))))
+      (write-tree (pass-final (xire-compile form ctx))))))
 
 
 

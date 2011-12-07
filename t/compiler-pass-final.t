@@ -22,10 +22,10 @@
 
 
 (describe "pass-final"
-  (define (gen iform . args)
+  (define (gen iform)
     (call-with-output-string
       (lambda (port)
-        (write-tree (apply pass-final (list iform) args) port))))
+        (write-tree (pass-final iform) port))))
   (it "should reject an object which is not a valid iform"
     (expect (gen '#($FOO)) raise? <error>)
     (expect (gen '#($CONST 1 2)) raise? <error>)

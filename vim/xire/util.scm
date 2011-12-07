@@ -311,13 +311,13 @@
    [in-scriptp  ; #t if a form in a scirpt file being compiled; otherwise, #f.
      :init-keyword :in-scriptp
      :init-value #t]
-   [in-funcp
+   [in-funcp  ; #t to compile forms in a function; otherwise, #f.
      :init-keyword :in-funcp
      :init-value #f]
-   [func-args
+   [func-args  ; A list of (src-name . lvar) for arguments to a function.
      :init-keyword :func-args
      :init-value '()]
-   [locals
+   [locals  ; A list of (src-name . lvar) for local variables.
      :init-keyword :locals
      :init-value '()]
    ))

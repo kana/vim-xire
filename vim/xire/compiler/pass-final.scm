@@ -80,10 +80,7 @@
 ;;; Entry point
 ;;; ===========
 
-(define (pass-final iforms)
-  (map pass-final/rec iforms))
-
-(define (pass-final/rec iform)
+(define (pass-final iform)
   (let gen ([iform iform])
     (match iform
       [#('$CONST obj)
