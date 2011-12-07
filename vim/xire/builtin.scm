@@ -294,8 +294,7 @@
   )
 
 (defstmt if
-  [(_ $cond:expr $then:stmt)
-   ($if $cond $then ($begin '()))]
+  ; Use "when" for :if without :else.
   [(_ $cond:expr $then:stmt $else:stmt)
    ($if $cond $then $else)]
   )
@@ -352,7 +351,8 @@
   [(_ $cond:qexpr $then:qstmt ...)
    `(if ,$cond
       (begin
-        ,@$then))]
+        ,@$then)
+      (begin))]
   )
 
 (defstmt while
