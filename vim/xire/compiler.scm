@@ -42,6 +42,10 @@
   (define (finish)
     (write-tree (reverse compiled-vim-script-tree) output-port))
   (define ctx (make-root-ctx))
+  (define (optimize iform)
+    ; Currently there is no optimization.
+    ; More passes will be added in future.
+    iform)
 
   (parameterize ([xire-env env])
     (let loop ()
@@ -60,7 +64,7 @@
          (loop)]
         [form
          (push! compiled-vim-script-tree
-                (pass-final (xire-compile form ctx)))
+                (pass-final (optimize (xire-compile form ctx))))
          (loop)]))))
 
 ;; Compile a Xire script FORM then return a resulting Vim script in IForm.
