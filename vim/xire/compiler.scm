@@ -57,13 +57,9 @@
         [('scheme . scheme-exprs)
          (eval `(begin ,@scheme-exprs) scheme-env)
          (loop)]
-        [(and (name . _) form)
+        [form
          (push! compiled-vim-script-tree
                 (pass-final (xire-compile form ctx)))
-         (loop)]
-        [(? iform? form)
-         (push! compiled-vim-script-tree
-                (pass-final form))
          (loop)]))))
 
 ;; Compile a Xire script FORM then return a resulting Vim script in IForm.
