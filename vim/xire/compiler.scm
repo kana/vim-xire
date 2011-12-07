@@ -20,6 +20,7 @@
 (use text.tree)
 (use util.list)
 (use util.match)
+(use vim.xire.compiler.pass-1)
 (use vim.xire.compiler.pass-final)
 (use vim.xire.iform)
 (use vim.xire.util)
@@ -64,37 +65,7 @@
 
 ;; Compile a Xire script FORM then return a resulting Vim script in IForm.
 (define (xire-compile form ctx)
-  (define (report-syntax-error)
-    (errorf "Invalid Xire form: ~s" form))
-  (match form
-    [((? symbol? name) . args)
-     (cond
-       [(xire-lookup-macro name ctx)
-        => (lambda (expander)
-             (xire-compile (expander form ctx) ctx))]
-       [else
-         ; Treat "(foo ...)" form in an expression context as a function call,
-         ; where foo is not known as a Xire macro.  This convention is to
-         ; simplify the compiler implementation.
-         (if (expr-ctx? ctx)
-           (let1 func (if-let1 name&lvar (or (assq name (ref ctx 'locals))
-                                             (assq name (ref ctx 'func-args)))
-                        ($lref (cdr name&lvar))
-                        ($gref name))
-             ($call func (xire-compile-forms args ctx)))
-           (report-syntax-error))])]
-    [(_ . _)  ; FORM is already compiled.
-     form]
-    [(? iform? form)  ; FORM is already compiled.
-     form]
-    [_
-      (ensure-expr-ctx form ctx)
-      (if (symbol? form)
-        (if-let1 name&lvar (or (assq form (ref ctx 'locals))
-                               (assq form (ref ctx 'func-args)))
-          ($lref (cdr name&lvar))
-          ($gref form))
-        ($const form))]))
+  (pass-1 form ctx))
 
 ;; Compile a Xire script EXPR then return a resulting Vim script in IForm.
 ;; This is an abbreviated form of xire-compile for typical use.
