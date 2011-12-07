@@ -59,11 +59,11 @@
          (loop)]
         [(and (name . _) form)
          (push! compiled-vim-script-tree
-                (pass-final (list (xire-compile form ctx))))
+                (pass-final (xire-compile form ctx)))
          (loop)]
         [(? iform? form)
          (push! compiled-vim-script-tree
-                (pass-final (list form)))
+                (pass-final form))
          (loop)]))))
 
 ;; Compile a Xire script FORM then return a resulting Vim script in IForm.
